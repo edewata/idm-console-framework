@@ -40,8 +40,8 @@ fi
 #
 # See if libjava and libjvm exist, and set the lib path.  These are linked to by JSS.
 #
-LIBJAVA_DIR=`find $JAVA_HOME -name libjava.so | sed 's/\/libjava.so$//'`
-LIBJVM_DIR=`find $JAVA_HOME -name libjvm.so | sed 's/\/libjvm.so$//'`
+LIBJAVA_DIR=`find $JAVA_HOME -name libjava\.s[ol] | sed 's/\/libjava\.s.$//'`
+LIBJVM_DIR=`find $JAVA_HOME -name libjvm\.s[ol] | sed 's/\/libjvm\.s.$//'`
 
 if [ -z "$LIBJAVA_DIR" -a -z "$LIBJVM_DIR" ]
 then
