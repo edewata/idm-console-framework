@@ -1,0 +1,109 @@
+<!-- --- BEGIN COPYRIGHT BLOCK ---
+ Copyright (C) 2005 Red Hat, Inc.
+ All rights reserved.
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation version
+ 2.1 of the License.
+                                                                                
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+                                                                                
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+  --- END COPYRIGHT BLOCK ---  -->
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="GENERATOR" CONTENT="Mozilla/4.05 [en]C-NSCP  (Win95; U) [Netscape]">
+   <META NAME="Author" CONTENT="Terence Kwan">
+   <TITLE>Netscape Console SDK - Users and Groups Example Readme</TITLE>
+</HEAD>
+<BODY>
+
+<CENTER>
+<H1>
+<A NAME="top"></A>Users and Groups Sample Plug-in Readme</H1></CENTER>
+
+<HR WIDTH="100%"><B><FONT SIZE=+2>SuperMail ResourceEditor Plug-in Example</FONT></B>
+
+<P>This example shows you how to create a plug-in for the ResourceEditor
+and integrate with the Netscape Admin Server 4.0 Users and Groups editor.
+The example is a plug-in to edit user entries. You can follow these steps
+to create plug-ins to edit group and organizational unit entries as well.
+
+<P>The Directory Server should have an object class named <TT>SuperMailUser</TT>.
+When the example
+<BR>calls a SuperMailUser object, the user and group editor displays the
+proper UI plug-in.
+<H2>
+
+<HR NOSHADE SIZE=1>Plug-in Steps</H2>
+
+
+<P><B>Step 1. Define a new object class called SuperMailUser and update
+the Directory Server</B>
+<BLOCKQUOTE>This has been done in the <TT>SuperMailSchema.conf</TT> file.
+In order to update the directory server with this schema, copy the file
+to this directory: <TT><I>&lt;server-root></I>/slapd-<I>&lt;servername></I>/config</TT>
+
+<P>Suppose you have installed the Netscape Directory Server in <TT>/usr/netscape/server4</TT>
+and named the server as <TT>corporate</TT>. Copy the <TT>SuperMailSchema.conf</TT>
+file to this directory:&nbsp;&nbsp; <TT>/usr/netscape/server4/slapd-corporate/config</TT>.
+
+<P>In addition, you must edit the&nbsp; <TT>/usr/netscape/server4/slapd-corporate/config/ns-schema.conf</TT>
+file to include the <TT>SuperMailSchema.conf</TT> file.
+
+<P>After doing this, restart the Directory Server to pick up the new schema
+information.</BLOCKQUOTE>
+<B>Step 2. Modify the default object classes for users to include the SuperMailUser
+object class</B>
+<BLOCKQUOTE>The <TT>AddSuperMailUser.ldif</TT> file contains the necessary
+changes to modify the entry at:
+<BR><TT>dn: cn=user, cn=defaultObjectClassesContainer, ou=4.0, ou=Admin,
+ou=Global Preferences, ou=mcom.com, o=NetscapeRoot</TT>.
+
+<P>This entry is used by the <TT>ResourceEditor</TT> to determine which
+object classes need to be edited for a user. Note that <TT>ou=mcom.com</TT>
+should be changed to the domain name was used during the installation of
+the Console and Directory Server.
+
+<P>To modify the default object classes for users, first modify the <TT>AddSuperMailUser.ldif</TT>
+file as necessary, then do an <TT>ldapmodify -f AddSuperMailUser.ldif</TT>.</BLOCKQUOTE>
+<B>Step 3. Add the resource editor extension class for the SuperMailUser
+object class</B>
+<BLOCKQUOTE>The <TT>SuperMailUser.ldif</TT> file contains the necessary
+changes to add the entry at:
+
+<P><TT>dn: cn=superMailUser, cn=ResourceEditorExtension, ou=4.0, ou=Admin,
+ou=Global Preferences, ou=mcom.com, o=NetscapeRoot</TT>.
+
+<P>This entry is used by the <TT>ResourceEditor</TT> to instantiate the
+plug-ins for editing a user entry. Note that <TT>ou=mcom.com</TT> should&nbsp;
+be changed to the domain name was used during the installation of the Console
+and Directory Server.
+
+<P>To add the resource editor extension, first modify the <TT>SuperMailUser.ldif</TT>
+file as necessary, then perform an <TT>ldapmodify -a -f SuperMailUser.ldif</TT>.</BLOCKQUOTE>
+<B>Step 4. Copy the jar files to <TT><I>&lt;server-root></I>/java/jars</TT>
+directory</B>
+<BLOCKQUOTE>To get this example working, copy the <TT>SuperMailUGPlugin.jar</TT>
+and <TT>SuperMailUGPlugin_en.jar</TT> files to the <TT><I>&lt;server-root></I>/java/jars</TT>
+directory.
+
+<P>Using the above example of an installation at <TT>/usr/netscape/server4</TT>,
+the target directory is <TT>/usr/netscape/server4/java/jars</TT>.</BLOCKQUOTE>
+<B>Step 5. Start the console</B>
+<BLOCKQUOTE>Run <TT>/usr/netscape/server4/startconsole</TT>.</BLOCKQUOTE>
+To see the installed plug-in, log in. Go to the User and Groups Tab and
+create a new user.
+<BR>You see the SuperMail User Tab.
+<BR><FONT SIZE=-1>[<A HREF="#top">Top</A>]</FONT>
+<BR>
+<HR WIDTH="100%">
+</BODY>
+</HTML>

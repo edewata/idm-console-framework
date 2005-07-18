@@ -1,0 +1,80 @@
+<!-- --- BEGIN COPYRIGHT BLOCK ---
+ Copyright (C) 2005 Red Hat, Inc.
+ All rights reserved.
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation version
+ 2.1 of the License.
+                                                                                
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+                                                                                
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+  --- END COPYRIGHT BLOCK ---  -->
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="GENERATOR" CONTENT="Mozilla/4.05C-NSCP [en] (X11; U; SunOS 5.5.1 sun4u) [Netscape]">
+</HEAD>
+<BODY>
+<B><FONT SIZE=+2>SuperMail ResourceEditor Plugin Example</FONT></B>
+
+<P>This example shows you how to create a plugin for the ResourceEditor.
+The example is a plugin to edit user entries, but the steps can be followed
+to create plugins to edit group and organizational unit entries.
+
+<P><B>Step 1. Define a new object class called SuperMailUser and update
+the directory server</B>
+<BLOCKQUOTE>This has been done in the <TT>SuperMailSchema.conf</TT> file.
+In order to update the directory server with this schema, the file must
+be first copied to the <TT><I>&lt;server-root></I>/slapd-<I>&lt;servername></I>/config</TT>
+directory. Suppose you have installed the Netscape Directory Server in
+<TT>/usr/netscape/server4</TT> and named the server as <TT>corporate</TT>.
+The directory to copy the <TT>SuperMailSchema.conf</TT> file is then <TT><I>/usr/netscape/server4</I>/slapd-<I>corporate</I>/config</TT>.
+In addition, you must edit <TT>/usr/netscape/server4/slapd-corporate/config/ns-schema.conf</TT>
+file to include the <TT>SuperMailSchema.conf</TT> file. Once this is done,
+restart the directory server to pick up the new schema information.</BLOCKQUOTE>
+
+
+<P><B>Step 2. Modify the default object classes for users to include the
+SuperMailUser object class</B>
+<BLOCKQUOTE>The <TT>AddSuperMailUser.ldif</TT> file contains the necessary
+changes to modify the entry at <I>dn: cn=user, cn=defaultObjectClassesContainer,
+ou=4.0, ou=Admin, ou=Global Preferences, <B>ou=mcom.com</B>, o=NetscapeRoot</I>.
+This entry is used by the ResourceEditor to determine which object classes
+need to be edited for a user. Note that the <B><I>ou=mcom.com</I></B> should
+be changed to whatever domain name was used during installation of Console/Directory.
+To modify the default object classes for users, first modify the <TT>AddSuperMailUser.ldif</TT>
+file as necessary, then do an <TT>ldapmodify -f AddSuperMailUser.ldif</TT>.</BLOCKQUOTE>
+
+
+<P><B>Step 3. Add the resource editor extension class for the SuperMailUser
+object class</B>
+<BLOCKQUOTE>The <TT>SuperMailUser.ldif</TT> file contains the necessary
+changes to add the entry at <I>dn: cn=superMailUser, cn=ResourceEditorExtension,
+ou=4.0, ou=Admin, ou=Global Preferences, <B>ou=mcom.com</B>, o=NetscapeRoot</I>.
+This entry is used by the ResourceEditor to instantiate the plugins for
+editing an user entry. Note that the ou=mcom.com should be changed to whatever
+domain name was used during the installation of Console/Directory. To add
+the resource editor extension, first modify the <TT>SuperMailUser.ldif</TT>
+file as necessary, then do an <TT>ldapmodify -a -f SuperMailUser.ldif</TT>.</BLOCKQUOTE>
+
+
+<P><B>Step 4. Copy the jar files to <TT><I>&lt;server-root></I>/java/jars</TT>
+directory</B>
+<BLOCKQUOTE>To get this example working, copy the <TT>SuperMailUGPlugin.jar</TT>
+and <TT>SuperMailUGPlugin_en.jar</TT> files to the <TT><I>&lt;server-root></I>/java/jars</TT>
+directory. Using the above example of an installation at <TT>/usr/netscape/server4</TT>,
+the target directory is <TT><I>/usr/netscape/server4</I>/java/jars</TT>.</BLOCKQUOTE>
+
+
+<P><B>Step 5. Start the console</B>
+<BLOCKQUOTE>In keeping with the current example, run <TT>/usr/netscape/server4/startconsole</TT>.</BLOCKQUOTE>
+&nbsp;
+</BODY>
+</HTML>
