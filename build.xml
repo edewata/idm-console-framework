@@ -1,0 +1,280 @@
+<!--
+BEGIN COPYRIGHT BLOCK
+Copyright (C) 2005 Red Hat, Inc.
+All rights reserved.
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation version
+2.1 of the License.
+                                                                                
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+                                                                                
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+END COPYRIGHT BLOCK
+-->
+
+<project name="consolesdk" default="dist" basedir=".">
+  <!-- Load properties -->
+  <property file="build.properties"/>
+
+  <!-- Paths -->
+  <property name="built.dir"       value="${consolesdk.root}/built"/>
+  <property name="package.dir"     value="${built.dir}/package"/>
+  <property name="lib.dir"         value="${package.dir}/lib"/>
+  <property name="dist.dir"        value="${package.dir}/java"/>
+  <property name="caplugin.dir"    value="${dist.dir}/caplugin"/>
+  <property name="jars.dir"        value="${dist.dir}/jars"/>
+  <property name="built.classdir"  value="${built.dir}/classes"/>
+  <property name="javadoc.dir"     value="${built.dir}/doc"/>
+  <property name="imports.dir"     value="${consolesdk.root}/imports"/>
+  <property name="java.src.dir"    value="src"/>
+
+  <!-- Prepare -->
+  <target name="prepare_build">
+    <!-- Create directories -->
+    <mkdir dir="${built.classdir}"/>
+    <mkdir dir="${imports.dir}"/>
+
+    <!-- Load imports file -->
+    <input
+      message="An imports file must be specified.  Enter the imports file that you want to use:"
+      addproperty="imports.file"
+      defaultvalue="imports"
+    />
+    <fail message="Imports file does not exist. (${imports.file})">
+      <condition>
+        <not>
+          <available file="${imports.file}"/>
+        </not>
+      </condition>
+    </fail>
+    <property file="${imports.file}"/>
+
+    <!-- Check if components exist -->
+    <available file="${imports.dir}/ldapjdk/${ldapjdk.import}" property="ldapjdk.import.exists"/>
+    <available file="${imports.dir}/jss/${jss.jar.import}" property="jss.jar.import.exists"/>
+    <available file="${imports.dir}/jss/${jss.lib.import}" property="jss.lib.import.exists"/>
+    <available file="${imports.dir}/nss/${nss.import}" property="nss.import.exists"/>
+    <available file="${imports.dir}/nspr/${nspr.import}" property="nspr.import.exists"/>
+
+    <!-- Construct classpath -->
+    <path id="consolesdk.classpath">
+      <pathelement location="${imports.dir}/ldapjdk/${ldapjdk.import}"/>
+      <pathelement location="${imports.dir}/jss/${jss.jar.import}"/>
+    </path>
+  </target>
+
+  <target name="prepare_dist">
+    <!-- Create directories -->
+    <mkdir dir="${lib.dir}"/>
+    <mkdir dir="${caplugin.dir}"/>
+    <mkdir dir="${jars.dir}"/>
+  </target>
+
+  <target name="prepare_doc">
+    <!-- Create directories -->
+    <mkdir dir="${javadoc.dir}"/>
+  </target>
+
+  <!-- Imports -->
+  <target name="import_ldapjdk" depends="prepare_build" unless="ldapjdk.import.exists">
+    <mkdir dir="${imports.dir}/ldapjdk"/>
+    <get src="${ldapjdk.location}/${ldapjdk.import}"
+         dest="${imports.dir}/ldapjdk/${ldapjdk.import}"/>
+  </target>
+
+  <target name="import_jss_jar" depends="prepare_build" unless="jss.jar.import.exists">
+    <mkdir dir="${imports.dir}/jss"/>
+    <get src="${jss.jar.location}/${jss.jar.import}"
+         dest="${imports.dir}/jss/${jss.jar.import}"/>
+  </target>
+
+  <target name="import_jss_lib" depends="prepare_build" unless="jss.lib.import.exists">
+     <mkdir dir="${imports.dir}/jss"/>
+     <get src="${jss.lib.location}/${jss.lib.import}"
+          dest="${imports.dir}/jss/${jss.lib.import}"/>
+     <unjar src="${imports.dir}/jss/${jss.lib.import}" dest="${imports.dir}/jss"/>
+  </target>
+
+  <target name="import_nss_lib" depends="prepare_build" unless="nss.import.exists">
+    <mkdir dir="${imports.dir}/nss"/>
+    <get src="${nss.location}/${nss.import}"
+         dest="${imports.dir}/nss/${nss.import}"/>
+    <unjar src="${imports.dir}/nss/${nss.import}" dest="${imports.dir}/nss"/>
+  </target>
+
+  <target name="import_nspr_lib" depends="prepare_build" unless="nspr.import.exists">
+    <mkdir dir="${imports.dir}/nspr"/>
+    <get src="${nspr.location}/${nspr.import}"
+         dest="${imports.dir}/nspr/${nspr.import}"/>
+    <unjar src="${imports.dir}/nspr/${nspr.import}"  dest="${imports.dir}/nspr"/>
+  </target>
+
+  <!-- Build -->
+  <target name="build" depends="import_ldapjdk,import_jss_jar">
+    <!-- compile regular java code -->
+    <javac   srcdir="${java.src.dir}"
+             destdir="${built.classdir}"
+             debug="${compile.debug}" deprecation="${compile.deprecation}"
+             optimize="${compile.optimize}"
+             verbose="no"
+             excludes="**/CVS/**">
+             <classpath refid="consolesdk.classpath" />
+    </javac>
+  </target>
+
+  <!-- Dist -->
+  <target name="dist" depends="build,prepare_dist,import_jss_lib,import_nss_lib,import_nspr_lib">
+    <!-- Create jar files -->
+    <jar jarfile="${dist.dir}/${mcc.name}.jar" >
+      <fileset dir="${built.classdir}">
+         <include name="com/netscape/management/client/**/*.class" />
+         <include name="sun/net/www/protocol/https/**/*.class" />
+         <exclude name="com/netscape/management/client/topology/IServerObject.class"/>
+         <exclude name="com/netscape/management/client/topology/IRemovableServerObject.class"/>
+         <exclude name="com/netscape/management/client/topology/IProductObject.class"/>
+         <exclude name="com/netscape/management/client/topology/AbstractServerObject.class"/>
+         <exclude name="com/netscape/management/client/topology/ServerNode.class"/>
+         <exclude name="com/netscape/management/client/IPage.class"/>
+         <exclude name="com/netscape/management/client/IFramework.class"/>
+         <exclude name="com/netscape/management/client/IFrameworkInitializer.class"/>
+         <exclude name="com/netscape/management/client/FrameworkInitializer.class"/>
+         <exclude name="com/netscape/management/client/IResourceObject.class"/>
+         <exclude name="com/netscape/management/client/ResourceObject.class"/>
+         <exclude name="com/netscape/management/client/util/ClassLoaderUtil.class"/>
+         <exclude name="com/netscape/management/client/util/LocalJarClassLoader.class"/>
+         <exclude name="com/netscape/management/client/util/KingpinClassLoader.class"/>
+         <exclude name="com/netscape/management/client/util/UtilConsoleGlobals.class"/>
+         <exclude name="com/netscape/management/client/console/ConsoleInfo.class"/>
+         <exclude name="com/netscape/management/client/console/VersionInfo.class"/>
+      </fileset>
+    </jar>
+    <jar jarfile="${dist.dir}/${mcc.name}_${lang}.jar" >
+      <fileset dir="${java.src.dir}">
+         <include name="com/netscape/management/client/**/*.properties" />
+         <include name="com/netscape/management/client/**/*.gif" />
+         <include name="com/netscape/management/client/**/*.jpg" />
+      </fileset>
+    </jar>
+    <jar jarfile="${dist.dir}/${nmclf.name}.jar" >
+      <fileset dir="${built.classdir}">
+         <include name="com/netscape/management/nmclf/**/*.class" />
+      </fileset>
+    </jar>
+    <jar jarfile="${dist.dir}/${nmclf.name}_${lang}.jar" >
+      <fileset dir="${java.src.dir}">
+         <include name="com/netscape/management/nmclf/**/*.properties" />
+         <include name="com/netscape/management/nmclf/**/*.gif" />
+         <include name="com/netscape/management/nmclf/**/*.jpg" />
+      </fileset>
+    </jar>
+    <jar jarfile="${dist.dir}/base.jar" >
+      <fileset dir="${built.classdir}">
+        <include name="com/netscape/management/client/topology/IServerObject.class"/>
+        <include name="com/netscape/management/client/topology/IRemovableServerObject.class"/>
+        <include name="com/netscape/management/client/topology/IProductObject.class"/>
+        <include name="com/netscape/management/client/topology/AbstractServerObject.class"/>
+        <include name="com/netscape/management/client/topology/ServerNode.class"/>
+        <include name="com/netscape/management/client/IPage.class"/>
+        <include name="com/netscape/management/client/IFramework.class"/>
+        <include name="com/netscape/management/client/IFrameworkInitializer.class"/>
+        <include name="com/netscape/management/client/FrameworkInitializer.class"/>
+        <include name="com/netscape/management/client/IResourceObject.class"/>
+        <include name="com/netscape/management/client/ResourceObject.class"/>
+        <include name="com/netscape/management/client/util/ClassLoaderUtil.class"/>
+        <include name="com/netscape/management/client/util/LocalJarClassLoader.class"/>
+        <include name="com/netscape/management/client/util/KingpinClassLoader.class"/>
+        <include name="com/netscape/management/client/util/UtilConsoleGlobals.class"/>
+        <include name="com/netscape/management/client/console/ConsoleInfo.class"/>
+        <include name="com/netscape/management/client/console/VersionInfo.class"/>
+      </fileset>
+    </jar>
+    <jar jarfile="${caplugin.dir}/default.jar" >
+      <manifest>
+        <section name="com.netscape.management.client.security.csr.DefaultPlugin.class">
+          <attribute name="UserURL" value="http://fedora.redhat.com"/>
+          <attribute name="UpdateURL" value="http://fedora.redhat.com"/>
+          <attribute name="Description" value="Fedora Directory Project"/>
+          <attribute name="Icon" value="com/netscape/management/client/images/logo16.gif"/>
+        </section>
+      </manifest>
+      <fileset dir="${built.classdir}">
+        <include name="com/netscape/management/client/security/csr/DefaultPlugin.class"/>
+        <include name="com/netscape/management/client/security/csr/CertRequestInfoPage.class"/>
+        <include name="com/netscape/management/client/security/csr/CertRequestSubmissionPage.class"/>
+      </fileset>
+    </jar>
+
+    <!-- Copy components into packaging area -->
+    <copy file="${imports.dir}/ldapjdk/${ldapjdk.import}" todir="${dist.dir}"/>
+    <copy file="${imports.dir}/jss/${jss.jar.import}" tofile="${dist.dir}/jss3.jar"/>
+    <copy todir="${lib.dir}">
+      <fileset dir="${imports.dir}/jss/lib">
+        <include name="libjss*"/>
+      </fileset>
+      <fileset dir="${imports.dir}/nss/lib">
+        <include name="libnss*"/>
+        <include name="libssl*"/>
+        <include name="libsmime*"/>
+        <include name="libsoftokn*"/>
+        <exclude name="libnssckbi*"/>
+        <exclude name="lib*.a"/>
+      </fileset>
+      <fileset dir="${imports.dir}/nspr/lib">
+        <include name="libnspr*"/>
+        <include name="libpl*"/>
+        <exclude name="lib*.a"/>
+      </fileset>
+    </copy>
+
+    <!-- Copy start script into packaging area -->
+    <copy file="startconsole" todir="${package.dir}"/>
+    <chmod file="${package.dir}/startconsole" perm="755"/>
+
+    <!-- Create a bundle of the Console -->
+    <tar destfile="${built.dir}/consolesdk${consolesdk.version}.tar.gz"
+         compression="gzip">
+      <tarfileset dir="${package.dir}"
+                  prefix="consolesdk${consolesdk.version}"
+                  mode="755">
+        <include name="startconsole"/>
+      </tarfileset>
+      <tarfileset dir="${package.dir}"
+                  prefix="consolesdk${consolesdk.version}">
+        <include name="**"/>
+        <exclude name="startconsole"/>
+      </tarfileset>
+    </tar>
+  </target>
+ 
+  <!-- Javadoc -->
+  <target name="javadoc" depends="prepare_doc">
+    <javadoc 
+      packagenames="com.netscape.management.*"
+      sourcepath="src"
+      destdir="${javadoc.dir}"
+      author="true"
+      version="true"
+      use="true"
+      windowtitle="Console SDK API"
+      doctitle="Console SDK API" />
+  </target>
+
+  <!-- Cleanup -->
+  <target name="clean_all" depends="clean,clean_imports"/>
+
+  <target name="clean">
+    <delete dir="${built.dir}"/>
+  </target>
+
+  <target name="clean_imports">
+    <delete dir="${imports.dir}"/>
+  </target>
+  
+</project>

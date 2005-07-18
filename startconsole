@@ -1,0 +1,69 @@
+#!/bin/sh
+#
+# BEGIN COPYRIGHT BLOCK
+# Copyright (C) 2005 Red Hat, Inc.
+# All rights reserved.
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation version
+# 2.1 of the License.
+#                                                                                 
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#                                                                                 
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# END COPYRIGHT BLOCK
+
+#
+# Check if JAVA_HOME is set
+#
+if [ -z "$JAVA_HOME" ]
+then
+  echo "$0: Your JAVA_HOME environment variable is not set.  Please set it appropriately."
+  exit 1
+fi
+
+#
+# Make sure java exists and is executable
+#
+if [ ! -f java -a ! -x java ]
+then
+  echo "$0: The java program is not in your path, or is not executable."
+  exit 1
+fi
+
+#
+# See if libjava and libjvm exist, and set the lib path.  These are linked to by JSS.
+#
+LIBJAVA_DIR=`find $JAVA_HOME -name libjava.so | sed 's/\/libjava.so$//'`
+LIBJVM_DIR=`find $JAVA_HOME -name libjvm.so | sed 's/\/libjvm.so$//'`
+
+if [ -z "$LIBJAVA_DIR" -a -z "$LIBJVM_DIR" ]
+then
+  echo "$0: Unable to find libjava and libjvm in JAVA_HOME.  Please ensure that JAVA_HOME is set correctly."
+  exit 1
+else
+  if [ "$LIBJAVA_DIR" = "$LIBJVM_DIR" ]
+  then
+    LD_LIBRARY_PATH="$LIBJAVA_DIR"
+    SHLIB_PATH="$LIBJAVA_DIR"
+    DYLD_PATH="$LIBJAVA_DIR"
+  else
+    LD_LIBRARY_PATH="$LIBJAVA_DIR:$LIBJVM_DIR"
+    SHLIB_PATH="$LIBJAVA_DIR:$LIBJVM_DIR"
+    DYLD_PATH="$LIBJAVA_DIR:$LIBJVM_DIR"
+  fi
+  export LD_LIBRARY_PATH
+  export SHLIB_PATH
+  export DYLD_PATH
+fi
+
+#
+# Launch the Console
+#
+cd java; $JAVA_HOME/bin/java -ms8m -mx64m  -cp .:./base.jar:./mcc70_en.jar:./jss3.jar:./ldapjdk.jar:./mcc70.jar:./nmclf70_en.jar:./nmclf70.jar -Djava.library.path=../lib -Djava.util.prefs.systemRoot=. -Djava.util.prefs.userRoot=. com.netscape.management.client.console.Console $*

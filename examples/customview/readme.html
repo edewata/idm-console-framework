@@ -1,0 +1,70 @@
+<!-- --- BEGIN COPYRIGHT BLOCK ---
+ Copyright (C) 2005 Red Hat, Inc.
+ All rights reserved.
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation version
+ 2.1 of the License.
+                                                                                
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+                                                                                
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+  --- END COPYRIGHT BLOCK ---  -->
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="Author" CONTENT="Terence Kwan">
+   <META NAME="GENERATOR" CONTENT="Mozilla/4.05 [en]C-NSCP  (Win95; U) [Netscape]">
+   <TITLE>Netscape Console SDK - Custom View Example Readme</TITLE>
+</HEAD>
+<BODY>
+
+<CENTER>
+<H1>
+<A NAME="top"></A>Custom View Plug-in Example Readme</H1></CENTER>
+
+<H2>
+
+<HR WIDTH="100%">Example</H2>
+This example shows how to plug in to the Netscape Admin Server 4.0 Custom
+View framework. Once the plug-in is installed, the Custom View selector
+will contain one more option. If the user selects the SuperMail custom
+view, it displays a different view for the user.
+<H2>
+
+<HR NOSHADE SIZE=1>Installation Steps</H2>
+
+<OL>
+<LI>
+Install the plug-in and issue this command:</LI>
+
+<BR><TT>dapmodify -a -f customview.ldif</TT>
+<LI>
+Compile the <TT>SuperMailCustomView.java</TT> into <TT>SuperMailCustomView.class</TT>.</LI>
+
+<LI>
+Jar the class file into <TT>SuperMail.jar</TT>.</LI>
+
+<LI>
+Make an English localization jar file by copying <TT>SuperMail.jar</TT>
+to <TT>SuperMail_en.jar</TT>.</LI>
+
+<LI>
+Copy <TT>SuperMail.jar</TT> and <TT>SuperMail_en.jar</TT> to <TT>&lt;server-root>/java/jars</TT>.</LI>
+
+<LI>
+Start the Console and log in.</LI>
+
+<LI>
+You see the SuperMail plug-in as one item in the Custom View selector.</LI>
+</OL>
+<FONT SIZE=-1>[<A HREF="#top">Top</A>]</FONT>&nbsp;
+<HR WIDTH="100%">
+</BODY>
+</HTML>
