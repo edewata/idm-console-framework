@@ -19,12 +19,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 END COPYRIGHT BLOCK
 -->
 
-<project name="consolesdk" default="dist" basedir=".">
+<project name="console" default="dist" basedir=".">
   <!-- Load properties -->
   <property file="build.properties"/>
 
   <!-- Paths -->
-  <property name="built.dir"       value="${consolesdk.root}/built"/>
+  <property name="built.dir"       value="${console.root}/built"/>
   <property name="package.dir"     value="${built.dir}/package"/>
   <property name="lib.dir"         value="${package.dir}/lib"/>
   <property name="dist.dir"        value="${package.dir}/java"/>
@@ -32,7 +32,7 @@ END COPYRIGHT BLOCK
   <property name="jars.dir"        value="${dist.dir}/jars"/>
   <property name="built.classdir"  value="${built.dir}/classes"/>
   <property name="javadoc.dir"     value="${built.dir}/doc"/>
-  <property name="imports.dir"     value="${consolesdk.root}/imports"/>
+  <property name="imports.dir"     value="${console.root}/imports"/>
   <property name="java.src.dir"    value="src"/>
 
   <!-- Prepare -->
@@ -64,7 +64,7 @@ END COPYRIGHT BLOCK
     <available file="${imports.dir}/nspr/${nspr.import}" property="nspr.import.exists"/>
 
     <!-- Construct classpath -->
-    <path id="consolesdk.classpath">
+    <path id="console.classpath">
       <pathelement location="${imports.dir}/ldapjdk/${ldapjdk.import}"/>
       <pathelement location="${imports.dir}/jss/${jss.jar.import}"/>
     </path>
@@ -125,7 +125,7 @@ END COPYRIGHT BLOCK
              optimize="${compile.optimize}"
              verbose="no"
              excludes="**/CVS/**">
-             <classpath refid="consolesdk.classpath" />
+             <classpath refid="console.classpath" />
     </javac>
   </target>
 
@@ -238,15 +238,15 @@ END COPYRIGHT BLOCK
     <chmod file="${package.dir}/startconsole" perm="755"/>
 
     <!-- Create a bundle of the Console -->
-    <tar destfile="${built.dir}/consolesdk${consolesdk.version}.tar.gz"
+    <tar destfile="${built.dir}/console${console.version}.tar.gz"
          compression="gzip">
       <tarfileset dir="${package.dir}"
-                  prefix="consolesdk${consolesdk.version}"
+                  prefix="console${console.version}"
                   mode="755">
         <include name="startconsole"/>
       </tarfileset>
       <tarfileset dir="${package.dir}"
-                  prefix="consolesdk${consolesdk.version}">
+                  prefix="console${console.version}">
         <include name="**"/>
         <exclude name="startconsole"/>
       </tarfileset>
