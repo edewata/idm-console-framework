@@ -262,8 +262,8 @@ END COPYRIGHT BLOCK
       author="true"
       version="true"
       use="true"
-      windowtitle="Console SDK API"
-      doctitle="Console SDK API" />
+      windowtitle="Console API"
+      doctitle="Console API" />
   </target>
 
   <!-- Cleanup -->
