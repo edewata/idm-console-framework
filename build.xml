@@ -200,7 +200,7 @@ END COPYRIGHT BLOCK
         <section name="com.netscape.management.client.security.csr.DefaultPlugin.class">
           <attribute name="UserURL" value="http://fedora.redhat.com"/>
           <attribute name="UpdateURL" value="http://fedora.redhat.com"/>
-          <attribute name="Description" value="Fedora Directory Project"/>
+          <attribute name="Description" value="Fedora"/>
           <attribute name="Icon" value="com/netscape/management/client/images/logo16.gif"/>
         </section>
       </manifest>
