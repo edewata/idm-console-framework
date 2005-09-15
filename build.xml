@@ -68,6 +68,16 @@ END COPYRIGHT BLOCK
       <pathelement location="${imports.dir}/ldapjdk/${ldapjdk.import}"/>
       <pathelement location="${imports.dir}/jss/${jss.jar.import}"/>
     </path>
+
+    <!-- Generate version property file -->
+    <exec dir="${console.root}/console" executable="./buildnum.pl">
+      <arg line="-p ${built.dir}"/>
+    </exec>
+    <exec executable="${console.root}/console/src/com/netscape/management/client/console/genverinfo.sh">
+      <arg value="${console.root}/console/src/com/netscape/management/client/console/versioninfo.properties"/>
+      <arg value="${console.dotversion}"/>
+      <arg value="${built.dir}/buildnum.dat"/>
+    </exec>
   </target>
 
   <target name="prepare_dist">
@@ -271,6 +281,7 @@ END COPYRIGHT BLOCK
 
   <target name="clean">
     <delete dir="${built.dir}"/>
+    <delete file="${console.root}/console/src/com/netscape/management/client/console/versioninfo.properties"/>
   </target>
 
   <target name="clean_imports">
