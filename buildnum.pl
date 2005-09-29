@@ -58,7 +58,7 @@ if ($opt_H) {exitHelp();}
 
 # Load arguments
 $platdir = $opt_p || exitHelp();
-$buildnum_file = "./$platdir/buildnum.dat";
+$buildnum_file = "$platdir/buildnum.dat";
 
 # Get current time
 @now = gmtime;
