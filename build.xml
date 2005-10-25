@@ -24,7 +24,7 @@ END COPYRIGHT BLOCK
   <property file="build.properties"/>
 
   <!-- Paths -->
-  <property name="built.dir"       value="${console.root}/built"/>
+  <property name="built.dir"       value="${console.root}/../built"/>
   <property name="package.dir"     value="${built.dir}/package"/>
   <property name="lib.dir"         value="${package.dir}/lib"/>
   <property name="dist.dir"        value="${package.dir}/java"/>
@@ -32,7 +32,7 @@ END COPYRIGHT BLOCK
   <property name="jars.dir"        value="${dist.dir}/jars"/>
   <property name="built.classdir"  value="${built.dir}/classes"/>
   <property name="javadoc.dir"     value="${built.dir}/doc"/>
-  <property name="imports.dir"     value="${console.root}/imports"/>
+  <property name="imports.dir"     value="${console.root}/../imports"/>
   <property name="java.src.dir"    value="src"/>
 
   <!-- Prepare -->
@@ -70,12 +70,12 @@ END COPYRIGHT BLOCK
     </path>
 
     <!-- Generate version property file -->
-   <exec executable="${console.root}/console/buildnum.pl" vmlauncher="true">
+   <exec executable="${console.root}/buildnum.pl" vmlauncher="true">
       <arg line="-p ${built.dir}"/>
     </exec>
 
-    <exec executable="${console.root}/console/src/com/netscape/management/client/console/genverinfo.sh">
-      <arg value="${console.root}/console/src/com/netscape/management/client/console/versioninfo.properties"/>
+    <exec executable="${console.root}/src/com/netscape/management/client/console/genverinfo.sh">
+      <arg value="${console.root}/src/com/netscape/management/client/console/versioninfo.properties"/>
       <arg value="${console.dotversion}"/>
       <arg value="${built.dir}/buildnum.dat"/>
     </exec>
@@ -284,7 +284,7 @@ END COPYRIGHT BLOCK
 
   <target name="clean">
     <delete dir="${built.dir}"/>
-    <delete file="${console.root}/console/src/com/netscape/management/client/console/versioninfo.properties"/>
+    <delete file="${console.root}/src/com/netscape/management/client/console/versioninfo.properties"/>
   </target>
 
   <target name="clean_imports">
