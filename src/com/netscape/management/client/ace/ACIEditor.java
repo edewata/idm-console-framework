@@ -41,7 +41,7 @@ import com.netscape.management.client.util.*;
  * 5) Time
  * 
  * Additional tabs may be registered at the following location:
- * cn=ACIEditor, ou=4.0, ou=Global Preferences, ou=[domain], o=NetscapeRoot
+ * cn=ACIEditor, ou=[Console Version], ou=Global Preferences, ou=[domain], o=NetscapeRoot
  * which is an entry of this type:
  *      objectclass nsAdminObject
  *          superior top
@@ -230,7 +230,7 @@ class ACIEditor extends GenericDialog
         v.addElement(new TimeTab());
         // TODO: load tabs dynamically
 
-        // points to NetscapeRoot\mcom.com\Global Preferences\Admin\4.0
+        // points to NetscapeRoot\mcom.com\Global Preferences\Admin\<Console version>
         String baseDN = "cn=ACIEditor, " + LDAPUtil.getAdminGlobalParameterEntry();
         try
         {

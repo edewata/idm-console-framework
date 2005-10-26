@@ -211,7 +211,6 @@ public class UGPage extends JPanel implements IPage {
     public MenuItemCategory createToolsMenu() {
         ConsoleInfo ci = Console.getConsoleInfo();
         LDAPConnection ldc = ci.getLDAPConnection();
-        // String dn = "cn=UserGroupTools,ou=4.0,ou=Admin,ou=Global Preferences,ou=mcom.com,o=NetscapeRoot";
         String dn = "cn=UserGroupTools," +
                 LDAPUtil.getAdminGlobalParameterEntry();
 

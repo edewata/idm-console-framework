@@ -28,10 +28,10 @@ import netscape.ldap.*;
   * the User Group page is selected.
   *
   * The plugin must be registered in LDAP under this entry:
-  * cn=UserGroupTools, ou=4.0, ou=Admin, ou=Global Preferences, ou=<domain>, o=NetscapeRoot
+  * cn=UserGroupTools, ou=[AS version], ou=Admin, ou=Global Preferences, ou=[domain], o=NetscapeRoot
   *
   * For example,
-  * dn: cn=UserGroupTools, ou=4.0, ou=Admin, ou=Global Preferences, ou=mcom.com, o=NetscapeRoot
+  * dn: cn=UserGroupTools, ou=1.0, ou=Admin, ou=Global Preferences, ou=mcom.com, o=NetscapeRoot
   * cn: UserGroupTools
   * objectclass: top
   * objectclass: nsAdminObject
