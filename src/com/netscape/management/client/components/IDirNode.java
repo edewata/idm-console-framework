@@ -23,7 +23,7 @@ import netscape.ldap.LDAPConnection;
 import netscape.ldap.LDAPEntry;
 
 /**
- *  Netscape Directory Server 4.0 Directory Entry interface.
+ *  Directory Server Directory Entry interface.
  *
  * @author  rweltman
  * @version %I%, %G%

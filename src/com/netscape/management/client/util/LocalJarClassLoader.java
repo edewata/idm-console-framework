@@ -45,14 +45,6 @@ public class LocalJarClassLoader extends KingpinClassLoader {
 
     static final protected int JAR_FILE_INCLUDE_LIMIT = 100;
 
-    // Flag whether a jar is based on a console version prior to 5.0 (
-    // (4.0, 4.1 or 4.2). Denotes that a class needs swing package name
-    // conversion and compatibility adjustments
-    private boolean isPre50Jar; 
-    
-    // Compatibility jar to be used by all pre 5.0 jars
-    private static String console42Jar= "console42.jar";
-
     protected Vector jarNames = new Vector(); // A String Vector
 
     protected Vector jarFiles = new Vector(); // A ZipFile Vector
@@ -152,38 +144,13 @@ public class LocalJarClassLoader extends KingpinClassLoader {
         //
         PropertyResourceBundle manifest = getManifest(filename);
         if (manifest == null) {
-            // Include console42.jar for pre 5.0 jars
-            isPre50Jar = true;
-            includeConsole42Jar(language);
+            if (Debug.isEnabled()) {
+                Debug.println(3, debugTag + "No manifest file for " + filename);
+            }
             return;
         }
         
-        // Step 4. Set isPre50Jar flag
-        //
-        String mccVersion = manifest.getString("mcc-version");
-        
-        if (mccVersion == null) {
-            // 5.0+ manifests must have mcc-version directive
-            isPre50Jar = true;
-            if (Debug.isEnabled()) {
-                Debug.println(2, debugTag + "Bad manifest, no mcc-version directive");
-            }                
-
-        }
-        else {
-            // Only 4.x jars needs swing package name conversion
-            isPre50Jar = mccVersion.startsWith("4");
-        }
-        if (Debug.isEnabled()) {
-            Debug.println(5, debugTag +"isPre50Jar=" + isPre50Jar);
-        }
-
-        // Include console42.jar for pre 5.0 jars
-        if (isPre50Jar) {
-            includeConsole42Jar(language);
-        }
-
-        // Step 5. Include jars specified in the manifest
+        // Step 4. Include jars specified in the manifest
         //
         String[] list = getManifestJarList(manifest);
         for (int i = 0 ; i < list.length; i++) {
@@ -220,33 +187,6 @@ public class LocalJarClassLoader extends KingpinClassLoader {
         }        
     }
 
-    /**
-     * Backward compatibility jar console42.jar is automatically added to all
-     * server jars prior to console 5.0
-     */
-    private void includeConsole42Jar(String language) throws Exception {
-        String path = patchDir + "/" + console42Jar;
-        if (!(new File(path)).exists()) {
-            return;
-        }
-        if (Debug.isEnabled()) {
-            Debug.println(2, debugTag + "include jar " + console42Jar);
-        }
-        jarNames.addElement(console42Jar);
-        jarFiles.addElement(new ZipFile(path));
-
-        String langFile = addL10Nsuffix(console42Jar, "en");
-        path = patchDir + "/" + langFile;
-        if (!(new File(path)).exists()) {
-            return;
-        }
-        if (Debug.isEnabled()) {
-            Debug.println(2, debugTag + "include jar " + langFile);
-        }
-        jarNames.addElement(langFile);
-        jarFiles.addElement(new ZipFile(path));
-    }        
-        
 
     /**
       * Processes the manifest PropertyResourceBundle and produces an array
@@ -508,31 +448,7 @@ public class LocalJarClassLoader extends KingpinClassLoader {
                 BufferedInputStream zis =
                         new BufferedInputStream(f.getInputStream(e));
 
-                // Do swing package name conversion on the fly if necessary
-                if (isPre50Jar && path.endsWith(".class")) {
-                    try {
-                        if (Debug.isEnabled()) {
-                            Debug.println(6, debugTag + "converting " + path + " ...");
-                        }
-                        ByteArrayOutputStream bos = new ByteArrayOutputStream(512);
-                        SwingPackageNameConverter.convert(zis,bos);
-                        bos.close();
-                        if (Debug.isEnabled()) {
-                            Debug.println(6, debugTag + "---- Done");
-                        }
-                        return bos.toByteArray();
-                    }    
-                    catch (Exception ex) {
-                        Debug.println(0, debugTag + "Conversion Exception "+ ex);
-                        if (Debug.isEnabled()) {
-                            ex.printStackTrace(System.out);
-                        }                            
-                        throw ex;
-                    }
-
-                }
-                
-                // Read the content if no swing name conversion
+                // Read the content
                 int size = (int)(e.getSize());
                 int cnt = 0;
                 byte[] storage = new byte[size];

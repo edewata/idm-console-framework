@@ -66,4 +66,4 @@ fi
 #
 # Launch the Console
 #
-cd java; $JAVA_HOME/bin/java -ms8m -mx64m  -cp .:./base.jar:./mcc71_en.jar:./jss3.jar:./ldapjdk.jar:./mcc71.jar:./nmclf71_en.jar:./nmclf71.jar -Djava.library.path=../lib -Djava.util.prefs.systemRoot=. -Djava.util.prefs.userRoot=. com.netscape.management.client.console.Console $*
+cd java; $JAVA_HOME/bin/java -ms8m -mx64m  -cp .:./base.jar:./mcc10_en.jar:./jss3.jar:./ldapjdk.jar:./mcc10.jar:./nmclf10_en.jar:./nmclf10.jar -Djava.library.path=../lib -Djava.util.prefs.systemRoot=. -Djava.util.prefs.userRoot=. com.netscape.management.client.console.Console $*

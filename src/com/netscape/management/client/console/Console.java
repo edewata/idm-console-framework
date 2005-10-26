@@ -58,7 +58,7 @@ public class Console implements CommClient {
     // preference information
     //
     public static final String IDENTIFIER = "Console";
-    public static final String VERSION = "4.0";
+    public static final String VERSION = "1.0";
     public static final String PREFERENCES_LOGIN =
             IDENTIFIER + "." + VERSION + ".Login.preferences";
 
@@ -75,8 +75,6 @@ public class Console implements CommClient {
     public static final String OPTION_JAVALAF = "javalaf";
 
 	public static final int MAX_RECENT_URLS = 5;
-
-	protected static final double MIN_CONTEXT_HELP_VERSION = 4.5;
 
     //
     // global values
@@ -942,26 +940,10 @@ public class Console implements CommClient {
                     userPreferenceDN, true);
             _info.setUserPreferenceDN(userPreferenceDN);
         }
-		checkHelpSystem();
+        // Always enable context help.
+        UtilConsoleGlobals.setContextHelpEnabled( true );
     }
 
-	/**
-	 * Check if the Admin Server version supports context-sensitive
-	 * Help. That is the case if the version is greater than 4.2.
-	 */
-	protected void checkHelpSystem() {
-		boolean hasContextHelp = false;
-		if ( _adminVersion != null ) {
-			hasContextHelp = ( Double.parseDouble( _adminVersion ) >=
-							   MIN_CONTEXT_HELP_VERSION );
-			Debug.println( "Console.checkHelpSystem: contextHelp=" +
-						   hasContextHelp );
-		} else {
-			Debug.println( "Console.checkHelpSystem: cannot determine " +
-						   "Admin Version" );
-		}
-		UtilConsoleGlobals.setContextHelpEnabled( hasContextHelp );
-	}
 
     /**
       * build up the resource editor extension plugin.
