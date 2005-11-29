@@ -40,7 +40,6 @@ import com.netscape.management.client.util.AdmTask;
 import com.netscape.management.client.util.Help;
 import com.netscape.management.client.util.Browser;
 import com.netscape.management.nmclf.*;
-
 import com.netscape.management.client.security.csr.*;
 import com.netscape.management.client.preferences.*;
 import netscape.ldap.*;
@@ -62,7 +61,9 @@ public class CertRequestWizard  {
     IDataCollectionModel dataCollectionModel = new WizardDataCollectionModel();
 
     final String PLUGIN_ID          = "PLUGIN_ID";
-    final String PLUGIN_DIR         = "./caplugin";
+    final String PLUGIN_DIR         = Console.PREFERENCE_DIR + "caplugin" + File.separator;
+    final String DEFAULT_PLUGIN_CLASS = "com.netscape.management.client.security.csr.DefaultPlugin.class";
+    final String DEFAULT_PLUGIN_DESC  = "Manual Cert Request Plugin";
 
     PluginWizardPage pwdPage = null;
     PluginWizardPage endSequence = null;
@@ -379,6 +380,16 @@ public class CertRequestWizard  {
 	    //construct plugin list
 	    Vector caList = new Vector();
 	    File f = new File(PLUGIN_DIR);
+
+            // Load the default plugin
+            defaultPlugin = new PluginItem(DEFAULT_PLUGIN_CLASS, DEFAULT_PLUGIN_DESC,
+                                           "", null , "", null);
+
+            // Check if caplugin directory exists
+             if (!f.exists())
+                f.mkdir();
+
+            // Check for additional plugins
 	    File[] fList = f.listFiles(this);
 	    for (int i=0; i<fList.length; i++) {
 		// load jar file and extract all the information
@@ -417,10 +428,11 @@ public class CertRequestWizard  {
 			    }
 			}
 
-			Debug.println(jarFilename);
-			Debug.println(attr.getValue("Description"));
-			Debug.println(attr.getValue("UpdateURL"));
-			Debug.println(attr.getValue("UserURL"));
+			Debug.println("Plugin Jar: " + jarFilename);
+                        Debug.println("Class Name: " + className);
+			Debug.println("Description: " + attr.getValue("Description"));
+			Debug.println("Update URL: " + attr.getValue("UpdateURL"));
+			Debug.println("User URL: " + attr.getValue("UserURL"));
 
 			PluginItem tmp = new PluginItem(className,
 							attr.getValue("Description"),
@@ -428,11 +440,7 @@ public class CertRequestWizard  {
 							imageData, 
 							attr.getValue("UserURL"), 
 							jarFilename);
-			if (fList[i].getName().equals("default.jar")) {
-			    defaultPlugin = tmp;
-			} else {
-			    caList.addElement(tmp);
-			}
+			caList.addElement(tmp);
 		    }
 		} catch (Exception ee) {
 		    SecurityUtil.printException("CertRequestWizard::CAPlugin::CAPlugin()",ee);
@@ -510,9 +518,14 @@ public class CertRequestWizard  {
 		String className = selectedPlugin._className.substring(0, selectedPlugin._className.indexOf(".class"));
 
 		try {
-
-		    LocalJarClassLoader loader = new LocalJarClassLoader(selectedPlugin._jarFilename);
-		    Class myClass = loader.loadClass(className);
+                    Class myClass;
+                    // If this is the default plugin, just load the class directly
+                    if (defaultPluginUsed) {
+                        myClass = Class.forName(className);
+                    } else {
+		        LocalJarClassLoader loader = new LocalJarClassLoader(selectedPlugin._jarFilename);
+		        myClass = loader.loadClass(className);
+                    }
 
 		    ic = (ICAPlugin)(myClass.newInstance());
 

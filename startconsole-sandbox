@@ -1,3 +1,5 @@
+#!/bin/sh
+#
 # BEGIN COPYRIGHT BLOCK
 # Copyright (C) 2005 Red Hat, Inc.
 # All rights reserved.
@@ -16,25 +18,15 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 # END COPYRIGHT BLOCK
+
+JAVA=`which java`
+if [ -z "$JAVA" -o ! -x "$JAVA" ]
+then
+  echo "$0: The java program is not in your path, or is not executable.";
+  exit 1
+fi
+
 #
-# Defines component import locations for Solaris9
-
-# Mozilla LDAP JDK
-ldapjdk.location=http://directory.fedora.redhat.com/built/components/ldapjdk/v4.17
-ldapjdk.import=ldapjdk.jar
-
-# Mozilla JSS Library
-jss.lib.location=http://directory.fedora.redhat.com/built/components/jss/JSS_3_7_RTM/SunOS5.9_OPT.OBJ
-jss.lib.import=mdbinary.jar
-
-# Mozilla JSS Jar
-jss.jar.location=http://directory.fedora.redhat.com/built/components/jss/JSS_3_7_RTM
-jss.jar.import=xpclass.jar
-
-# Mozilla NSS Library
-nss.location=http://directory.fedora.redhat.com/built/components/nss/NSS_3_10_2_RTM/SunOS5.9_OPT.OBJ
-nss.import=mdbinary.jar
-
-# Mozilla NSPR Library
-nspr.location=http://directory.fedora.redhat.com/built/components/nspr/v4.6/SunOS5.9_OPT.OBJ
-nspr.import=mdbinary.jar
+# Launch the Console
+#
+java -ms8m -mx64m -cp ./java/jss3.jar:./java/ldapjdk.jar:./java/fedora-base-1.0.jar:./java/fedora-mcc-1.0.jar:./java/fedora-mcc-1.0_en.jar:./java/fedora-nmclf-1.0.jar:./java/fedora-nmclf-1.0_en.jar -Djava.library.path=./lib -Djava.util.prefs.systemRoot="$HOME/.fedora-console" -Djava.util.prefs.userRoot="$HOME/.fedora-console" com.netscape.management.client.console.Console $*
