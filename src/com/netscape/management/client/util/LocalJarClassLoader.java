@@ -25,8 +25,8 @@ import java.io.*;
 import java.net.URL;
 import java.net.MalformedURLException;
 import com.netscape.management.client.comm.*;
-
 import com.netscape.management.client.console.ConsoleInfo;
+import com.netscape.management.client.console.Console;
 
 /**
  * The LocalJarClassLoader is designed to load classes from jars
@@ -55,11 +55,13 @@ public class LocalJarClassLoader extends KingpinClassLoader {
 
     private static final String debugTag = "ClassLoader: ";
 
+    static String jarsDir = Console.PREFERENCE_DIR + "jars" + File.separator;
+
     /**
-     *  Patch table lists all files in the ./patch directory
+     *  Patch table lists all files in the PREFERENCE_DIR/patch directory
      */
     static String patchFilePrefix = "patch-";
-    static String patchDir = "./patch/";
+    static String patchDir = Console.PREFERENCE_DIR + "patch" + File.separator;
     static Hashtable patchTable;
 
     static {
@@ -408,22 +410,17 @@ public class LocalJarClassLoader extends KingpinClassLoader {
 
 
     /**
-      * A jar file is either in <server-root>/java/jars or in <server-root>/java
+      * Server jar file located in jarsDir
       */
     protected static String locateJarFile(String jarname) {
-        // Look for files first in jars/.
+        // Look for files in jarsDir.
+        String filename = jarsDir + jarname;
 
-        //String filename = "jars/" + jarname;
-        String filename = "jars" + File.separator + jarname;
         if (!((new File(filename)).exists())) {
-            // file not found in jars/, look in ./
-
-            filename = jarname;
-            if (!((new File(filename)).exists())) {
-                return null;
-            }
+            return null;
+        } else {
+            return filename;
         }
-        return filename;
     }
 
 
@@ -475,17 +472,14 @@ public class LocalJarClassLoader extends KingpinClassLoader {
 
     /**
       * Returns a list of the jarfiles stored in the local jar directory.
-      * This directory is currently ./jars, which assumes that our ultimate
-      * application installation strategy will allow for a directory called
-      * jars in the cwd of the VM on startup.
       *
       * @return an array of the locally stored jar files.
       */
     public static String[] getLocalJarList() {
-        File f = new File("jars");
+        File f = new File(jarsDir);
 
         if (!f.exists() || !f.isDirectory()) {
-            Debug.println(0, debugTag + "getLocalJarList():Unable to read ./jars directory");
+            Debug.println(0, debugTag + "getLocalJarList():Unable to read " + jarsDir + " directory");
             return null;
         }
 
@@ -498,7 +492,7 @@ public class LocalJarClassLoader extends KingpinClassLoader {
     }
 
     /**
-      * Returns a list of the patch files stored in the ./patch directory.
+      * Returns a list of the patch files stored in the patch directory.
       * A patch file name format is patch-<jar-file> e.g. patch-ds41.jar
       *
       * @return a hashtable of patchFile
@@ -531,7 +525,7 @@ public class LocalJarClassLoader extends KingpinClassLoader {
 
     /**
       * Acquires the jar file from the remote http server and stores it in the local
-      * jar directory, which is currently assumed to be ./jars. It will look in
+      * jar directory, which is currently assumed to be PREFERENCE_DIR/jars. It will look in
       * the <baseURL>/java, followed by <baseURL>/java/jars and finally <baseURL>
       * directory, and it will also attempt to retrieve any L10N supplements, if found.
       *
@@ -557,7 +551,7 @@ public class LocalJarClassLoader extends KingpinClassLoader {
             for (int i=0; i < createdFiles.size(); i++) {
                 try {
                     String filename = (String)createdFiles.elementAt(i);
-                    File f = new File("jars/" + filename);
+                    File f = new File(jarsDir + filename);
                     boolean deleted = f.delete();
                     if (deleted) {
                         Debug.println(1, debugTag + " Cleanup: removed " + f);
@@ -750,13 +744,12 @@ public class LocalJarClassLoader extends KingpinClassLoader {
                 Thread.currentThread().sleep(20);
             }
 
-            String jarPath = "jars";
-            File f = new File(jarPath);
+            File f = new File(jarsDir);
             if (!f.exists())
                 f.mkdir();
 
             FileOutputStream fos =
-                    new FileOutputStream(jarPath + "/" + filename);
+                    new FileOutputStream(jarsDir + filename);
             AsyncByteArrayInputStream ais = (AsyncByteArrayInputStream) is;
             fos.write(ais.getBuf(), 0, ais.size());
             fos.close();
@@ -811,7 +804,7 @@ public class LocalJarClassLoader extends KingpinClassLoader {
         Vector jars = new Vector();
 
         try {
-            f = new ZipFile("jars/" + mainJar);
+            f = new ZipFile(jarsDir + mainJar);
             ZipEntry e = f.getEntry(MANIFEST_FILE_NAME);
             String jarname, compList = null;
 
@@ -981,7 +974,7 @@ class CompatibilityPersistance {
     }
 
     /**
-      * Parse all jars in java/jars for 'backward-compatible'
+      * Parse all jars in jarsDir for 'backward-compatible'
       * directive in the manifest file
       */
     public static void parseAllJars(Hashtable table, String[] jars) {
@@ -989,7 +982,7 @@ class CompatibilityPersistance {
             return;
         for (int i = 0; i < jars.length; i++) {
             try {
-                ZipFile f = new ZipFile("jars/" + jars[i]);
+                ZipFile f = new ZipFile(LocalJarClassLoader.jarsDir + jars[i]);
                 ZipEntry e = f.getEntry(
                         LocalJarClassLoader.MANIFEST_FILE_NAME);
                 if (e == null) {
@@ -1023,7 +1016,7 @@ class CompatibilityPersistance {
                 }
             } catch (Exception ex) {
                 Debug.println(0,
-                        debugTag + " error process manifest for jars/" +
+                        debugTag + " error process manifest for " + LocalJarClassLoader.jarsDir +
                         jars[i] + " " + ex);
                 continue;
             }

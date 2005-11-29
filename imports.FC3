@@ -24,17 +24,17 @@ ldapjdk.location=http://directory.fedora.redhat.com/built/components/ldapjdk/v4.
 ldapjdk.import=ldapjdk.jar
 
 # Mozilla JSS Library
-jss.lib.location=http://directory.fedora.redhat.com/built/components/jss/JSS_3_5_1_RTM/RHEL4_x86_gcc3_OPT.OBJ
+jss.lib.location=http://directory.fedora.redhat.com/built/components/jss/JSS_3_7_RTM/RHEL4_x86_gcc3_OPT.OBJ
 jss.lib.import=mdbinary.jar
 
 # Mozilla JSS Jar
-jss.jar.location=http://directory.fedora.redhat.com/built/components/jss/JSS_3_5_1_RTM
+jss.jar.location=http://directory.fedora.redhat.com/built/components/jss/JSS_3_7_RTM
 jss.jar.import=xpclass.jar
 
 # Mozilla NSS Library
-nss.location=http://directory.fedora.redhat.com/built/components/nss/NSS_3_9_3_RTM/RHEL4_x86_gcc3_OPT.OBJ
+nss.location=http://directory.fedora.redhat.com/built/components/nss/NSS_3_10_2_RTM/RHEL4_x86_gcc3_OPT.OBJ
 nss.import=mdbinary.jar
 
 # Mozilla NSPR Library
-nspr.location=http://directory.fedora.redhat.com/built/components/nspr/v4.4.1/RHEL4_x86_gcc3_OPT.OBJ
+nspr.location=http://directory.fedora.redhat.com/built/components/nspr/v4.6/RHEL4_x86_gcc3_OPT.OBJ
 nspr.import=mdbinary.jar

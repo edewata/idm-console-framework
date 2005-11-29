@@ -32,7 +32,6 @@ import com.netscape.management.client.util.*;
  * @author  ahakim@netscape.com
  */
 public class FilePreferenceManager extends PreferenceManager {
-    private static String PREFERENCES_FOLDER = ".mcc";
     private static String FILE_SEPARATOR = ".";
     private static String FILE_SUFFIX = ".preferences";
     private Hashtable _prefTable = new Hashtable();
@@ -46,21 +45,16 @@ public class FilePreferenceManager extends PreferenceManager {
     public static String getHomePath() {
         String homePath = null;
         Properties p = System.getProperties();
-        homePath = (String) p.get("user.home");
-        if (homePath == null)
-            homePath = ".";
 
-        String prefPath = homePath + "/"+PREFERENCES_FOLDER;
-
-        File f = new File(prefPath);
+        File f = new File(Console.PREFERENCE_DIR);
         if (!f.exists())
             f.mkdir();
 
         if (!f.exists()) {
-            Debug.println("error: cannot create/access" + prefPath);
-            return homePath;
+            Debug.println("error: cannot create/access" + Console.PREFERENCE_DIR);
+            return ".";
         }
-        return prefPath;
+        return Console.PREFERENCE_DIR;
     }
 
 

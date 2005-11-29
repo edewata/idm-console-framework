@@ -154,7 +154,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
         else 
             {
                 // Try to present server object in the topology without creating the
-                // object instance. Look for the cached server icon in jars/<jarName>.icon file.
+                // object instance. Look for the cached server icon in <jarName>.icon file.
                 String jarName = getJARClassName(ldc, serverDN);
                 /* Serializing the icon to cache it no longer seems to be
                  * working correctly.  We will instantiate the server now
@@ -165,7 +165,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
                     {
                         jarBaseName = jarName.substring(0, jarName.indexOf('.'));
                     }
-                cacheIconPath = "jars/" + jarBaseName + ".icon";
+                cacheIconPath = LocalJarClassLoader.jarsDir + jarBaseName + ".icon";
                 ImageIcon icon = (ImageIcon)getIconFromCache(cacheIconPath);
                 if (icon != null) 
                     {

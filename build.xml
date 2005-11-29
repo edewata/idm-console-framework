@@ -19,58 +19,43 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 END COPYRIGHT BLOCK
 -->
 
-<project name="console" default="dist" basedir=".">
+<project name="console" default="build_jars" basedir=".">
   <!-- Load properties -->
   <property file="build.properties"/>
 
   <!-- Paths -->
-  <property name="built.dir"       value="${console.root}/../built"/>
-  <property name="package.dir"     value="${built.dir}/package"/>
-  <property name="lib.dir"         value="${package.dir}/lib"/>
-  <property name="dist.dir"        value="${package.dir}/java"/>
-  <property name="caplugin.dir"    value="${dist.dir}/caplugin"/>
-  <property name="jars.dir"        value="${dist.dir}/jars"/>
-  <property name="built.classdir"  value="${built.dir}/classes"/>
-  <property name="javadoc.dir"     value="${built.dir}/doc"/>
-  <property name="imports.dir"     value="${console.root}/../imports"/>
-  <property name="java.src.dir"    value="src"/>
+  <property name="built.dir"        value="${console.root}/../built"/>
+  <property name="built.classdir"   value="${built.dir}/classes"/>
+  <property name="release.dir"      value="${built.dir}/release"/>
+  <property name="built.jardir"     value="${release.dir}/jars"/>
+  <property name="package.dir"      value="${release.dir}/package"/>
+  <property name="dist.dir"         value="${release.dir}/dist"/>
+  <property name="lib.dir"          value="${package.dir}/lib"/>
+  <property name="java.dir"         value="${package.dir}/java"/>
+  <property name="javadoc.dir"      value="${built.dir}/doc"/>
+  <property name="imports.dir"      value="${console.root}/../imports"/>
+  <property name="java.src.dir"     value="src"/>
 
   <!-- Prepare -->
-  <target name="prepare_build">
+  <target name="prepare_build" depends="prepare_imports">
     <!-- Create directories -->
     <mkdir dir="${built.classdir}"/>
-    <mkdir dir="${imports.dir}"/>
 
-    <!-- Load imports file -->
-    <input
-      message="An imports file must be specified.  Enter the imports file that you want to use:"
-      addproperty="imports.file"
-      defaultvalue="imports"
-    />
-    <fail message="Imports file does not exist. (${imports.file})">
-      <condition>
-        <not>
-          <available file="${imports.file}"/>
-        </not>
-      </condition>
-    </fail>
-    <property file="${imports.file}"/>
-
-    <!-- Check if components exist -->
-    <available file="${imports.dir}/ldapjdk/${ldapjdk.import}" property="ldapjdk.import.exists"/>
-    <available file="${imports.dir}/jss/${jss.jar.import}" property="jss.jar.import.exists"/>
-    <available file="${imports.dir}/jss/${jss.lib.import}" property="jss.lib.import.exists"/>
-    <available file="${imports.dir}/nss/${nss.import}" property="nss.import.exists"/>
-    <available file="${imports.dir}/nspr/${nspr.import}" property="nspr.import.exists"/>
+    <!-- Override these properties to use components from other system locations -->
+    <property name="ldapjdk.local.location" value="/usr/share/java"/>
+    <property name="jss.local.location"     value="/usr/share/java"/>
+    <property name="jsslib.local.location"  value="/usr/lib"/>
+    <property name="nss.local.location"     value="/usr/lib"/>
+    <property name="nspr.local.location"    value="/usr/lib"/>
 
     <!-- Construct classpath -->
     <path id="console.classpath">
-      <pathelement location="${imports.dir}/ldapjdk/${ldapjdk.import}"/>
-      <pathelement location="${imports.dir}/jss/${jss.jar.import}"/>
+      <pathelement location="${ldapjdk.local.location}/ldapjdk.jar"/>
+      <pathelement location="${jss.local.location}/jss3.jar"/>
     </path>
 
     <!-- Generate version property file -->
-   <exec executable="${console.root}/buildnum.pl" vmlauncher="true">
+    <exec executable="${console.root}/buildnum.pl" vmlauncher="true">
       <arg line="-p ${built.dir}"/>
     </exec>
 
@@ -81,11 +66,44 @@ END COPYRIGHT BLOCK
     </exec>
   </target>
 
-  <target name="prepare_dist">
+  <target name="prepare_imports" if="imports.file">
+    <mkdir dir="${imports.dir}"/>
+
+    <!-- Load imports file -->
+    <fail message="Imports file does not exist. (${imports.file})">
+      <condition>
+        <not>
+          <available file="${imports.file}"/>
+        </not>
+      </condition>
+    </fail>
+    <property file="${imports.file}"/>
+
+    <!-- Set local component locations -->
+    <property name="ldapjdk.local.location" value="${imports.dir}/ldapjdk"/>
+    <property name="jss.local.location"     value="${imports.dir}/jss"/>
+    <property name="jsslib.local.location"  value="${imports.dir}/jss/lib"/>
+    <property name="nss.local.location"     value="${imports.dir}/nss/lib"/>
+    <property name="nspr.local.location"    value="${imports.dir}/nspr/lib"/>
+
+    <!-- Check if components exist -->
+    <available file="${imports.dir}/ldapjdk/${ldapjdk.import}" property="ldapjdk.import.exists"/>
+    <available file="${imports.dir}/jss/${jss.jar.import}"     property="jss.jar.import.exists"/>
+    <available file="${imports.dir}/jss/${jss.lib.import}"     property="jss.lib.import.exists"/>
+    <available file="${imports.dir}/nss/${nss.import}"         property="nss.import.exists"/>
+    <available file="${imports.dir}/nspr/${nspr.import}"       property="nspr.import.exists"/>
+  </target>
+
+  <target name="prepare_jars">
+    <!-- Create directories -->
+    <mkdir dir="${package.dir}"/>
+    <mkdir dir="${built.jardir}"/>
+  </target>
+
+  <target name="prepare_package">
     <!-- Create directories -->
     <mkdir dir="${lib.dir}"/>
-    <mkdir dir="${caplugin.dir}"/>
-    <mkdir dir="${jars.dir}"/>
+    <mkdir dir="${dist.dir}"/>
   </target>
 
   <target name="prepare_doc">
@@ -94,33 +112,34 @@ END COPYRIGHT BLOCK
   </target>
 
   <!-- Imports -->
-  <target name="import_ldapjdk" depends="prepare_build" unless="ldapjdk.import.exists">
+  <target name="import_ldapjdk" depends="prepare_imports" if="imports.file" unless="ldapjdk.import.exists">
     <mkdir dir="${imports.dir}/ldapjdk"/>
     <get src="${ldapjdk.location}/${ldapjdk.import}"
          dest="${imports.dir}/ldapjdk/${ldapjdk.import}"/>
   </target>
 
-  <target name="import_jss_jar" depends="prepare_build" unless="jss.jar.import.exists">
+  <target name="import_jss_jar" depends="prepare_imports" if="imports.file" unless="jss.jar.import.exists">
     <mkdir dir="${imports.dir}/jss"/>
     <get src="${jss.jar.location}/${jss.jar.import}"
          dest="${imports.dir}/jss/${jss.jar.import}"/>
+    <copy file="${imports.dir}/jss/${jss.jar.import}" tofile="${imports.dir}/jss/jss3.jar"/>
   </target>
 
-  <target name="import_jss_lib" depends="prepare_build" unless="jss.lib.import.exists">
-     <mkdir dir="${imports.dir}/jss"/>
-     <get src="${jss.lib.location}/${jss.lib.import}"
-          dest="${imports.dir}/jss/${jss.lib.import}"/>
-     <unjar src="${imports.dir}/jss/${jss.lib.import}" dest="${imports.dir}/jss"/>
+  <target name="import_jss_lib" depends="prepare_imports" if="imports.file" unless="jss.lib.import.exists">
+    <mkdir dir="${imports.dir}/jss"/>
+    <get src="${jss.lib.location}/${jss.lib.import}"
+         dest="${imports.dir}/jss/${jss.lib.import}"/>
+    <unjar src="${imports.dir}/jss/${jss.lib.import}" dest="${imports.dir}/jss"/>
   </target>
 
-  <target name="import_nss_lib" depends="prepare_build" unless="nss.import.exists">
+  <target name="import_nss_lib" depends="prepare_imports" if="imports.file" unless="nss.import.exists">
     <mkdir dir="${imports.dir}/nss"/>
     <get src="${nss.location}/${nss.import}"
          dest="${imports.dir}/nss/${nss.import}"/>
     <unjar src="${imports.dir}/nss/${nss.import}" dest="${imports.dir}/nss"/>
   </target>
 
-  <target name="import_nspr_lib" depends="prepare_build" unless="nspr.import.exists">
+  <target name="import_nspr_lib" depends="prepare_imports" if="imports.file" unless="nspr.import.exists">
     <mkdir dir="${imports.dir}/nspr"/>
     <get src="${nspr.location}/${nspr.import}"
          dest="${imports.dir}/nspr/${nspr.import}"/>
@@ -128,7 +147,25 @@ END COPYRIGHT BLOCK
   </target>
 
   <!-- Build -->
-  <target name="build" depends="import_ldapjdk,import_jss_jar">
+  <target name="build" depends="prepare_build, import_ldapjdk, import_jss_jar">
+    <!-- Verify that the required jars exist -->
+    <fail message="LDAP JDK (ldapjdk.jar) does not exist in ${ldapjdk.local.location}">
+      Please set the correct location with -Dldapjdk.local.location=[path]
+      <condition>
+        <not>
+          <available file="${ldapjdk.local.location}/ldapjdk.jar"/>
+        </not>
+      </condition>
+    </fail>
+    <fail message="JSS (jss3.jar) does not exist in ${jss.local.location}">
+      Please set the correct location with -Djss.local.location=[path]
+      <condition>
+        <not>
+          <available file="${jss.local.location}/jss3.jar"/>
+        </not>
+      </condition>
+    </fail>
+
     <!-- compile regular java code -->
     <javac   srcdir="${java.src.dir}"
              destdir="${built.classdir}"
@@ -142,10 +179,10 @@ END COPYRIGHT BLOCK
     </javac>
   </target>
 
-  <!-- Dist -->
-  <target name="dist" depends="build,prepare_dist,import_jss_lib,import_nss_lib,import_nspr_lib">
+  <!-- Package -->
+  <target name="build_jars" depends="build,prepare_jars">
     <!-- Create jar files -->
-    <jar jarfile="${dist.dir}/${mcc.name}.jar" >
+    <jar jarfile="${built.jardir}/${mcc.name}.jar" >
       <fileset dir="${built.classdir}">
          <include name="com/netscape/management/client/**/*.class" />
          <include name="sun/net/www/protocol/https/**/*.class" />
@@ -168,26 +205,26 @@ END COPYRIGHT BLOCK
          <exclude name="com/netscape/management/client/console/VersionInfo.class"/>
       </fileset>
     </jar>
-    <jar jarfile="${dist.dir}/${mcc.name}_${lang}.jar" >
+    <jar jarfile="${built.jardir}/${mcc.name}_${lang}.jar" >
       <fileset dir="${java.src.dir}">
          <include name="com/netscape/management/client/**/*.properties" />
          <include name="com/netscape/management/client/**/*.gif" />
          <include name="com/netscape/management/client/**/*.jpg" />
       </fileset>
     </jar>
-    <jar jarfile="${dist.dir}/${nmclf.name}.jar" >
+    <jar jarfile="${built.jardir}/${nmclf.name}.jar" >
       <fileset dir="${built.classdir}">
          <include name="com/netscape/management/nmclf/**/*.class" />
       </fileset>
     </jar>
-    <jar jarfile="${dist.dir}/${nmclf.name}_${lang}.jar" >
+    <jar jarfile="${built.jardir}/${nmclf.name}_${lang}.jar" >
       <fileset dir="${java.src.dir}">
          <include name="com/netscape/management/nmclf/**/*.properties" />
          <include name="com/netscape/management/nmclf/**/*.gif" />
          <include name="com/netscape/management/nmclf/**/*.jpg" />
       </fileset>
     </jar>
-    <jar jarfile="${dist.dir}/base.jar" >
+    <jar jarfile="${built.jardir}/${base.name}.jar" >
       <fileset dir="${built.classdir}">
         <include name="com/netscape/management/client/topology/IServerObject.class"/>
         <include name="com/netscape/management/client/topology/IRemovableServerObject.class"/>
@@ -208,30 +245,25 @@ END COPYRIGHT BLOCK
         <include name="com/netscape/management/client/console/VersionInfo.class"/>
       </fileset>
     </jar>
-    <jar jarfile="${caplugin.dir}/default.jar" >
-      <manifest>
-        <section name="com.netscape.management.client.security.csr.DefaultPlugin.class">
-          <attribute name="UserURL" value="http://fedora.redhat.com"/>
-          <attribute name="UpdateURL" value="http://fedora.redhat.com"/>
-          <attribute name="Description" value="Fedora"/>
-          <attribute name="Icon" value="com/netscape/management/client/images/logo16.gif"/>
-        </section>
-      </manifest>
-      <fileset dir="${built.classdir}">
-        <include name="com/netscape/management/client/security/csr/DefaultPlugin.class"/>
-        <include name="com/netscape/management/client/security/csr/CertRequestInfoPage.class"/>
-        <include name="com/netscape/management/client/security/csr/CertRequestSubmissionPage.class"/>
-      </fileset>
-    </jar>
+  </target>
+
+  <!-- Package -->
+  <target name="package" depends="build_jars,prepare_package,import_jss_lib,import_nss_lib,import_nspr_lib">
+    <!-- Copy built jars to packaging area -->
+    <copy file="${built.jardir}/${mcc.name}.jar" todir="${java.dir}"/>
+    <copy file="${built.jardir}/${mcc.name}_${lang}.jar" todir="${java.dir}"/>
+    <copy file="${built.jardir}/${nmclf.name}.jar" todir="${java.dir}"/>
+    <copy file="${built.jardir}/${nmclf.name}_${lang}.jar" todir="${java.dir}"/>
+    <copy file="${built.jardir}/${base.name}.jar" todir="${java.dir}"/>
 
     <!-- Copy components into packaging area -->
-    <copy file="${imports.dir}/ldapjdk/${ldapjdk.import}" todir="${dist.dir}"/>
-    <copy file="${imports.dir}/jss/${jss.jar.import}" tofile="${dist.dir}/jss3.jar"/>
+    <copy file="${ldapjdk.local.location}/ldapjdk.jar" todir="${java.dir}"/>
+    <copy file="${jss.local.location}/jss3.jar" todir="${java.dir}"/>
     <copy todir="${lib.dir}">
-      <fileset dir="${imports.dir}/jss/lib">
+      <fileset dir="${jsslib.local.location}">
         <include name="libjss*"/>
       </fileset>
-      <fileset dir="${imports.dir}/nss/lib">
+      <fileset dir="${nss.local.location}">
         <include name="libnss*"/>
         <include name="libssl*"/>
         <include name="libsmime*"/>
@@ -239,7 +271,7 @@ END COPYRIGHT BLOCK
         <exclude name="libnssckbi*"/>
         <exclude name="lib*.a"/>
       </fileset>
-      <fileset dir="${imports.dir}/nspr/lib">
+      <fileset dir="${nspr.local.location}">
         <include name="libnspr*"/>
         <include name="libpl*"/>
         <exclude name="lib*.a"/>
@@ -247,19 +279,19 @@ END COPYRIGHT BLOCK
     </copy>
 
     <!-- Copy start script into packaging area -->
-    <copy file="startconsole" todir="${package.dir}"/>
+    <copy file="startconsole-sandbox" tofile="${package.dir}/startconsole"/>
     <chmod file="${package.dir}/startconsole" perm="755"/>
 
     <!-- Create a bundle of the Console -->
-    <tar destfile="${built.dir}/console${console.version}.tar.gz"
+    <tar destfile="${dist.dir}/fedora-console-${console.dotversion}.tar.gz"
          compression="gzip">
       <tarfileset dir="${package.dir}"
-                  prefix="console${console.version}"
+                  prefix="fedora-console-${console.dotversion}"
                   mode="755">
         <include name="startconsole"/>
       </tarfileset>
       <tarfileset dir="${package.dir}"
-                  prefix="console${console.version}">
+                  prefix="fedora-console${console.dotversion}">
         <include name="**"/>
         <exclude name="startconsole"/>
       </tarfileset>

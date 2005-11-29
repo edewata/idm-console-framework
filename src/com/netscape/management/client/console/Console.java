@@ -70,6 +70,9 @@ public class Console implements CommClient {
     public static final String PREFERENCE_X = "X";
     public static final String PREFERENCE_Y = "Y";
 
+    public static final String PREFERENCE_DIR = System.getProperty("user.home") + File.separator +
+                                                ".fedora-console" + File.separator;
+
     public static final String OPTION_NOWINPOS = "nowinpos";
     public static final String OPTION_NOLOGO = "nologo";
     public static final String OPTION_JAVALAF = "javalaf";

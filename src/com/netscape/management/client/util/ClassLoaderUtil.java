@@ -50,13 +50,13 @@ public class ClassLoaderUtil {
             return false;
 
         if (Debug.getTraceLevel() >= 7) {
-            Debug.println(7, debugTag + " Search <" + sJarName + "> in java/jars ");
+            Debug.println(7, debugTag + " Search <" + sJarName + "> in " + LocalJarClassLoader.jarsDir);
             String list = "";
             for (int n = 0 ; n < sJarList.length ; n++) {
 
                 list += "<"+sJarList[n] + ">";
             }
-            Debug.println(7, debugTag + " java/jars content: " + list);
+            Debug.println(7, debugTag + LocalJarClassLoader.jarsDir + " content: " + list);
         }
 
         for (int i = 0 ; i < sJarList.length ; i++)
