@@ -19,15 +19,10 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client;
 
-import java.util.*;
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.event.*;
 import javax.swing.tree.*;
-import javax.swing.border.*;
 import javax.swing.plaf.basic.*;
-import com.netscape.management.client.util.*;
 
 /**
  * A specialized tree cell renderer for use with the ResourcePage tree.
@@ -123,13 +118,15 @@ public class ResourceCellRenderer extends JLabel implements TreeCellRenderer {
     public void paint(Graphics g) {
         Color backgroundColor;
         Icon icon = getIcon();
-        int iconTextGap = getIconTextGap() - 2;
+        int iconTextGap = getIconTextGap();
+        String s = getText();
         int offset = 0;
-        int width = getWidth();
-        int height = getHeight();
-
-        if (iconTextGap < 0)
-            iconTextGap = 0;
+        int width = 0;
+        FontMetrics fm = getToolkit().getFontMetrics(getFont());
+        
+        if (s != null)
+            width = SwingUtilities.computeStringWidth(fm, s);
+        int height = fm.getHeight() + 2;
 
         if (icon != null)
             offset = icon.getIconWidth() + iconTextGap;
@@ -146,9 +143,9 @@ public class ResourceCellRenderer extends JLabel implements TreeCellRenderer {
         g.setColor(backgroundColor);
 
         if (icon != null && getText() != null) {
-            g.fillRect(offset + 1, 1, width - 2 - offset, height - 2);
+            g.fillRect(offset + 1, 1, width, height);
         } else {
-            g.fillRect(1, 1, width - 2 - offset, height - 2);
+            g.fillRect(1, 1, width, height);
         }
 
         super.paint(g);
@@ -157,10 +154,10 @@ public class ResourceCellRenderer extends JLabel implements TreeCellRenderer {
             if (_hasFocus) {
                 g.setColor(Color.black); // TODO: hard-coded value
                 BasicGraphicsUtils.drawDashedRect(g, offset, 0,
-                        width - 1 - offset, height);
+                                                  width, height);
             } else {
                 g.setColor(backgroundColor);
-                g.drawRect(offset, 0, width - 1 - offset, height - 1);
+                g.drawRect(offset, 0, width, height);
             }
         }
     }

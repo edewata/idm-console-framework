@@ -28,8 +28,6 @@ import java.net.URL;
 import java.net.MalformedURLException;
 
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.border.*;
 
 import com.netscape.management.nmclf.*;
 import com.netscape.management.client.*;
@@ -151,7 +149,7 @@ public class Console implements CommClient {
 
             if (!_useJavaLookAndFeel) {
                 SuiLookAndFeel nmclf = new SuiLookAndFeel();
-                UIManager.setLookAndFeel(nmclf);
+                UIManager.setLookAndFeel((LookAndFeel)nmclf);
 
                 // With JDK1.4 on Unix, the first instance of JFileChooser
                 // has an incorrect layout for some of the buttons. Create

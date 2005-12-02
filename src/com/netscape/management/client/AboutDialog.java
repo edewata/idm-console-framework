@@ -25,7 +25,6 @@ import javax.swing.border.*;
 import java.awt.*;
 
 import com.netscape.management.client.util.*;
-import com.netscape.management.nmclf.SuiConstants;
 
 /**
  * AboutDialog is a class to display a standard "about box",
