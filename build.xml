@@ -35,6 +35,7 @@ END COPYRIGHT BLOCK
   <property name="javadoc.dir"      value="${built.dir}/doc"/>
   <property name="imports.dir"      value="${console.root}/../imports"/>
   <property name="java.src.dir"     value="src"/>
+  <property environment="env"/>
 
   <!-- Prepare -->
   <target name="prepare_build" depends="prepare_imports">
@@ -174,6 +175,7 @@ END COPYRIGHT BLOCK
     	     deprecation="${compile.deprecation}"
              optimize="${compile.optimize}"
              verbose="no"
+	     fork="true"
              excludes="**/CVS/**">
              <classpath refid="console.classpath" />
     </javac>

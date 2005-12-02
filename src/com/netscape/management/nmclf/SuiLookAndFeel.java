@@ -24,15 +24,9 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.plaf.basic.*;
-import com.sun.java.swing.plaf.windows.*;
 import javax.swing.plaf.*;
-import javax.swing.text.JTextComponent;
-import javax.swing.text.DefaultEditorKit;
-import java.awt.event.KeyEvent;
-import java.awt.event.InputEvent;
-import java.util.*;
+import javax.swing.plaf.metal.*;
 
-import java.net.URL;
 import java.io.Serializable;
 
 import com.netscape.management.client.util.*;
@@ -49,7 +43,7 @@ import com.netscape.management.client.util.*;
  * @author Ben fry
  * @author Andy Hakim
  */
-public class SuiLookAndFeel extends WindowsLookAndFeel implements Serializable, SuiConstants 
+public class SuiLookAndFeel extends MetalLookAndFeel implements Serializable, SuiConstants 
 {
     public static final boolean _isWindows =
             System.getProperty("os.name").startsWith("Windows");

@@ -240,7 +240,7 @@ SuiConstants {
         }
 
         c.setBackground(UIManager.getColor("control"));
-        c.setForeground(UIManager.getColor("text"));
+        c.setForeground(UIManager.getColor("textText"));
     }
 
     protected void finalize() throws Throwable {

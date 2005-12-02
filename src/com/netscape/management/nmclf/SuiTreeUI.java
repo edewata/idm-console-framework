@@ -20,16 +20,11 @@
 package com.netscape.management.nmclf;
 
 import java.awt.*;
-import java.awt.event.*;
-
-import java.io.*;
-import java.util.*;
 
 import javax.swing.*;
 import javax.swing.plaf.*;
 import javax.swing.tree.*;
 import javax.swing.plaf.basic.*;
-import com.sun.java.swing.plaf.windows.*;
 
 /**
  * A UI for JTree.  The original intent was to use curved lines
