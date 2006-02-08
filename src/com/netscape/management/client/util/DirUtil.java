@@ -141,7 +141,7 @@ public class DirUtil {
 			try {
 				Class c = Class.forName( SSL_CIPHERS );
 				Method m = c.getMethod( "getCipherSuite", new Class[0] );
-				_cipherSuite = m.invoke( null, (Object)null );
+				_cipherSuite = m.invoke( null, (Object[])null );
 			} catch (Exception e) {
 				Debug.println("DirUtil.getCipherSuite: Cannot load class, " +
 					e );
