@@ -87,10 +87,10 @@ public class ViewInfo {
             String name) {
         LDAPAttribute attr = ldapEntry.getAttribute(name);
         if (attr != null) {
-            Enumeration enum = attr.getStringValues();
-            if (enum != null)
+            Enumeration attr_enum = attr.getStringValues();
+            if (attr_enum != null)
                 try {
-                    return (String) enum.nextElement();
+                    return (String) attr_enum.nextElement();
                 } catch (Exception e)// if value stored was null, enum fails
                 {
                 }
@@ -110,9 +110,9 @@ public class ViewInfo {
             String name, String value) {
         LDAPAttribute attr = ldapEntry.getAttribute(name);
         if (attr != null) {
-            Enumeration enum = attr.getStringValues();
-            while (enum.hasMoreElements()) {
-                String v = (String)enum.nextElement();
+            Enumeration attr_enum = attr.getStringValues();
+            while (attr_enum.hasMoreElements()) {
+                String v = (String)attr_enum.nextElement();
                 if (v.equalsIgnoreCase(value)) {
                     return true;
                 }

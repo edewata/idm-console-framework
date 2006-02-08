@@ -134,10 +134,10 @@ public class CustomView implements ICustomView {
                                                 String name) {
         LDAPAttribute attr = ldapEntry.getAttribute(name);
         if (attr != null) {
-            Enumeration enum = attr.getStringValues();
-            if (enum != null)
+            Enumeration attr_enum = attr.getStringValues();
+            if (attr_enum != null)
                 try {
-                    return (String) enum.nextElement();
+                    return (String) attr_enum.nextElement();
                 } catch (Exception e)// if value stored was null, enum fails
                     {
                         Debug.println(0, "CustomView: no configuration data");
@@ -159,9 +159,9 @@ public class CustomView implements ICustomView {
             return;
         }
 
-        Enumeration enum = attr.getStringValues();
-        while (enum != null && enum.hasMoreElements()) {
-            String flag = ((String)enum.nextElement()).trim();
+        Enumeration attr_enum = attr.getStringValues();
+        while (attr_enum != null && attr_enum.hasMoreElements()) {
+            String flag = ((String)attr_enum.nextElement()).trim();
             if (flag.equalsIgnoreCase("showTopContainer")) {                 
                 _fShowTopContainer = true;
             }

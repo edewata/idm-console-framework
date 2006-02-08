@@ -282,9 +282,9 @@ class CertInstallCertPage extends WizardPage implements SuiConstants, ActionList
                                                    );
 
                         Debug.println("Restore session data");
-                        Enumeration enum = pref.getNames();
-                        while (enum.hasMoreElements()) {
-                            String name = enum.nextElement().toString();
+                        Enumeration names_enum = pref.getNames();
+                        while (names_enum.hasMoreElements()) {
+                            String name = names_enum.nextElement().toString();
                             ic.setProperty(name, pref.getString(name));
                         }
 
