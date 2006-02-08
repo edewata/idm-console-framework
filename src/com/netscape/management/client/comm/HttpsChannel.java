@@ -326,9 +326,9 @@ public class HttpsChannel extends HttpChannel implements
 
         public void setCertList(Vector nicknames) {
             certList.removeAllItems();
-            Enumeration enum = nicknames.elements();
-            while (enum.hasMoreElements()) {
-                certList.addItem(enum.nextElement());
+            Enumeration nicks_enum = nicknames.elements();
+            while (nicks_enum.hasMoreElements()) {
+                certList.addItem(nicks_enum.nextElement());
             }
             if (certList.getItemCount() > 0) {
                 certList.setSelectedIndex(0);

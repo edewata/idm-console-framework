@@ -308,10 +308,10 @@ public class EncryptionPanel extends JPanel {
 			cert.setActionCommand("EVENT_HANDLE_DISABLED");
 			cert.removeAllItems();
 			Hashtable selectedDev = (Hashtable)(_secDevice.get((String)(device.getSelectedItem())));
-			Enumeration enum = selectedDev.keys();
+			Enumeration device_enum = selectedDev.keys();
 			DefaultComboBoxModel comboModel = (DefaultComboBoxModel) cert.getModel();
-			while (enum.hasMoreElements()) {
-				String key = (String)(enum.nextElement());
+			while (device_enum.hasMoreElements()) {
+				String key = (String)(device_enum.nextElement());
 				if (key.startsWith("CERT")) {
 					String certName = (String)selectedDev.get(key);
 					// Multiple certs with the same name can exit (bug 558903)

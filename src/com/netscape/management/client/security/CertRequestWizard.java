@@ -214,9 +214,9 @@ public class CertRequestWizard  {
 									   "cn=CSRSession,"+consoleInfo.getCurrentDN()
 									   );
 
-				Enumeration enum = ic.getPropertyNames();
-				while (enum.hasMoreElements()) {
-				    String attr = enum.nextElement().toString();
+				Enumeration names_enum = ic.getPropertyNames();
+				while (names_enum.hasMoreElements()) {
+				    String attr = names_enum.nextElement().toString();
 				    pref.set(attr, ic.getProperty(attr));
 				}
 

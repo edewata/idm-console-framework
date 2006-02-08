@@ -113,9 +113,9 @@ public class ClientAuthPanel extends JPanel implements ActionListener{
      * @param enable true to enable all buttons, false to disable and gray out all buttons
      */
     public void setEnabled(boolean enable) {
-	Enumeration enum = buttonGroup.getElements();
-	while (enum.hasMoreElements()) {
-	    ((JRadioButton)(enum.nextElement())).setEnabled(enable);
+	Enumeration button_enum = buttonGroup.getElements();
+	while (button_enum.hasMoreElements()) {
+	    ((JRadioButton)(button_enum.nextElement())).setEnabled(enable);
 	}
     }
 
