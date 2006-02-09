@@ -324,6 +324,7 @@ SuiConstants {
             center();
         }
         super.show();
+        this.toFront();
     }
 
     /**
