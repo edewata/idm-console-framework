@@ -565,6 +565,7 @@ public class Console implements CommClient {
                 dialog.setInitialLocation(x, y);
                 _splashScreen.setCursor(
                         Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                _splashScreen.toBack();
                 dialog.showModal();
                 if (dialog.isCancel())
                     System.exit(0);
