@@ -293,7 +293,7 @@ END COPYRIGHT BLOCK
         <include name="startconsole"/>
       </tarfileset>
       <tarfileset dir="${package.dir}"
-                  prefix="fedora-console${console.dotversion}">
+                  prefix="fedora-console-${console.dotversion}">
         <include name="**"/>
         <exclude name="startconsole"/>
       </tarfileset>
