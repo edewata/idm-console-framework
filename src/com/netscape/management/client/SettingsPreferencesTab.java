@@ -147,19 +147,19 @@ class SettingsPreferencesTab extends AbstractPreferencesTab {
         Console.setLocalPreferencesFlag(
                 !storeDirectoryRadio.isSelected());
         PreferenceManager pm = PreferenceManager.getPreferenceManager(
-                Framework.IDENTIFIER, Framework.VERSION);
+                Framework.IDENTIFIER, Framework.MAJOR_VERSION);
         Preferences p = pm.getPreferences(Framework.PREFERENCES_GENERAL);
    
         if (storeLocalState != storeDiskRadio.isSelected()) {
             if (storeDiskRadio.isSelected()) {
                 copyPreferences(pm,
                         new FilePreferenceManager(
-                        Framework.IDENTIFIER, Framework.VERSION));
+                        Framework.IDENTIFIER, Framework.MAJOR_VERSION));
             } else {
                 ConsoleInfo ci = Console.getConsoleInfo();
                 PreferenceManager toMgr = new LDAPPreferenceManager(
                         ci.getLDAPConnection(), ci.getUserPreferenceDN(),
-                        Framework.IDENTIFIER, Framework.VERSION);
+                        Framework.IDENTIFIER, Framework.MAJOR_VERSION);
                 copyPreferences(pm, toMgr);
             }
         }

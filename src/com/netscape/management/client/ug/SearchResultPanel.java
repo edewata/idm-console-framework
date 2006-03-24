@@ -64,7 +64,7 @@ public class SearchResultPanel extends JPanel {
         Vector header = new Vector();
 
         PreferenceManager pm = PreferenceManager.getPreferenceManager(
-                Framework.IDENTIFIER, Framework.VERSION);
+                Framework.IDENTIFIER, Framework.MAJOR_VERSION);
         Preferences p = pm.getPreferences(PREFERENCES_RESULT_TABLE);
 
         int count = p.getInt(PREFERENCE_COLUMN_COUNT, -1);

@@ -80,13 +80,13 @@ public class ViewSelectorComponent extends Box implements SwingConstants, SuiCon
 
         pm = new LDAPPreferenceManager(ci.getLDAPConnection(),
                 ci.getUserPreferenceDN(), Framework.IDENTIFIER,
-                Framework.VERSION);
+                Framework.MAJOR_VERSION);
         userViewPreferences = (LDAPPreferences) pm.getPreferences("CustomViews");  // private views
         privateViewDN = userViewPreferences.getDN();
 
         pm = new LDAPPreferenceManager(ci.getLDAPConnection(),
                 "ou=Global Preferences," + LDAPUtil.getInstalledSoftwareDN(), "admin",
-                Framework.VERSION);
+                Framework.MAJOR_VERSION);
         publicViewPreferences = (LDAPPreferences) pm.getPreferences("PublicViews");
 
         publicViewDN = publicViewPreferences.getDN();

@@ -52,7 +52,7 @@ public class LDAPUtil {
     }
 
     public static String getAdminGlobalParameterEntry() {
-        return "ou=" + Console.VERSION + ", ou=admin, ou=Global Preferences,"+
+        return "ou=" + Console.MAJOR_VERSION + ", ou=admin, ou=Global Preferences,"+
                 _isieDN;
     }
 
@@ -75,7 +75,7 @@ public class LDAPUtil {
       * @param product RDN for a server (e.g. "ou=admin" for the admin server)
       */
     public static String getGlobalParameterEntry(String product) {
-        return "ou=" + Console.VERSION + "," + product + ", ou=Global Preferences,"+
+        return "ou=" + Console.MAJOR_VERSION + "," + product + ", ou=Global Preferences,"+
                 _isieDN;
     }
 

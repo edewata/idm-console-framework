@@ -47,6 +47,7 @@ import com.netscape.management.nmclf.*;
 public class Framework extends JFrame implements IFramework, SuiConstants {
     public static final String IDENTIFIER = Console.IDENTIFIER;
     public static final String VERSION = Console.VERSION;
+    public static final String MAJOR_VERSION = Console.MAJOR_VERSION;
 
     public static final String PREFERENCES_GENERAL = "General";
     public static final String PREFERENCES_FONTS = "Fonts";
@@ -653,7 +654,7 @@ public class Framework extends JFrame implements IFramework, SuiConstants {
         if (_preferenceManager == null)
             _preferenceManager =
                     PreferenceManager.getPreferenceManager(IDENTIFIER,
-                    VERSION);
+                    MAJOR_VERSION);
 
         Preferences p =
                 _preferenceManager.getPreferences(PREFERENCES_GENERAL);

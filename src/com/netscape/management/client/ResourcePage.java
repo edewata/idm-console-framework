@@ -223,7 +223,7 @@ IResourceModelListener, Cloneable, SuiConstants {
      */
     public void initialize(IFramework framework) {
         PreferenceManager pm = PreferenceManager.getPreferenceManager(
-                Framework.IDENTIFIER, Framework.VERSION);
+                Framework.IDENTIFIER, Framework.MAJOR_VERSION);
         Preferences p = pm.getPreferences(PREFERENCES_RESOURCES);
         setMainPanel(p.getBoolean(PREFERENCE_SHOW_TREE, true));
 
@@ -761,7 +761,7 @@ IResourceModelListener, Cloneable, SuiConstants {
             ResourcePage.this.add(_customPanel);
         }
         PreferenceManager pm = PreferenceManager.getPreferenceManager(
-                Framework.IDENTIFIER, Framework.VERSION);
+                Framework.IDENTIFIER, Framework.MAJOR_VERSION);
         Preferences p = pm.getPreferences(PREFERENCES_RESOURCES);
         p.set(PREFERENCE_SHOW_TREE, _isTreeVisible);
     }
