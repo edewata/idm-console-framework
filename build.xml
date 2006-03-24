@@ -172,10 +172,10 @@ END COPYRIGHT BLOCK
              destdir="${built.classdir}"
              debug="${compile.debug}"
              debuglevel="lines,vars,source"
-    	     deprecation="${compile.deprecation}"
+             deprecation="${compile.deprecation}"
              optimize="${compile.optimize}"
              verbose="no"
-	     fork="true"
+             fork="true"
              excludes="**/CVS/**">
              <classpath refid="console.classpath" />
     </javac>
@@ -257,6 +257,22 @@ END COPYRIGHT BLOCK
     <copy file="${built.jardir}/${nmclf.name}.jar" todir="${java.dir}"/>
     <copy file="${built.jardir}/${nmclf.name}_${lang}.jar" todir="${java.dir}"/>
     <copy file="${built.jardir}/${base.name}.jar" todir="${java.dir}"/>
+    <!-- make a symlinks: e.g., prefix-mcc-1.0.0.jar to prefix-mcc-1.0.jar -->
+    <exec executable="ln" dir="${java.dir}" vmlauncher="true">
+      <arg line="-s ${mcc.name}.jar ${mcc.gen.name}.jar"/>
+    </exec>
+    <exec executable="ln" dir="${java.dir}" vmlauncher="true">
+      <arg line="-s ${mcc.name}_${lang}.jar ${mcc.gen.name}_${lang}.jar"/>
+    </exec>
+    <exec executable="ln" dir="${java.dir}" vmlauncher="true">
+      <arg line="-s ${nmclf.name}.jar ${nmclf.gen.name}.jar"/>
+    </exec>
+    <exec executable="ln" dir="${java.dir}" vmlauncher="true">
+      <arg line="-s ${nmclf.name}_${lang}.jar ${nmclf.gen.name}_${lang}.jar"/>
+    </exec>
+    <exec executable="ln" dir="${java.dir}" vmlauncher="true">
+      <arg line="-s ${base.name}.jar ${base.gen.name}.jar"/>
+    </exec>
 
     <!-- Copy components into packaging area -->
     <copy file="${ldapjdk.local.location}/ldapjdk.jar" todir="${java.dir}"/>
@@ -270,6 +286,7 @@ END COPYRIGHT BLOCK
         <include name="libssl*"/>
         <include name="libsmime*"/>
         <include name="libsoftokn*"/>
+        <include name="libfreebl*"/>
         <exclude name="libnssckbi*"/>
         <exclude name="lib*.a"/>
       </fileset>
@@ -285,15 +302,15 @@ END COPYRIGHT BLOCK
     <chmod file="${package.dir}/startconsole" perm="755"/>
 
     <!-- Create a bundle of the Console -->
-    <tar destfile="${dist.dir}/fedora-console-${console.dotversion}.tar.gz"
+    <tar destfile="${dist.dir}/${console.brand}-console-${console.dotversion}.tar.gz"
          compression="gzip">
       <tarfileset dir="${package.dir}"
-                  prefix="fedora-console-${console.dotversion}"
+                  prefix="${console.brand}-console-${console.dotversion}"
                   mode="755">
         <include name="startconsole"/>
       </tarfileset>
       <tarfileset dir="${package.dir}"
-                  prefix="fedora-console-${console.dotversion}">
+                  prefix="${console.brand}-console-${console.dotversion}">
         <include name="**"/>
         <exclude name="startconsole"/>
       </tarfileset>

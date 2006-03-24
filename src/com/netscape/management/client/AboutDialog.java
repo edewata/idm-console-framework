@@ -179,7 +179,7 @@ public class AboutDialog extends AbstractDialog {
 
 
         AboutDialog dialog = new AboutDialog(f, "Fedora Management Console");
-        dialog.setProduct(UIManager.getIcon("OptionPane.warningIcon"), "Fedora Management Console\056 Console 1.0\nCopyright (C) Red Hat, Inc.", "\n\nThis software is subject to the terms of a license agreement. Please do not use the software unless you agree to all the license terms");
+        dialog.setProduct(UIManager.getIcon("OptionPane.warningIcon"), "Fedora Management Console\056 Console 1.0.2\nCopyright (C) Red Hat, Inc.", "\n\nThis software is subject to the terms of a license agreement. Please do not use the software unless you agree to all the license terms");
         dialog.addVendor(UIManager.getIcon("OptionPane.informationIcon"), "Contains Phaos SSL encryption software from Phaos Technology Corporation.  Copyright &copy 1998 Phaos Technology Corporation. All Rights Reserved");
         dialog.addVendor(UIManager.getIcon("OptionPane.informationIcon"), "Contains encryption software from RSA Data Security, Inc. Copyright &copy; 1994 RSA Data Security, Inc.  All rights reserved.");
 

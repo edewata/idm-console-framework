@@ -345,7 +345,7 @@ public class ChangeDirectoryDialog extends AbstractDialog {
      */
     private void loadPreferences() {
         PreferenceManager pm = PreferenceManager.getPreferenceManager(
-                                                                      Framework.IDENTIFIER, Framework.VERSION);
+                                                                      Framework.IDENTIFIER, Framework.MAJOR_VERSION);
         Preferences p = pm.getPreferences(PREFERENCES_SEARCH_DIRECTORY);
 
         String host = p.getString(PREFERENCE_HOST, _info.getUserHost());
@@ -397,7 +397,7 @@ public class ChangeDirectoryDialog extends AbstractDialog {
      */
     private void savePreferences() {
         PreferenceManager pm = PreferenceManager.getPreferenceManager(
-                                                                      Framework.IDENTIFIER, Framework.VERSION);
+                                                                      Framework.IDENTIFIER, Framework.MAJOR_VERSION);
         Preferences p = pm.getPreferences(PREFERENCES_SEARCH_DIRECTORY);
 
         p.set(PREFERENCE_HOST, _info.getUserHost());

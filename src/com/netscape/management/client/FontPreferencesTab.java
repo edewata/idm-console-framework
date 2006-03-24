@@ -57,7 +57,7 @@ class FontPreferencesTab extends AbstractPreferencesTab {
 
     public FontPreferencesTab()
     {
-        preferenceManager = PreferenceManager.getPreferenceManager(Framework.IDENTIFIER, Framework.VERSION);
+        preferenceManager = PreferenceManager.getPreferenceManager(Framework.IDENTIFIER, Framework.MAJOR_VERSION);
         setTitle(i18n("title"));
     }
     
