@@ -28,11 +28,12 @@
 #
 #
 
-if [ $# -ne 3 ]; then 
-	echo Usage: $0 outputFile versionNumber buildNumberFile
+if [ $# -ne 4 ]; then 
+	echo Usage: $0 outputFile versionNumber majorVersionNumber buildNumberFile
 	exit  1
 fi
 
 echo console-versionNumber=$2 > $1
-bld=`cat $3`
+echo console-majorVersionNumber=$3 > $1
+bld=`cat $4`
 echo console-buildNumber=`eval eval echo $bld` >> $1
