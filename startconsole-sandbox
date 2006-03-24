@@ -27,6 +27,13 @@ then
 fi
 
 #
+# Set library path to ensure we pick up our local libraries
+#
+export LD_LIBRARY_PATH=./lib:${LD_LIBRARY_PATH}
+export SHLIB_PATH=./lib:${SHLIB_PATH}
+export DYLD_LIBRARY_PATH=./lib:${DYLD_LIBRARY_PATH}
+
+#
 # Launch the Console
 #
 java -ms8m -mx64m -cp ./java/jss3.jar:./java/ldapjdk.jar:./java/fedora-base-1.0.jar:./java/fedora-mcc-1.0.jar:./java/fedora-mcc-1.0_en.jar:./java/fedora-nmclf-1.0.jar:./java/fedora-nmclf-1.0_en.jar -Djava.library.path=./lib -Djava.util.prefs.systemRoot="$HOME/.fedora-console" -Djava.util.prefs.userRoot="$HOME/.fedora-console" com.netscape.management.client.console.Console $*

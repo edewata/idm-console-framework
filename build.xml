@@ -63,6 +63,7 @@ END COPYRIGHT BLOCK
     <exec executable="${console.root}/src/com/netscape/management/client/console/genverinfo.sh">
       <arg value="${console.root}/src/com/netscape/management/client/console/versioninfo.properties"/>
       <arg value="${console.dotversion}"/>
+      <arg value="${console.dotgenversion}"/>
       <arg value="${built.dir}/buildnum.dat"/>
     </exec>
   </target>
