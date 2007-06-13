@@ -31,12 +31,13 @@ class CertInstallTypePage extends WizardPage implements SuiConstants {
 
     JTextField forServer, certName;
     ResourceSet resource = KeyCertUtility.getResourceSet();
+    ResourceSet resource_theme = KeyCertUtility.getResourceSetTheme();
 
     public void pageShown() {
         IDataCollectionModel dataModel = getDataModel();
-        forServer.setText((String)(dataModel.getValue("serverType", resource.getString("CertInstallTypePage", "defaultServerName"))) +
+        forServer.setText((String)(dataModel.getValue("serverType", resource_theme.getString("CertInstallTypePage", "defaultServerName"))) +
                           " (" +
-                          (String)(dataModel.getValue("sie", resource.getString("CertInstallTypePage", "defaultSIE"))) +
+                          (String)(dataModel.getValue("sie", resource_theme.getString("CertInstallTypePage", "defaultSIE"))) +
                           ")");
 
 	if (dataModel.getValue("certtype").equals(Integer.toString(CertInstallWizard.CA))) {

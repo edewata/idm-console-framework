@@ -38,6 +38,7 @@ import java.util.BitSet;
 import java.lang.reflect.Method;
 import java.io.UTFDataFormatException;
 
+import com.netscape.management.client.util.*;
 import com.netscape.management.client.util.Debug;
 import com.netscape.management.client.util.IProgressListener;
 import com.netscape.management.client.util.Permissions;
@@ -59,6 +60,8 @@ public class HttpChannel implements Runnable, CommChannel {
     final static protected String newline = "\r\n";
 
     final static protected int defaultExpectedLineLength = 128;
+
+    public static ResourceSet _resource_theme = new ResourceSet("com.netscape.management.client.theme.theme");
 
     static protected int defaultBufferLength = 512;
 
@@ -271,9 +274,11 @@ public class HttpChannel implements Runnable, CommChannel {
         writeLine("Connection: Keep-Alive");
         try {
             String consoleVersion = VersionInfo.getVersionNumber();
-            writeLine("User-Agent: Fedora-Management-Console/" + consoleVersion);
+            writeLine("User-Agent: "+
+                _resource_theme.getString("console","useragent")+ "/" + consoleVersion);
         } catch (Exception e) {
-            writeLine("User-Agent: Fedora-Management-Console/");
+            writeLine("User-Agent:"+
+                _resource_theme.getString("console","useragent")+ "/");
         }
         writeLine("Accept-Language: " + language);
 

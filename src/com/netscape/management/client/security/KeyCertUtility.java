@@ -48,6 +48,16 @@ class KeyCertUtility {
         return _resource;
     }
 
+    static ResourceSet _resource_theme = null;
+    public static ResourceSet getResourceSetTheme() {
+        if (_resource_theme == null) {
+            _resource_theme = new ResourceSet("com.netscape.management.client.theme.theme");
+
+        }
+
+        return _resource_theme;
+    }
+
     static Help _help = null;
     public static Help getHelp() {
         if (_help == null) {
