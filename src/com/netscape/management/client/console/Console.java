@@ -85,6 +85,7 @@ public class Console implements CommClient {
     public static ConsoleInfo _info;
     public static String _consoleAdminURL;
     public static ResourceSet _resource = new ResourceSet("com.netscape.management.client.console.console");
+    public static ResourceSet _resource_theme = new ResourceSet("com.netscape.management.client.theme.console");
 
     //
     // private values
@@ -527,7 +528,7 @@ public class Console implements CommClient {
 
         _frame = new JFrame();
         // Set the icon image so that login dialog will inherit it
-        _frame.setIconImage( new RemoteImage("com/netscape/management/client/images/logo16.gif").getImage());
+        _frame.setIconImage( new RemoteImage("com/netscape/management/client/theme/images/logo16.gif").getImage());
 
         ModalDialogUtil.setWindowLocation(_frame);
 
@@ -1557,7 +1558,7 @@ public class Console implements CommClient {
         }
 
         Debug.println(0,
-                "Fedora-Management-Console/" +
+                _resource_theme.getString("console","useragent")+"/" +
                 _resource.getString("console","displayVersion") + 
                 " B" + VersionInfo.getBuildNumber());
 

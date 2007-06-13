@@ -213,6 +213,12 @@ END COPYRIGHT BLOCK
          <include name="com/netscape/management/client/**/*.properties" />
          <include name="com/netscape/management/client/**/*.gif" />
          <include name="com/netscape/management/client/**/*.jpg" />
+         <exclude name="com/netscape/management/client/theme/**" />
+      </fileset>
+    </jar>
+    <jar jarfile="${built.jardir}/${theme.name}_${lang}.jar" >
+      <fileset dir="${java.src.dir}">
+         <include name="com/netscape/management/client/theme/**" />
       </fileset>
     </jar>
     <jar jarfile="${built.jardir}/${nmclf.name}.jar" >
@@ -255,6 +261,7 @@ END COPYRIGHT BLOCK
     <!-- Copy built jars to packaging area -->
     <copy file="${built.jardir}/${mcc.name}.jar" todir="${java.dir}"/>
     <copy file="${built.jardir}/${mcc.name}_${lang}.jar" todir="${java.dir}"/>
+    <copy file="${built.jardir}/${theme.name}_${lang}.jar" todir="${java.dir}"/>
     <copy file="${built.jardir}/${nmclf.name}.jar" todir="${java.dir}"/>
     <copy file="${built.jardir}/${nmclf.name}_${lang}.jar" todir="${java.dir}"/>
     <copy file="${built.jardir}/${base.name}.jar" todir="${java.dir}"/>
@@ -264,6 +271,9 @@ END COPYRIGHT BLOCK
     </exec>
     <exec executable="ln" dir="${java.dir}" vmlauncher="true">
       <arg line="-s ${mcc.name}_${lang}.jar ${mcc.gen.name}_${lang}.jar"/>
+    </exec>
+    <exec executable="ln" dir="${java.dir}" vmlauncher="true">
+      <arg line="-s ${theme.name}_${lang}.jar ${theme.gen.name}_${lang}.jar"/>
     </exec>
     <exec executable="ln" dir="${java.dir}" vmlauncher="true">
       <arg line="-s ${nmclf.name}.jar ${nmclf.gen.name}.jar"/>

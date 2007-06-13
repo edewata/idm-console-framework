@@ -128,7 +128,7 @@ public class HttpsChannel extends HttpChannel implements
         if (isWin && _frame == null) {
             _frame = new JFrame();
             // Set the icon image so that login dialog will inherit it
-            _frame.setIconImage( new RemoteImage("com/netscape/management/client/images/logo16.gif").getImage());
+            _frame.setIconImage( new RemoteImage("com/netscape/management/client/theme/images/logo16.gif").getImage());
         }
         return _frame;
     }
