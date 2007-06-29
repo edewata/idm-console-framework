@@ -42,17 +42,20 @@ END COPYRIGHT BLOCK
     <!-- Create directories -->
     <mkdir dir="${built.classdir}"/>
 
+    <!-- Classdest is the location you intend to install the Console jars -->
+    <property name="classdest"              value="/usr/share/java"/>
+
     <!-- Override these properties to use components from other system locations -->
     <property name="ldapjdk.local.location" value="/usr/share/java"/>
-    <property name="jss.local.location"     value="/usr/share/java"/>
+    <property name="jss.local.location"     value="/usr/lib/java"/>
     <property name="jsslib.local.location"  value="/usr/lib"/>
     <property name="nss.local.location"     value="/usr/lib"/>
     <property name="nspr.local.location"    value="/usr/lib"/>
 
     <!-- Construct classpath -->
     <path id="console.classpath">
-      <pathelement location="${ldapjdk.local.location}/ldapjdk.jar"/>
-      <pathelement location="${jss.local.location}/jss3.jar"/>
+      <pathelement location="${ldapjdk.local.location}/${ldapjdk.jar.name}"/>
+      <pathelement location="${jss.local.location}/${jss.jar.name}"/>
     </path>
 
     <!-- Generate version property file -->
@@ -124,7 +127,7 @@ END COPYRIGHT BLOCK
     <mkdir dir="${imports.dir}/jss"/>
     <get src="${jss.jar.location}/${jss.jar.import}"
          dest="${imports.dir}/jss/${jss.jar.import}"/>
-    <copy file="${imports.dir}/jss/${jss.jar.import}" tofile="${imports.dir}/jss/jss3.jar"/>
+    <copy file="${imports.dir}/jss/${jss.jar.import}" tofile="${imports.dir}/jss/${jss.jar.name}"/>
   </target>
 
   <target name="import_jss_lib" depends="prepare_imports" if="imports.file" unless="jss.lib.import.exists">
@@ -151,19 +154,19 @@ END COPYRIGHT BLOCK
   <!-- Build -->
   <target name="build" depends="prepare_build, import_ldapjdk, import_jss_jar">
     <!-- Verify that the required jars exist -->
-    <fail message="LDAP JDK (ldapjdk.jar) does not exist in ${ldapjdk.local.location}">
+    <fail message="LDAP JDK (${ldapjdk.jar.name}) does not exist in ${ldapjdk.local.location}">
       Please set the correct location with -Dldapjdk.local.location=[path]
       <condition>
         <not>
-          <available file="${ldapjdk.local.location}/ldapjdk.jar"/>
+          <available file="${ldapjdk.local.location}/${ldapjdk.jar.name}"/>
         </not>
       </condition>
     </fail>
-    <fail message="JSS (jss3.jar) does not exist in ${jss.local.location}">
+    <fail message="JSS (${jss.jar.name}) does not exist in ${jss.local.location}">
       Please set the correct location with -Djss.local.location=[path]
       <condition>
         <not>
-          <available file="${jss.local.location}/jss3.jar"/>
+          <available file="${jss.local.location}/${jss.jar.name}"/>
         </not>
       </condition>
     </fail>
@@ -180,6 +183,21 @@ END COPYRIGHT BLOCK
              excludes="**/CVS/**">
              <classpath refid="console.classpath" />
     </javac>
+
+    <!-- create startconsole script -->
+    <copy file="startconsole" todir="${release.dir}"/>
+    <replace file="${release.dir}/startconsole">
+      <replacefilter token="@classdest@" value="${classdest}"/>
+      <replacefilter token="@jssjar@" value="${jss.local.location}/${jss.jar.name}"/> 
+      <replacefilter token="@ldapjdkjar@" value="${ldapjdk.local.location}/${ldapjdk.jar.name}"/>
+      <replacefilter token="@basejar@" value="${base.name}.jar"/>
+      <replacefilter token="@mccjar@" value="${mcc.name}.jar"/>
+      <replacefilter token="@mcclangjar@" value="${mcc.name}_${lang}.jar"/>
+      <replacefilter token="@nmclfjar@" value="${nmclf.name}.jar"/>
+      <replacefilter token="@nmclflangjar@" value="${nmclf.name}_${lang}.jar"/>
+      <replacefilter token="@themejar@" value="${theme.name}_${lang}.jar"/>
+      <replacefilter token="@libdir@" value="${lib.dir}"/>
+    </replace>
   </target>
 
   <!-- Package -->
@@ -286,8 +304,8 @@ END COPYRIGHT BLOCK
     </exec>
 
     <!-- Copy components into packaging area -->
-    <copy file="${ldapjdk.local.location}/ldapjdk.jar" todir="${java.dir}"/>
-    <copy file="${jss.local.location}/jss3.jar" todir="${java.dir}"/>
+    <copy file="${ldapjdk.local.location}/${ldapjdk.jar.name}" todir="${java.dir}"/>
+    <copy file="${jss.local.location}/${jss.jar.name}" todir="${java.dir}"/>
     <copy todir="${lib.dir}">
       <fileset dir="${jsslib.local.location}">
         <include name="libjss*"/>

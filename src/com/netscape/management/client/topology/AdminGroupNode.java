@@ -43,7 +43,6 @@ import com.netscape.management.nmclf.SuiOptionPane;
  */
 public class AdminGroupNode extends ServerLocNode implements IMenuInfo,
 INodeInfo {
-    private static final String MENU_MERGE = "MERGE";
     private static final String MENU_OBJECT_CREATE_CATEGORY = "OBJECT_CREATE_CATEGORY";
     private static final String MENU_CONTEXT_CREATE_CATEGORY = "CONTEXT_CREATE_CATEGORY";
 
@@ -52,7 +51,6 @@ INodeInfo {
     private InstalledProduct[]_installedProducts;
 
     private static RemoteImage _icon = null;
-    private static ServerRootPromptDialog _serverRootPrompt = null;
     private static ProductSelectionDialog _serverSelection = null;
     private static ResourceSet _resource;
 
@@ -297,7 +295,6 @@ INodeInfo {
             rpm.fireDisableMenuItem(viewInstance,
                     MENU_CONTEXT_CREATE_CATEGORY);
         }
-        rpm.fireEnableMenuItem(viewInstance, MENU_MERGE);
     }
 
 
@@ -475,16 +472,12 @@ INodeInfo {
       */
     public IMenuItem[] getMenuItems(String category) {
         if (category.equals(ResourcePage.MENU_OBJECT)) {
-            return new IMenuItem[]{ new MenuItemText(MENU_MERGE,
-                    _resource.getString("menu", "MergeConfig"), "",
-                    true), new MenuItemCategory(
+            return new IMenuItem[]{ new MenuItemCategory(
                     MENU_OBJECT_CREATE_CATEGORY,
                     _resource.getString("menu", "CreateServer"),
                     _enableCreateMenuCategory)};
         } else if (category.equals(ResourcePage.MENU_CONTEXT)) {
-            return new IMenuItem[]{ new MenuItemText(MENU_MERGE,
-                    _resource.getString("menu", "MergeConfig"), "",
-                    true), new MenuItemCategory(
+            return new IMenuItem[]{ new MenuItemCategory(
                     MENU_CONTEXT_CREATE_CATEGORY,
                     _resource.getString("menu", "CreateServer"),
                     _enableCreateMenuCategory)};
@@ -525,50 +518,43 @@ INodeInfo {
       * @param item menu item which is selected
       */
     public void actionMenuSelected(IPage viewInstance, IMenuItem item) {
-        if (item.getID().equals(MENU_MERGE)) {
-            MergeConfigDialog d =
-                    new MergeConfigDialog(getDN(), _consoleInfo, this,
-                    viewInstance);
-            d.show();
-        } else {
-            // Check if create a new server instance was selected.
-            if (_installedProducts != null) {
-                for (int i = 0; i < _installedProducts.length; i++) {
-                    if (item.getID().equals(
-                            _installedProducts[i].getNickname())) {
-                        Class c = ClassLoaderUtil.getClass(_consoleInfo,
-                                _installedProducts[i]
-                                .getCreationClassName());
-                        if (c != null) {
-                            try {
-                                IProductObject productHandle =
-                                        (IProductObject) c.newInstance();
-                                productHandle.initialize(
-                                        (ConsoleInfo)_consoleInfo.clone());
-                                CreateThread thread =
-                                        new CreateThread(_consoleInfo,
-                                        viewInstance, getDN(),
-                                        productHandle, _resource);
-                                thread.start();
-                            } catch (Exception e) {
-                                SuiOptionPane.showMessageDialog(
-                                        _consoleInfo.getFrame(),
-                                        MessageFormat.format(
-                                        _resource.getString("ServerRootPromptDialog",
-                                        "couldNotInstantiate"),
-                                        new Object[]{c.getName(), e}),
-                                        _resource.getString("ServerRootPromptDialog",
-                                        "CreateTitle"),
-                                        SuiOptionPane.ERROR_MESSAGE);
-                                ModalDialogUtil.sleep();
-                                ModalDialogUtil.raise(
-                                        viewInstance.getFramework().
-                                        getJFrame());
-                                return;
-                            }
+        // Check if create a new server instance was selected.
+        if (_installedProducts != null) {
+            for (int i = 0; i < _installedProducts.length; i++) {
+                if (item.getID().equals(
+                        _installedProducts[i].getNickname())) {
+                    Class c = ClassLoaderUtil.getClass(_consoleInfo,
+                            _installedProducts[i]
+                            .getCreationClassName());
+                    if (c != null) {
+                        try {
+                            IProductObject productHandle =
+                                    (IProductObject) c.newInstance();
+                            productHandle.initialize(
+                                    (ConsoleInfo)_consoleInfo.clone());
+                            CreateThread thread =
+                                    new CreateThread(_consoleInfo,
+                                    viewInstance, getDN(),
+                                    productHandle, _resource);
+                            thread.start();
+                        } catch (Exception e) {
+                            SuiOptionPane.showMessageDialog(
+                                    _consoleInfo.getFrame(),
+                                    MessageFormat.format(
+                                    _resource.getString("ServerPromptDialog",
+                                    "couldNotInstantiate"),
+                                    new Object[]{c.getName(), e}),
+                                    _resource.getString("ServerPromptDialog",
+                                    "CreateTitle"),
+                                    SuiOptionPane.ERROR_MESSAGE);
+                            ModalDialogUtil.sleep();
+                            ModalDialogUtil.raise(
+                                    viewInstance.getFramework().
+                                    getJFrame());
+                            return;
                         }
-                        break; // Only one instance can be created at a time...
                     }
+                    break; // Only one instance can be created at a time...
                 }
             }
         }

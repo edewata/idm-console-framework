@@ -82,6 +82,8 @@ public class Framework extends JFrame implements IFramework, SuiConstants {
 
     public static String _imageSource = "com/netscape/management/client/images/";
     public static ResourceSet _resource = new ResourceSet("com.netscape.management.client.default");
+    public static ResourceSet _resource_theme = new 
+            ResourceSet("com.netscape.management.client.theme.theme");
     public static Help _help = new Help("com.netscape.management.client.default");
 
     protected boolean _isPageInitialized[];
@@ -208,7 +210,8 @@ public class Framework extends JFrame implements IFramework, SuiConstants {
                 2, HORIZ_WINDOW_INSET));
 
         _bannerPanel = new JPanel(new BorderLayout());
-        _bannerPanel.getAccessibleContext().setAccessibleDescription(i18n("banner","console"));
+        _bannerPanel.getAccessibleContext().setAccessibleDescription(
+                _resource_theme.getString("banner","console"));
         _bannerPanel.setBorder(
                 BorderFactory.createEmptyBorder(0, 0, 0, 0));
 

@@ -62,7 +62,7 @@ public class TopologyInitializer extends FrameworkInitializer {
 
         consoleInfo = info;
 
-        setFrameTitle(new ResourceSet("com.netscape.management.client.console.console").getString("console", "title"));  // not localized because it is product name
+        setFrameTitle(new ResourceSet("com.netscape.management.client.theme.theme").getString("console", "title"));  // not localized because it is product name
         setMinimizedImage( new RemoteImage("com/netscape/management/client/theme/images/logo16.gif").getImage());
         setBannerImage( new RemoteImage("com/netscape/management/client/theme/images/ConsoleBanner.gif").getImage());
 

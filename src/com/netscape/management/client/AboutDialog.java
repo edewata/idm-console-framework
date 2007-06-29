@@ -165,24 +165,4 @@ public class AboutDialog extends AbstractDialog {
         super.show();
     }
 
-
-
-    //testing program
-    /*public static void main(String arg[]) {
-
-        JFrame f = new JFrame();
-        f.setSize(432,400);
-
-        try {
-            UIManager.setLookAndFeel("com.netscape.management.nmclf.SuiLookAndFeel");
-        } catch (Exception e) {}
-
-
-        AboutDialog dialog = new AboutDialog(f, "Fedora Management Console");
-        dialog.setProduct(UIManager.getIcon("OptionPane.warningIcon"), "Fedora Management Console\056 Console 1.0.3\nCopyright (C) Red Hat, Inc.", "\n\nThis software is subject to the terms of a license agreement. Please do not use the software unless you agree to all the license terms");
-        dialog.addVendor(UIManager.getIcon("OptionPane.informationIcon"), "Contains Phaos SSL encryption software from Phaos Technology Corporation.  Copyright &copy 1998 Phaos Technology Corporation. All Rights Reserved");
-        dialog.addVendor(UIManager.getIcon("OptionPane.informationIcon"), "Contains encryption software from RSA Data Security, Inc. Copyright &copy; 1994 RSA Data Security, Inc.  All rights reserved.");
-
-        dialog.show();
-}*/
 }

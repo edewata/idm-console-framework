@@ -261,15 +261,16 @@ public abstract class FrameworkInitializer implements IFrameworkInitializer {
                     new Cursor(Cursor.WAIT_CURSOR));
             if (aboutDialog == null) {
                 ResourceSet aboutDialogResource = new ResourceSet("com.netscape.management.client.defaultLicense");
+                ResourceSet themeResource = new ResourceSet("com.netscape.management.client.theme.theme");
                 aboutDialog = new AboutDialog(parent,
-                        aboutDialogResource.getString("defaultAbout",
+                        themeResource.getString("defaultAbout",
                         "dialogTitle"));
                 aboutDialog.setProduct( new RemoteImage(
-                        aboutDialogResource.getString("defaultAbout",
+                        themeResource.getString("defaultAbout",
                         "productLogo")),
                         aboutDialogResource.getString("defaultAbout",
                         "productCopyright"),
-                        aboutDialogResource.getString("defaultAbout",
+                        themeResource.getString("defaultAbout",
                         "productLicense"));
 
                 StringTokenizer st = new StringTokenizer(
