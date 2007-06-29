@@ -26,8 +26,9 @@ then
   exit 1
 fi
 
-THEME_JAR=/usr/share/java/fedora-theme-1.0.3_en.jar
+CLASSDEST=@classdest@
+
 #
 # Launch the Console
 #
-java -ms8m -mx64m -cp /usr/share/java/jss3.jar:/usr/share/java/ldapjdk.jar:/usr/share/java/fedora-base-1.0.3.jar:/usr/share/java/fedora-mcc-1.0.3.jar:/usr/share/java/fedora-mcc-1.0.3_en.jar:/usr/share/java/fedora-nmclf-1.0.3.jar:/usr/share/java/fedora-nmclf-1.0.3_en.jar:$THEME_JAR -Djava.library.path=/usr/lib -Djava.util.prefs.systemRoot="$HOME/.fedora-console" -Djava.util.prefs.userRoot="$HOME/.fedora-console" com.netscape.management.client.console.Console $*
+java -ms8m -mx64m -cp @jssjar@:@ldapjdkjar@:$CLASSDEST/@basejar@:$CLASSDEST/@mccjar@:$CLASSDEST/@mcclangjar@:$CLASSDEST/@nmclfjar@:$CLASSDEST/@nmclflangjar@:$CLASSDEST/@themejar@ -Djava.library.path=@libdir@ -Djava.util.prefs.systemRoot="$HOME/.fedora-console" -Djava.util.prefs.userRoot="$HOME/.fedora-console" com.netscape.management.client.console.Console $*

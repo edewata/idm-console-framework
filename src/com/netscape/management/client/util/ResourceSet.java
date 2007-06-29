@@ -256,7 +256,7 @@ public class ResourceSet {
         if (Debug.getTraceLevel() == 9) {
             Debug.println(9,
                     "ResourceSet: " + ((prb == null) ? "NOT ":"") +
-                    "found " + loaderName + ":"+bundle);
+                    "found in cache " + loaderName + ":"+bundle);
         }
         return prb;
     }

@@ -56,8 +56,8 @@ public class Console implements CommClient {
     // preference information
     //
     public static final String IDENTIFIER = "Console";
-    public static final String VERSION = "1.0.3";
-    public static final String MAJOR_VERSION = "1.0";
+    public static final String VERSION = "1.1.0";
+    public static final String MAJOR_VERSION = "1.1";
     public static final String PREFERENCES_LOGIN =
             IDENTIFIER + "." + VERSION + ".Login.preferences";
 
@@ -85,7 +85,7 @@ public class Console implements CommClient {
     public static ConsoleInfo _info;
     public static String _consoleAdminURL;
     public static ResourceSet _resource = new ResourceSet("com.netscape.management.client.console.console");
-    public static ResourceSet _resource_theme = new ResourceSet("com.netscape.management.client.theme.console");
+    public static ResourceSet _resource_theme = new ResourceSet("com.netscape.management.client.theme.theme");
 
     //
     // private values

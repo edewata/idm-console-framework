@@ -160,7 +160,7 @@ public class RemoteImage extends ImageIcon {
         if (Debug.getTraceLevel() == 9) {
             Debug.println(9,
                     "RemoteImage: " + ((image == null) ? "NOT ":"") +
-                    "found " + loaderName + ":"+path);
+                    "found in cache " + loaderName + ":"+path);
         }
         return image;
     }

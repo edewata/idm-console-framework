@@ -57,7 +57,7 @@ SuiConstants {
      */
     public LoginDialog(Frame parentFrame, String userid, String initialURL, Vector recentURLs) {
         this(parentFrame, userid, initialURL, recentURLs,
-                Console._resource.getString(_resourcePrefix, "title"),
+                Console._resource_theme.getString(_resourcePrefix, "title"),
                 "login");
     }
 

@@ -67,7 +67,7 @@ INodeInfo, SuiConstants {
     // attributes of objectclass netscapeServer
     static String _serverDataKey[] = new String[]{ "cn", "serverProductName",
     "description", "administratorContactInfo", //"serverVersionNumber",
-            "installationTimeStamp", "serverRoot", "serverHostName", };
+            "installationTimeStamp", "serverHostName", };
 
     // attributes of objectclass nsApplication
     static String _productDataKey[] = new String[]{ "nsProductName", //"description",
@@ -86,7 +86,7 @@ INodeInfo, SuiConstants {
 
     static String _displayDataKey[] = new String[]{ "serverProductName",
     "description", //"serverVersionNumber",
-            "installationTimeStamp", "serverRoot", "nsProductName",
+            "installationTimeStamp", "nsProductName",
     "nsVendor", "nsProductVersion", "nsBuildNumber", "nsRevisionNumber",
     "nsBuildSecurity", };
 
