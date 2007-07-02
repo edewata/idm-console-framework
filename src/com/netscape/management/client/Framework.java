@@ -211,7 +211,8 @@ public class Framework extends JFrame implements IFramework, SuiConstants {
 
         _bannerPanel = new JPanel(new BorderLayout());
         _bannerPanel.getAccessibleContext().setAccessibleDescription(
-                _resource_theme.getString("banner","console"));
+                _resource_theme.getString("banner","console") + " " +
+                VersionInfo.getVersionNumber());
         _bannerPanel.setBorder(
                 BorderFactory.createEmptyBorder(0, 0, 0, 0));
 

@@ -37,6 +37,15 @@ public class VersionInfo {
      * @return  Console Version Number
      */
     public static String getVersionNumber() {
+        return _resource.getString("console","versionNumber");
+    }
+
+    /**
+     * Returns major version number for the Console.
+     *
+     * @return  Console Major Version Number
+     */
+    public static String getMajorVersionNumber() {
         return _resource.getString("console","majorVersionNumber");
     }
 

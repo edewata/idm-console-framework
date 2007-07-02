@@ -34,6 +34,6 @@ if [ $# -ne 4 ]; then
 fi
 
 echo console-versionNumber=$2 > $1
-echo console-majorVersionNumber=$3 > $1
+echo console-majorVersionNumber=$3 >> $1
 bld=`cat $4`
 echo console-buildNumber=`eval eval echo $bld` >> $1

@@ -56,8 +56,8 @@ public class Console implements CommClient {
     // preference information
     //
     public static final String IDENTIFIER = "Console";
-    public static final String VERSION = "1.1.0";
-    public static final String MAJOR_VERSION = "1.1";
+    public static final String VERSION = VersionInfo.getVersionNumber();
+    public static final String MAJOR_VERSION = VersionInfo.getMajorVersionNumber();
     public static final String PREFERENCES_LOGIN =
             IDENTIFIER + "." + VERSION + ".Login.preferences";
 
@@ -1559,8 +1559,8 @@ public class Console implements CommClient {
 
         Debug.println(0,
                 _resource_theme.getString("console","useragent")+"/" +
-                _resource.getString("console","displayVersion") + 
-                " B" + VersionInfo.getBuildNumber());
+                VersionInfo.getVersionNumber() + " B" +
+                VersionInfo.getBuildNumber());
 
         if (opt.hasOption('x')) {
             String extraParam = opt.getOptionParam('x');
