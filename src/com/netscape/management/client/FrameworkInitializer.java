@@ -264,7 +264,7 @@ public abstract class FrameworkInitializer implements IFrameworkInitializer {
                 ResourceSet themeResource = new ResourceSet("com.netscape.management.client.theme.theme");
                 aboutDialog = new AboutDialog(parent,
                         themeResource.getString("defaultAbout",
-                        "dialogTitle"));
+                        "dialogTitle") + " " + VersionInfo.getVersionNumber());
                 aboutDialog.setProduct( new RemoteImage(
                         themeResource.getString("defaultAbout",
                         "productLogo")),

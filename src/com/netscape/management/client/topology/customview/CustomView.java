@@ -472,7 +472,8 @@ public class CustomView implements ICustomView {
         LDAPSearchResults result = null;
         try {
             result = _ldc.search(url.getDN().trim(), url.getScope(),
-                                 url.getFilter().trim(), new String[] {"1.1.0"}, false);
+                          url.getFilter().trim(),
+                          new String[] {VersionInfo.getVersionNumber()}, false);
             while (result != null && result.hasMoreElements()) {
                 LDAPEntry rscEntry = (LDAPEntry) result.next();
                 ResourceObject rscObj = getTopologyResource(rscEntry.getDN());
