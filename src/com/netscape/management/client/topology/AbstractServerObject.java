@@ -540,7 +540,7 @@ INodeInfo, SuiConstants {
             // activated before any change listener is registered
             while (_running && _changeListeners.size() == 0) {
                 try {
-                    Debug.println(7, "AbstractServerObject.StatusThread: waiting for chanage listeners to register");
+                    Debug.println(7, "AbstractServerObject.StatusThread: waiting for change listeners to register");
                     _sleeping = true;
                     Thread.currentThread().sleep(1000);
                     _sleeping = false;

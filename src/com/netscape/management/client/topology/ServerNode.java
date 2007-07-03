@@ -1231,7 +1231,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
                     {
                         setBusyIndicator(null, false, "");
                         if(!isDownloaded) {
-                            // statusDialog.setVisible(false);
+                            statusDialog.setVisible(false);
                         }
                         JOptionPane.showMessageDialog(parentFrame,
                                                       e.getMessage(),
