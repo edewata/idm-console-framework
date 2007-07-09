@@ -645,7 +645,7 @@ INodeInfo, SuiConstants {
       * @return true if server allows cloning operations
       */
     public boolean isCloningEnabled() {
-        return true;
+        return false;
     }
 
     /**
