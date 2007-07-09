@@ -384,7 +384,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
                 if (selection != null && selection.length == 1) 
                     {
                         enableSetACLMenuItem = true;
-                        enableCloneMenuItem = true;
+                        enableCloneMenuItem = false;
                         if (serverObject instanceof AbstractServerObject) 
                             {
                                 AbstractServerObject aso = (AbstractServerObject)serverObject;
@@ -546,9 +546,11 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
             return new IMenuItem[]{ new MenuItemText(MENU_OPEN_SERVER,
                                                      resource.getString("menu", "open"), "",
                                                      enableOpenMenuItem),
+                                    /*
                                     new MenuItemText(MENU_CLONE_SERVER,
                                                      resource.getString("menu", "CloneServer"), "",
                                                      enableCloneMenuItem),
+                                    */
                                     new MenuItemText(MENU_REMOVE_SERVER,
                                                      resource.getString("menu", "RemoveServer"), "",
                                                      enableRemoveMenuItem), new MenuItemSeparator(),
