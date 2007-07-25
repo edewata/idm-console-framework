@@ -134,7 +134,7 @@ SuiConstants {
 
         GridBagConstraints c = new GridBagConstraints();
 
-        JLabel splashLabel = new JLabel(new RemoteImage("com/netscape/management/client/console/images/login.gif"));
+        JLabel splashLabel = new JLabel(new RemoteImage("com/netscape/management/client/theme/images/login.gif"));
         c.gridwidth = 1;
         c.gridheight = 1;
         c.gridx = 0;
