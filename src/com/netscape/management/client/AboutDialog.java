@@ -25,6 +25,7 @@ import javax.swing.border.*;
 import java.awt.*;
 
 import com.netscape.management.client.util.*;
+import com.netscape.management.client.console.*;
 
 /**
  * AboutDialog is a class to display a standard "about box",
@@ -103,7 +104,10 @@ public class AboutDialog extends AbstractDialog {
         }
 
 
-        GridBagUtil.constrain(content, new MultilineLabel(copyright),
+        GridBagUtil.constrain(content, new MultilineLabel(copyright + "\n\n" +
+                (new ResourceSet("com.netscape.management.client.default")).
+                getString("aboutDialog", "dialogFrameworkPrefix") + " " +
+                VersionInfo.getVersionNumber()),
                 1, 0, 1, 1, 1, 0, GridBagConstraints.NORTH,
                 GridBagConstraints.HORIZONTAL, 0, 0,
                 SEPARATED_COMPONENT_SPACE, 0);
