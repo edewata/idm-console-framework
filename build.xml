@@ -184,9 +184,9 @@ END COPYRIGHT BLOCK
              <classpath refid="console.classpath" />
     </javac>
 
-    <!-- create startconsole script -->
-    <copy file="startconsole" todir="${release.dir}"/>
-    <replace file="${release.dir}/startconsole">
+    <!-- create fedora-console script -->
+    <copy file="fedora-console" todir="${release.dir}"/>
+    <replace file="${release.dir}/fedora-console">
       <replacefilter token="@classdest@" value="${classdest}"/>
       <replacefilter token="@jssjar@" value="${jss.local.location}/${jss.jar.name}"/> 
       <replacefilter token="@ldapjdkjar@" value="${ldapjdk.local.location}/${ldapjdk.jar.name}"/>
@@ -196,6 +196,7 @@ END COPYRIGHT BLOCK
       <replacefilter token="@nmclfjar@" value="${nmclf.name}.jar"/>
       <replacefilter token="@nmclflangjar@" value="${nmclf.name}_${lang}.jar"/>
       <replacefilter token="@themejar@" value="${theme.name}_${lang}.jar"/>
+      <replacefilter token="@prefsdir@" value="${theme.core}"/>
       <replacefilter token="@libdir@" value="${lib.dir}"/>
     </replace>
   </target>
