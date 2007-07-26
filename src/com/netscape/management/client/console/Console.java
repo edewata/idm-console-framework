@@ -53,6 +53,15 @@ public class Console implements CommClient {
     static long _t0 = System.currentTimeMillis();
 
     //
+    // global values
+    //
+    public static Preferences _preferences;
+    public static ConsoleInfo _info;
+    public static String _consoleAdminURL;
+    public static ResourceSet _resource = new ResourceSet("com.netscape.management.client.console.console");
+    public static ResourceSet _resource_theme = new ResourceSet("com.netscape.management.client.theme.theme");
+
+    //
     // preference information
     //
     public static final String IDENTIFIER = "Console";
@@ -70,22 +79,13 @@ public class Console implements CommClient {
     public static final String PREFERENCE_Y = "Y";
 
     public static final String PREFERENCE_DIR = System.getProperty("user.home") + File.separator +
-                                                ".fedora-console" + File.separator;
+                              _resource_theme.getString("console","prefsdir") + File.separator;
 
     public static final String OPTION_NOWINPOS = "nowinpos";
     public static final String OPTION_NOLOGO = "nologo";
     public static final String OPTION_JAVALAF = "javalaf";
 
-	public static final int MAX_RECENT_URLS = 5;
-
-    //
-    // global values
-    //
-    public static Preferences _preferences;
-    public static ConsoleInfo _info;
-    public static String _consoleAdminURL;
-    public static ResourceSet _resource = new ResourceSet("com.netscape.management.client.console.console");
-    public static ResourceSet _resource_theme = new ResourceSet("com.netscape.management.client.theme.theme");
+    public static final int MAX_RECENT_URLS = 5;
 
     //
     // private values
