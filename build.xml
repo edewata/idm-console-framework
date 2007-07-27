@@ -184,9 +184,9 @@ END COPYRIGHT BLOCK
              <classpath refid="console.classpath" />
     </javac>
 
-    <!-- create fedora-console script -->
-    <copy file="fedora-console" todir="${release.dir}"/>
-    <replace file="${release.dir}/fedora-console">
+    <!-- create fedora-idm-console script -->
+    <copy file="fedora-idm-console" todir="${release.dir}"/>
+    <replace file="${release.dir}/fedora-idm-console">
       <replacefilter token="@classdest@" value="${classdest}"/>
       <replacefilter token="@jssjar@" value="${jss.local.location}/${jss.jar.name}"/> 
       <replacefilter token="@ldapjdkjar@" value="${ldapjdk.local.location}/${ldapjdk.jar.name}"/>
