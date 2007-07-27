@@ -1,9 +1,9 @@
 %define major_version 1.1
 %define minor_version 0
 
-Name: fedora-console
+Name: fedora-idm-console
 Version: %{major_version}.%{minor_version}
-Release: 2
+Release: 3
 Group: Applications
 Vendor: Fedora Project
 URL: http://directory.fedora.redhat.com
@@ -15,7 +15,7 @@ BuildArch: noarch
 Source: %{name}-%{version}.tar.gz
 Autoreq: 0
 AutoReqProv: no
-Requires: fedora-console-framework >= %{version}
+Requires: %{name}-framework >= %{version}
 BuildPreReq: ant >= 1.6.2, ldapjdk >= 4.18, jss >=  4.2 
 
 %description
@@ -58,7 +58,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files framework
 %defattr(-,root,root)
-/usr/share/java/fedora-base-%{version}.jar
+/usr/share/java/%{name}-base-%{version}.jar
 /usr/share/java/fedora-mcc-%{version}.jar
 /usr/share/java/fedora-mcc-%{version}_en.jar
 /usr/share/java/fedora-nmclf-%{version}.jar
@@ -71,8 +71,8 @@ ln -s %{name}-%{version}_en.jar %{name}_en.jar
 
 %post framework
 cd /usr/share/java
-ln -s fedora-base-%{version}.jar fedora-base-%{major_version}.jar
-ln -s fedora-base-%{version}.jar fedora-base.jar
+ln -s %{name}-base-%{version}.jar %{name}-base-%{major_version}.jar
+ln -s %{name}-base-%{version}.jar %{name}-base.jar
 ln -s fedora-mcc-%{version}.jar fedora-mcc-%{major_version}.jar
 ln -s fedora-mcc-%{version}.jar fedora-mcc.jar
 ln -s fedora-mcc-%{version}_en.jar fedora-mcc-%{major_version}_en.jar
@@ -87,8 +87,8 @@ rm -rf /usr/share/java/%{name}-%{major_version}_en.jar
 rm -rf /usr/share/java/%{name}_en.jar
 
 %preun framework
-rm -rf /usr/share/java/fedora-base-%{major_version}.jar
-rm -rf /usr/share/java/fedora-base.jar
+rm -rf /usr/share/java/%{name}-base-%{major_version}.jar
+rm -rf /usr/share/java/%{name}-base.jar
 rm -rf /usr/share/java/fedora-mcc-%{major_version}.jar
 rm -rf /usr/share/java/fedora-mcc.jar
 rm -rf /usr/share/java/fedora-mcc-%{major_version}_en.jar
@@ -99,6 +99,9 @@ rm -rf /usr/share/java/fedora-nmclf-%{major_version}_en.jar
 rm -rf /usr/share/java/fedora-nmclf_en.jar
 
 %changelog
+* Fri Jul 27 2007 Nathan Kinder <nkinder@redhat.com> 1.1.0-3
+- Changed package name to be less generic.
+
 * Thu Jul 26 2007 Nathan Kinder <nkinder@redhat.com> 1.1.0-2
 - Updated start script and theme jar names. Fixed post and
   preun steps for framework subpackage.
