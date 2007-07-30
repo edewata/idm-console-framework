@@ -3,32 +3,29 @@
 
 Name: fedora-idm-console
 Version: %{major_version}.%{minor_version}
-Release: 3
-Group: Applications
-Vendor: Fedora Project
-URL: http://directory.fedora.redhat.com
-License: LGPL
-Packager: Red Hat, Inc. <http://bugzilla.redhat.com/bugzilla>
+Release: 4
 Summary: Fedora Management Console
-BuildRoot: %{_tmppath}/%{name}-%{version}-root
+
+Group: Applications
+License: LGPL
+URL: http://directory.fedora.redhat.com
+
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
-Source: %{name}-%{version}.tar.gz
-Autoreq: 0
-AutoReqProv: no
+Source: %{name}-%{version}.tar.bz2
 Requires: %{name}-framework >= %{version}
-BuildPreReq: ant >= 1.6.2, ldapjdk >= 4.18, jss >=  4.2 
+BuildRequires: ant >= 1.6.2
+BuildRequires: ldapjdk
+BuildRequires: jss >=  4.2 
 
 %description
 A Java based remote management console used for Managing Fedora
 Administration Server and Fedora Directory Server.
 
-# prep and setup expect there to be a Source file
-# in the /usr/src/redhat/SOURCES directory - it will be unpacked
-# in the _builddir (not BuildRoot)
-
 %package framework
 Summary: Fedora Management Console Framework
-Requires: ldapjdk >= 4.18, jss >= 4.2
+BuildRequires: ldapjdk
+BuildRequires: jss >= 4.2
 Group: System Environment/Libraries
 
 %description framework
@@ -36,41 +33,24 @@ A Java Management Console framework used for remote server management.
 
 %prep
 %setup -q
-                                                                                
+
 %build
-cd console
-ant -Dlib.dir=%{_libdir}
-                                                                                
+%{ant} \
+    -Dlib.dir=%{_libdir} \
+    -Dbuilt.dir=`pwd`/built \
+    -Dclassdest=%{_javadir}
+
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/usr/share/java
-install -m777 built/release/jars/fedora-* $RPM_BUILD_ROOT/usr/share/java
-install -d $RPM_BUILD_ROOT/usr/bin
-install -m777 built/release/%{name} $RPM_BUILD_ROOT/usr/bin
+install -d $RPM_BUILD_ROOT%{_javadir}
+install -m777 built/release/jars/fedora-* $RPM_BUILD_ROOT%{_javadir}
+install -d $RPM_BUILD_ROOT%{_bindir}
+install -m777 built/release/%{name} $RPM_BUILD_ROOT%{_bindir}
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-%files
-%defattr(-,root,root)
-/usr/share/java/%{name}-%{version}_en.jar
-/usr/bin/%{name}
-
-%files framework
-%defattr(-,root,root)
-/usr/share/java/%{name}-base-%{version}.jar
-/usr/share/java/fedora-mcc-%{version}.jar
-/usr/share/java/fedora-mcc-%{version}_en.jar
-/usr/share/java/fedora-nmclf-%{version}.jar
-/usr/share/java/fedora-nmclf-%{version}_en.jar
-
-%post
-cd /usr/share/java
+# create symlinks
+pushd $RPM_BUILD_ROOT%{_javadir}
 ln -s %{name}-%{version}_en.jar %{name}-%{major_version}_en.jar
 ln -s %{name}-%{version}_en.jar %{name}_en.jar
-
-%post framework
-cd /usr/share/java
 ln -s %{name}-base-%{version}.jar %{name}-base-%{major_version}.jar
 ln -s %{name}-base-%{version}.jar %{name}-base.jar
 ln -s fedora-mcc-%{version}.jar fedora-mcc-%{major_version}.jar
@@ -81,24 +61,40 @@ ln -s fedora-nmclf-%{version}.jar fedora-nmclf-%{major_version}.jar
 ln -s fedora-nmclf-%{version}.jar fedora-nmclf.jar
 ln -s fedora-nmclf-%{version}_en.jar fedora-nmclf-%{major_version}_en.jar
 ln -s fedora-nmclf-%{version}_en.jar fedora-nmclf_en.jar
+popd
 
-%preun
-rm -rf /usr/share/java/%{name}-%{major_version}_en.jar
-rm -rf /usr/share/java/%{name}_en.jar
+%clean
+rm -rf $RPM_BUILD_ROOT
 
-%preun framework
-rm -rf /usr/share/java/%{name}-base-%{major_version}.jar
-rm -rf /usr/share/java/%{name}-base.jar
-rm -rf /usr/share/java/fedora-mcc-%{major_version}.jar
-rm -rf /usr/share/java/fedora-mcc.jar
-rm -rf /usr/share/java/fedora-mcc-%{major_version}_en.jar
-rm -rf /usr/share/java/fedora-mcc_en.jar
-rm -rf /usr/share/java/fedora-nmclf-%{major_version}.jar
-rm -rf /usr/share/java/fedora-nmclf.jar
-rm -rf /usr/share/java/fedora-nmclf-%{major_version}_en.jar
-rm -rf /usr/share/java/fedora-nmclf_en.jar
+%files
+%defattr(-,root,root)
+%{_javadir}/%{name}-%{version}_en.jar
+%{_javadir}/%{name}-%{major_version}_en.jar
+%{_javadir}/%{name}_en.jar
+%{_bindir}/%{name}
+
+%files framework
+%defattr(-,root,root)
+%{_javadir}/%{name}-base-%{version}.jar
+%{_javadir}/%{name}-base-%{major_version}.jar
+%{_javadir}/%{name}-base.jar
+%{_javadir}/fedora-mcc-%{version}.jar
+%{_javadir}/fedora-mcc-%{major_version}.jar
+%{_javadir}/fedora-mcc.jar
+%{_javadir}/fedora-mcc-%{version}_en.jar
+%{_javadir}/fedora-mcc-%{major_version}_en.jar
+%{_javadir}/fedora-mcc_en.jar
+%{_javadir}/fedora-nmclf-%{version}.jar
+%{_javadir}/fedora-nmclf-%{major_version}.jar
+%{_javadir}/fedora-nmclf.jar
+%{_javadir}/fedora-nmclf-%{version}_en.jar
+%{_javadir}/fedora-nmclf-%{major_version}_en.jar
+%{_javadir}/fedora-nmclf_en.jar
 
 %changelog
+* Fri Jul 27 2007 Rich Megginson <rmeggins@redhat.com> 1.1.0-4
+- fedora-ized build - clean up in prep for package review
+
 * Fri Jul 27 2007 Nathan Kinder <nkinder@redhat.com> 1.1.0-3
 - Changed package name to be less generic.
 
