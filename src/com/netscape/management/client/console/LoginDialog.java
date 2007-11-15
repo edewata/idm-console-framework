@@ -249,18 +249,14 @@ SuiConstants {
       * invoke help
       */
     protected void helpInvoked() {
-        String urlString = Console._resource.getString("login", "help");
-        if (urlString.length()>0) {
-          //one level up to the <sr> instead of <sr>/java
-          File f = new File("..");
-                    
-          try {
-            URL url = f.toURL();
-                    
-            Browser browser = new Browser();
-            browser.open(url.toString()+urlString,  Browser.EXISTING_WINDOW);
-          } catch (Exception urlError) {
-          }
+        /* Display a help dialog */
+        String helpMsg = Console._resource.getString("login", "help");
+        if (helpMsg.length()>0) {
+            JOptionPane.showMessageDialog(
+                    SplashScreen.getInstance(), helpMsg,
+                    Console._resource.getString("login","helptitle"),
+                    JOptionPane.INFORMATION_MESSAGE);
+            ModalDialogUtil.sleep();
         }
     }
 }
