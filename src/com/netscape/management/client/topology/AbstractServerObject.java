@@ -74,7 +74,6 @@ INodeInfo, SuiConstants {
                 "nsVendor", //"nsNickName",
                 "nsProductVersion", "nsBuildNumber", "nsRevisionNumber",
                 //"nsSerialNumber",
-                        //"nsInstalledLocation",
                         //"installationTimeStamp",
                         //"nsExpirationDate",
                         "nsBuildSecurity", };

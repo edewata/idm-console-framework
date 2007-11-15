@@ -152,10 +152,7 @@ INodeInfo {
                 "nsAdminGroupName"), getName(), true, true),
         new NodeData("description",
                 _resource.getString("ServerObject","description"),
-                _description, true),
-        new NodeData("nsInstalledLocation",
-                _resource.getString("ServerObject",
-                "nsInstalledLocation"), _installPath, false), };
+                _description, true), };
     }
 
     /**
