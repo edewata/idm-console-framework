@@ -797,7 +797,8 @@ public class Framework extends JFrame implements IFramework, SuiConstants {
         {
             // Launch a browser
             Browser browser = new Browser();
-            boolean res = browser.open(i18n("menu", "HelpDocHome"), Browser.NEW_WINDOW);
+            boolean res = browser.open(_resource_theme.getString("menu", "HelpDocHome"),
+                                       Browser.NEW_WINDOW);
         }
         else
             Debug.println("Unrecognized Help Menu ID: " + menuID);
