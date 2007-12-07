@@ -1314,7 +1314,6 @@ public class Console implements CommClient {
             rd.showModal();
             if (rd.isCancel())
                 System.exit(0);
-            _splashScreen.toFront();
 
             if (!restartDirectoryServer(rd.getUsername(),
                     rd.getPassword(), rd.getURL())) {
