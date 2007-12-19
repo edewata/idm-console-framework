@@ -12,12 +12,12 @@ URL: http://directory.fedoraproject.org
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
-Source: %{name}-%{version}.tar.bz2
+Source: http://directory.fedoraproject.org/sources/%{name}-%{version}.tar.bz2
 Requires: ldapjdk
-Requires: jss >= 4.2
+Requires: jss
 BuildRequires: ant >= 1.6.2
 BuildRequires: ldapjdk
-BuildRequires: jss >=  4.2 
+BuildRequires: jss
 
 %description
 A Java Management Console framework used for remote server management.
