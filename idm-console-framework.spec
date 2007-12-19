@@ -3,7 +3,7 @@
 
 Name: idm-console-framework
 Version: %{major_version}.%{minor_version}
-Release: 1
+Release: 2%{?dist}
 Summary: Identity Management Console Framework
 
 Group: System Environment/Libraries
@@ -54,7 +54,7 @@ popd
 rm -rf $RPM_BUILD_ROOT
 
 %files
-%defattr(-,root,root)
+%defattr(-,root,root,-)
 %{_javadir}/idm-console-base-%{version}.jar
 %{_javadir}/idm-console-base-%{major_version}.jar
 %{_javadir}/idm-console-base.jar
@@ -72,5 +72,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_javadir}/idm-console-nmclf_en.jar
 
 %changelog
+* Wed Dec 19 2007 Rich Megginson <rmeggins@redhat.com> 1.1.0-2
+- for the fedora ds 1.1 release
+
 * Wed Aug  1 2007 Nathan Kinder <nkinder@redhat.com> 1.1.0-1
 - Initial creation (based on old fedora-idm-console package).
