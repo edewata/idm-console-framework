@@ -21,20 +21,19 @@
 package com.netscape.management.client.util;
 
 import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
 import java.util.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.StringReader;
 import java.net.*;
 import java.text.*;
 import java.beans.*;
 import javax.swing.*;
 import javax.swing.event.*;
-import javax.swing.border.*;
-import javax.swing.text.*;
 import javax.swing.text.html.*;
 import com.netscape.management.client.console.*;
 import com.netscape.management.client.components.*;
-import com.netscape.management.client.comm.*;
 
 /**
  * Dialog to select a topic to display, from a list of URLS organized
