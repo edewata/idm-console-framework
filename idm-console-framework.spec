@@ -1,13 +1,13 @@
 %define major_version 1.1
-%define minor_version 0
+%define minor_version 1
 
 Name: idm-console-framework
 Version: %{major_version}.%{minor_version}
-Release: 2%{?dist}
+Release: 1%{?dist}
 Summary: Identity Management Console Framework
 
 Group: System Environment/Libraries
-License: LGPL
+License: LGPLv2
 URL: http://directory.fedoraproject.org
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -15,9 +15,11 @@ BuildArch: noarch
 Source: http://directory.fedoraproject.org/sources/%{name}-%{version}.tar.bz2
 Requires: ldapjdk
 Requires: jss
+BuildRequires: java-1.7.0-icedtea
 BuildRequires: ant >= 1.6.2
 BuildRequires: ldapjdk
 BuildRequires: jss
+BuildRequires: java-1.7.0-icedtea-devel
 
 %description
 A Java Management Console framework used for remote server management.
@@ -55,6 +57,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
+%doc LICENSE
 %{_javadir}/idm-console-base-%{version}.jar
 %{_javadir}/idm-console-base-%{major_version}.jar
 %{_javadir}/idm-console-base.jar
@@ -72,6 +75,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_javadir}/idm-console-nmclf_en.jar
 
 %changelog
+* Wed Jan  9 2008 Rich Megginson <rmeggins@redhat.com> 1.1.1-1
+- fix rpmlint issues
+- changed license from LGPL to LGPLv2
+- added explicit requires for java-1.7.0-icedtea
+- added LICENSE for doc
+
 * Wed Dec 19 2007 Rich Megginson <rmeggins@redhat.com> 1.1.0-2
 - for the fedora ds 1.1 release
 

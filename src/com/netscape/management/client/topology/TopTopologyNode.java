@@ -20,7 +20,6 @@
 package com.netscape.management.client.topology;
 
 import java.util.*;
-import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.tree.*;
@@ -42,7 +41,7 @@ public class TopTopologyNode extends ServerLocNode {
     }
 
     /**
-      * initialize the top toplogy node
+      * initialize the top topology node
       */
     public void reload() {
         super.reload();

@@ -20,13 +20,10 @@
 package com.netscape.management.client.topology;
 
 import java.util.*;
-import java.net.*;
-import java.io.*;
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
+import java.awt.Component;
 import java.text.MessageFormat;
 import com.netscape.management.client.*;
 import com.netscape.management.client.util.*;

@@ -20,8 +20,8 @@
 package com.netscape.management.client.preferences;
 
 import java.util.*;
-import java.io.*;
-import netscape.ldap.*;
+import java.io.File;
+import java.io.FilenameFilter;
 import com.netscape.management.client.console.*;
 import com.netscape.management.client.util.*;
 
@@ -43,9 +43,6 @@ public class FilePreferenceManager extends PreferenceManager {
     }
 
     public static String getHomePath() {
-        String homePath = null;
-        Properties p = System.getProperties();
-
         File f = new File(Console.PREFERENCE_DIR);
         if (!f.exists())
             f.mkdir();
