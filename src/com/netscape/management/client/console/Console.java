@@ -1515,7 +1515,7 @@ public class Console implements CommClient {
       */
 
     static public void main(String argv[]) {
-		GetOpt opt = new GetOpt("h:a:A:f:l:u:w:s:D:x:", argv);
+		GetOpt opt = new GetOpt("h:a:A:f:l:u:w:y:s:D:x:", argv);
          
         if (opt.hasOption('f')) {
             String outFile = opt.getOptionParam('f');
@@ -1594,6 +1594,10 @@ public class Console implements CommClient {
             System.err.println("         -f <file> capture stderr and stdout to <file> (like Unix tee command)");
             System.err.println("         -s server DN (cn=...) or instance ID (e.g. slapd-host)");
             System.err.println("         -x extra options (javalaf,nowinpos,nologo)");
+            System.err.println("         -u username");
+            System.err.println("         -w password");
+            System.err.println("         -w - (read password from standard input)");
+            System.err.println("         -y password_file (read password from a file)");
             System.err.println("\nExample: Console -a https://hostname:10021 -l en");
             waitForKeyPress(); // allow the user to read the msg on Win NT
             System.exit(0);
@@ -1632,7 +1636,34 @@ public class Console implements CommClient {
         String password = null;
         if (opt.hasOption('w')) {
             password = opt.getOptionParam('w');
+            // GetOpt works in such a twisted way that "-" argument values
+            // result in null values received:
+            if (password == null || password.equals("-")) {
+                try {
+                    password = (new BufferedReader(new InputStreamReader(
+                            System.in))).readLine();
+                } catch (IOException e) {
+                    System.err
+                            .println("Problem reading password from standard input "
+                                    + e.getMessage());
+                }
+            }
         }
+        
+        if (opt.hasOption('y')) {
+            String passwdFile = opt.getOptionParam('y');
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(passwdFile));
+                password = br.readLine();
+                br.close();
+            } catch (FileNotFoundException e) {
+                System.err.println("Password file not found: " + e.getMessage());
+            } catch (IOException e) {
+                System.err.println("Problem reading from password file: " + e.getMessage());
+            }
+        }
+
+        
 
         _console = new Console(sAdminURL, localAdminURL, sLang, host, uid, password);
         return;
