@@ -245,7 +245,7 @@ public class TopologyModel extends ResourceModel implements IMenuInfo {
       */
     private void expandFirstNode(IPage viewInstance) {
         ResourceObject root = (ResourceObject) getRoot();
-        if (!root.isLeaf()) {
+        if (!root.isLeaf() && (root.getChildCount() > 0)) {
             ResourceObject firstChild = (ResourceObject) getChild(root, 0);
             if (firstChild instanceof DomainNode)
                 fireExpandTreeNode(viewInstance,

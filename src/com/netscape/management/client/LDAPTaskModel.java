@@ -285,7 +285,7 @@ public class LDAPTaskModel extends TaskModel implements IMenuInfo {
                     } catch (Exception e) {
                         Debug.println(
                                 "LDAPTaskModel.getTasksFromLdap: Could not load class: " +
-                                sJavaClassName);
+                                sJavaClassName + ": Exception: " + e);
                         // This implicitly means that this task should not show up in
                         // in the Task list.
                     }

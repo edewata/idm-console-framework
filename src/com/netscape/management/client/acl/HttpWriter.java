@@ -19,8 +19,6 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.acl;
 
-import java.io.Reader;
-import java.io.Writer;
 import java.io.InputStream;
 import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
@@ -30,7 +28,6 @@ import java.net.URL;
 import com.netscape.management.client.comm.CommClient;
 import com.netscape.management.client.comm.CommRecord;
 import com.netscape.management.client.comm.HttpManager;
-import com.netscape.management.client.comm.HttpChannel;
 
 /**
  * The HttpWriter class overides the close() method of the

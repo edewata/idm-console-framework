@@ -106,6 +106,15 @@ public class ClassLoaderUtil {
             if (iAtSign < 0) {
                 return Class.forName(sFullClassName); // use default system class loader
             }
+            
+            if (Debug.noJarsEnabled()) {
+            	if (iAtSign >= 0) {
+            		sFullClassName = sFullClassName.substring(0, iAtSign);
+            	}
+            	// for debuggers - do not download and install and use a jar file
+            	// assume the local class loader has all of the classes
+            	return Class.forName(sFullClassName); // use default system class loader
+            }
 
             if (Debug.isEnabled()) {
                 Debug.println(1, "ClassLoaderUtil.getClass("+sFullClassName+")");
