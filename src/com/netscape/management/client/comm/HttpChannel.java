@@ -135,7 +135,6 @@ public class HttpChannel implements Runnable, CommChannel {
         }
         
         if (thread != null) {
-            thread.stop();
             thread = null;
         }
     }
@@ -166,10 +165,13 @@ public class HttpChannel implements Runnable, CommChannel {
             } catch (IOException e) {
                 Debug.println(name + " error> " + e);
                 kill();
+                break;
             }
 
-            if (cr == null)
+            if (cr == null) {
                 kill();
+                break;
+            }
 
             cr.setChannel(this);
 

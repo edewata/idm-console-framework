@@ -1320,11 +1320,20 @@ public class Console implements CommClient {
                 return LDAP_INIT_FAILED;
             } else {
                 msg = _resource.getString("info","restartDS");
+                Debug.println("Console.LDAPinitialization(): " +
+                			  "before displaying message dialog with message " +
+                			  msg);
+                _splashScreen.toBack();
+                Thread.yield();
                 JOptionPane.showMessageDialog(
                         SplashScreen.getInstance(), msg,
                         _resource.getString("info","restartDSTitle"),
                         JOptionPane.INFORMATION_MESSAGE);
+                Debug.println("Console.LDAPinitialization(): " +
+          			  "after displaying message dialog with message " +
+          			  msg);
                 _dsHasBeenRestarted = true;
+                _splashScreen.toFront();
                 return LDAP_INIT_DS_RESTART;
             }
         }

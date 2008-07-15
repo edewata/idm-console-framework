@@ -451,8 +451,6 @@ public class HttpsChannel extends HttpChannel implements
         socket = null;
 
         Debug.println(name + " close> Closed");
-
-        thread.stop();
     }
 
     // Show dialog on the EventDispatchThread

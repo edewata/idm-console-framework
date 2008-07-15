@@ -43,6 +43,7 @@ public class Debug {
     public static final String TYPE_JSS  = "jss";  // jss calls
     public static final String TYPE_HTTP = "http"; // http calls
     public static final String TYPE_RSPTIME = "rsptime"; // response time
+    public static final String TYPE_NOJARS = "nojars"; // no jars - for debuggers
 
     //Predefined keywords used for gc trace type
     public static final String KW_CREATE = "Create   ";
@@ -54,7 +55,8 @@ public class Debug {
 
     // Flags "enabled" for predefined trace types. Fast way to check if a
     // predefined type is enabled, rather than searching _traceTypes list
-    private static boolean _fTraceGC, _fTraceLdap, _fTraceJSS, _fTraceHttp, _fTraceTime;
+    private static boolean _fTraceGC, _fTraceLdap, _fTraceJSS, _fTraceHttp, _fTraceTime,
+    	_fNoJars;
 
     // Flags for show entry options
     public static final int SHOW_INDEX = 1;
@@ -112,6 +114,9 @@ public class Debug {
     }
     public static boolean timeTraceEnabled() {
         return _fTraceTime;
+    }
+    public static boolean noJarsEnabled() {
+        return _fNoJars;
     }
     public static int getShowFlags() {
         return _showFlags;
@@ -216,6 +221,9 @@ public class Debug {
                             new Date(_appStartTimeStamp)) + " JVM Loaded");
                     _lastTimeStamp = _appStartTimeStamp;
                 }
+            } else if (traceType.equals(TYPE_NOJARS)) {
+            	_fNoJars = true;
+                _traceTypes.addElement(traceType);
             } else {
                 // Bad trace type
                 System.err.println("Bad trace type: " + traceType);
@@ -288,6 +296,7 @@ public class Debug {
         usage += "\n"+TYPE_HTTP + "\t\tHTTP Calls";
         usage += "\n"+TYPE_GC + "\t\tGarbage Collection";
         usage += "\n"+TYPE_RSPTIME + "\t\tResponse Time";
+        usage += "\n"+TYPE_NOJARS + "\t\tno jar files - for debuggers";
         usage += "\nDebug Flags:";
         usage += "\nidx\t\tEnumerate debug entries";
         usage += "\nlvl\t\tShow debug level for debug entries";

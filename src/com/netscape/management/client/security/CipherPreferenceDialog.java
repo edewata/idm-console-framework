@@ -103,6 +103,8 @@ public class CipherPreferenceDialog extends AbstractDialog {
     public final static String RSA_RC4_128_MD5 = "rsa_rc4_128_md5";
     /**SSL3 Domestic - Triple DES with 168 bit encryption and SHA message authentication*/
     public final static String RSA_3DES_SHA    = "rsa_3des_sha";
+    /**SSL3 Domestic - RC4 with 128 bit encryption and SHA message authentication*/
+    public final static String RSA_RC4_128_SHA = "rsa_rc4_128_sha";
 
     // fortezza ciphers
     /**SSL3 Domestic - Fortezza with 80 bit encryption and SHA message authentication */
@@ -117,14 +119,14 @@ public class CipherPreferenceDialog extends AbstractDialog {
     public final static String RSA_FIPS_3DES_SHA = "fips_3des_sha";
 
     /* default SSL V2 export ciphers */
-    final static String V2EXPORT   = "+"+RC4EXPORT+
-                                  ",+"+RC2EXPORT;
+    final static String V2EXPORT   = "-"+RC4EXPORT+
+                                  ",-"+RC2EXPORT;
 
     /* default SSL V2 domestic ciphers */
-    final static String V2DOMESTIC = "+"+RC4+
-                                  ",+"+RC2+
-                                  ",+"+DES+
-                                  ",+"+DES3;
+    final static String V2DOMESTIC = "-"+RC4+
+                                  ",-"+RC2+
+                                  ",-"+DES+
+                                  ",-"+DES3;
     
     /* default SSL V3 domestic ciphers */
     final static String V3EXPORT   = "+"+RSA_RC4_40_MD5+
@@ -523,6 +525,9 @@ public class CipherPreferenceDialog extends AbstractDialog {
 		cipherEntry = new CipherEntry(cipher, true, des, 56, md5, SSL_V2);
 	    } else if (cipher.equals(DES3)) {
 		cipherEntry = new CipherEntry(cipher, true, des, 168, md5, SSL_V2);
+	    } else {
+	    	Debug.println("CipherPreferenceDialog.createCipherEntry(): " +
+	    				  "Unknown SSLv2 cipher: " + cipher);
 	    }
 
 	//V3/TLS Cipher
@@ -551,6 +556,9 @@ public class CipherPreferenceDialog extends AbstractDialog {
 		cipherEntry = new CipherEntry(cipher, true, rc4+" "+fortezza, 128, sha, SSL_V3);
 	    } else if (cipher.equals(FORTEZZA_NULL)) {
 		cipherEntry = new CipherEntry(cipher, false, none+" "+fortezza, 0, sha, SSL_V3);
+	    } else {
+	    	Debug.println("CipherPreferenceDialog.createCipherEntry(): " +
+	    				  "Unknown SSLv3 cipher: " + cipher);
 	    }
 
 	    //TLS ciphers
@@ -559,7 +567,10 @@ public class CipherPreferenceDialog extends AbstractDialog {
 		    cipherEntry = new CipherEntry(cipher, true, des, 56, sha, SSL_V3, true);
 		} else if (cipher.equals(TLS_RSA_RC4_SHA)) {
 		    cipherEntry = new CipherEntry(cipher, true, rc4, 56, sha, SSL_V3, true);
-		}
+	    } else {
+	    	Debug.println("CipherPreferenceDialog.createCipherEntry(): " +
+	    				  "Unknown TLSv1 cipher: " + cipher);
+	    }
 	    }
 	}
 
