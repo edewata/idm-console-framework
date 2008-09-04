@@ -1,5 +1,5 @@
 %define major_version 1.1
-%define minor_version 1
+%define minor_version 2
 
 Name: idm-console-framework
 Version: %{major_version}.%{minor_version}
@@ -15,11 +15,11 @@ BuildArch: noarch
 Source: http://directory.fedoraproject.org/sources/%{name}-%{version}.tar.bz2
 Requires: ldapjdk
 Requires: jss
-BuildRequires: java-1.7.0-icedtea
+Requires: java
 BuildRequires: ant >= 1.6.2
 BuildRequires: ldapjdk
 BuildRequires: jss
-BuildRequires: java-1.7.0-icedtea-devel
+BuildRequires: java-devel
 
 %description
 A Java Management Console framework used for remote server management.
@@ -36,7 +36,7 @@ A Java Management Console framework used for remote server management.
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_javadir}
-install -m777 built/release/jars/idm-console-* $RPM_BUILD_ROOT%{_javadir}
+install -m644 built/release/jars/idm-console-* $RPM_BUILD_ROOT%{_javadir}
 
 # create symlinks
 pushd $RPM_BUILD_ROOT%{_javadir}
@@ -75,6 +75,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_javadir}/idm-console-nmclf_en.jar
 
 %changelog
+* Wed Jul  2 2008 Rich Megginson <rmeggins@redhat.com> 1.1.2-1
+- numerous fixes for threading issues and help for debugging and eclipse
+
+* Tue Apr 15 2008 Rich Megginson <rmeggins@redhat.com> 1.1.1-3
+- use java > 1.5.0 for the requirements
+
+* Mon Apr 14 2008 Rich Megginson <rmeggins@redhat.com> 1.1.1-2
+- install jar files with mode 644
+
 * Wed Jan  9 2008 Rich Megginson <rmeggins@redhat.com> 1.1.1-1
 - fix rpmlint issues
 - changed license from LGPL to LGPLv2
