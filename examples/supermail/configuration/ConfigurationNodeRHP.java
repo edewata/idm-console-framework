@@ -413,7 +413,7 @@ public class ConfigurationNodeRHP extends JPanel implements SuiConstants
 
     /**
      * Show help for Netscape Server Product.
-     * Help pages are expected to be installed in a netscape server root. The help page is
+     * Help pages are expected to be installed with other console help pages. The help page is
      * retrieved using the Admin Server help CGI
      */
     protected void showHelp() {

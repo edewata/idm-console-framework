@@ -131,8 +131,8 @@ public class About extends AbstractDialog {
         othersPane.setLayout(new BoxLayout(othersPane, BoxLayout.X_AXIS));
 
         // get resource string, figure out which logo file and copyright file to grab
-        // path is relative to <server root>
-        // copyright and logo info will stay under <server root>/manual/
+        // path is relative to datadir
+        // copyright and logo info will stay under datadir/manual/
         StringTokenizer st =
                 new StringTokenizer(_resource.getString("", index), ",\n\r");
         String htmlFile = "";
