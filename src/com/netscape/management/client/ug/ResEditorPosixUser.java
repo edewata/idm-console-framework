@@ -490,14 +490,84 @@ Observer {
      * @return  true if all required information has been provided; false otherwise
      */
     public boolean isComplete() {
-        if (_cbEnable.isSelected() && 
-            ((_tfUIDNumber.getText().trim().length() == 0)||(_tfGIDNumber.getText().trim().length()==0))) {
-            SuiOptionPane.showMessageDialog(null,
-                                            _resource.getString("resourceEditor", "IncompleteText"),
-                                            _resource.getString("resourceEditor",
-                                                                "IncompleteTitle"), SuiOptionPane.ERROR_MESSAGE);
-            ModalDialogUtil.sleep();
-            return false;
+        if (_cbEnable.isSelected()) {
+            if ((_tfUIDNumber.getText().trim().length() == 0)||(_tfGIDNumber.getText().trim().length()==0)) {
+                SuiOptionPane.showMessageDialog(null,
+                        _resource.getString("resourceEditor", "IncompleteText"),
+                        _resource.getString("resourceEditor",
+                        "IncompleteTitle"), SuiOptionPane.ERROR_MESSAGE);
+                ModalDialogUtil.sleep();
+                return false;
+            }
+            int testval;
+            try {
+                testval = Integer.parseInt(_tfUIDNumber.getText().trim());
+            } catch (NumberFormatException nfe) {
+                SuiOptionPane.showMessageDialog(null,
+                        _resource.getString("resourceEditor", "UidNotANumberText"),
+                        _resource.getString("resourceEditor",
+                        "UidNotANumberTitle"), SuiOptionPane.ERROR_MESSAGE);
+                ModalDialogUtil.sleep();
+                return false;
+            }
+            if (testval < 0) {
+                SuiOptionPane.showMessageDialog(null,
+                        _resource.getString("resourceEditor", "UidNotValidText"),
+                        _resource.getString("resourceEditor",
+                        "UidNotValidTitle"), SuiOptionPane.ERROR_MESSAGE);
+                ModalDialogUtil.sleep();
+                return false;                
+            }
+            if (testval == 0) {
+                Object[] val1 = {_resource.getString("resourceEditor", "yesButton"),
+                        _resource.getString("resourceEditor", "noButton")};
+                Object[] msg1 = {_resource.getString("resourceEditor", "errorText1"),
+                        _resource.getString("resourceEditor", "errorText2"),
+                        _resource.getString("resourceEditor", "errorText3")};
+                int selection = SuiOptionPane.showOptionDialog(null, msg1,
+                        _resource.getString("resourceEditor", "errorTitle"),
+                        SuiOptionPane.DEFAULT_OPTION,
+                        SuiOptionPane.WARNING_MESSAGE, null, val1, val1[0]);
+
+                if (selection == 1) {
+                    ModalDialogUtil.sleep();
+                    return false;
+                }
+            }
+            try {
+                testval = Integer.parseInt(_tfGIDNumber.getText().trim());
+            } catch (NumberFormatException nfe) {
+                SuiOptionPane.showMessageDialog(null,
+                        _resource.getString("resourceEditor", "GidNotANumberText"),
+                        _resource.getString("resourceEditor",
+                        "GidNotANumberTitle"), SuiOptionPane.ERROR_MESSAGE);
+                ModalDialogUtil.sleep();
+                return false;
+            }
+            if (testval < 0) {
+                SuiOptionPane.showMessageDialog(null,
+                        _resource.getString("resourceEditor", "GidNotValidText"),
+                        _resource.getString("resourceEditor",
+                        "GidNotValidTitle"), SuiOptionPane.ERROR_MESSAGE);
+                ModalDialogUtil.sleep();
+                return false;                
+            }
+            if (testval == 0) {
+                Object[] val1 = {_resource.getString("resourceEditor", "yesButton"),
+                        _resource.getString("resourceEditor", "noButton")};
+                Object[] msg1 = {_resource.getString("resourceEditor", "errorText1"),
+                        _resource.getString("resourceEditor", "errorText2"),
+                        _resource.getString("resourceEditor", "errorText3")};
+                int selection = SuiOptionPane.showOptionDialog(null, msg1,
+                        _resource.getString("resourceEditor", "errorTitle"),
+                        SuiOptionPane.DEFAULT_OPTION,
+                        SuiOptionPane.WARNING_MESSAGE, null, val1, val1[0]);
+
+                if (selection == 1) {
+                    ModalDialogUtil.sleep();
+                    return false;
+                }
+            }
         }
         return true;
     }
