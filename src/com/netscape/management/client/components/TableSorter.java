@@ -184,6 +184,10 @@ public class TableSorter extends TableMap implements ISortableTableModel
     public void reallocateIndexes() {
         int rowCount = model.getRowCount();
         Debug.println(8, "TableSorter.reallocateIndexes: getRowCount=" + rowCount);
+        if ((indexes != null) && (rowCount == indexes.length)) {
+            Debug.println(8, "TableSorter.reallocateIndexes: the model row count is the same as our row count - no need to reallocate");
+            return;
+        }
 
         // Set up a new array of indexes with the right number of elements
         // for the new data model.
@@ -196,8 +200,13 @@ public class TableSorter extends TableMap implements ISortableTableModel
     }
 
     public void tableChanged(TableModelEvent e) {
-        Debug.println(8, "TableSorter.tableChanged"); 
-        reallocateIndexes();
+        Debug.println(8, "TableSorter.tableChanged");
+        if (e.getType() != TableModelEvent.UPDATE) {
+            Debug.println(8, "TableSorter.checkModel: table size was changed - need to reallocate indexes");
+            reallocateIndexes();
+        } else {
+            Debug.println(8, "TableSorter.checkModel: table size was not changed - no need to reallocate indexes");            
+        }
         super.tableChanged(e);
     }
 

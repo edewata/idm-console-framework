@@ -96,7 +96,8 @@ public class Table extends JTable
      */
     public Table(TableModel dm, boolean enableClientSideSorting)
     {
-        this((enableClientSideSorting ? new TableSorter(dm) : dm), null, null);
+        this(((enableClientSideSorting && !(dm instanceof ISortableTableModel)) ?
+                new TableSorter(dm) : dm), null, null);
         this.enableClientSideSorting = enableClientSideSorting; 
     }
     
@@ -135,7 +136,6 @@ public class Table extends JTable
     {
         super(dm, cm, sm);
         initialize();
-        TableModel tm = getModel();
 		initializeColumnHeaders();
 	}
 
@@ -214,11 +214,16 @@ public class Table extends JTable
         Enumeration e = tcm.getColumns();
         int viewColumnIndex = 0;
         TableModel tm  = getModel();
+        // can't refer to this.enableClientSideSorting here because initializeColumnHeaders
+        // can be called from ctor, before this members are set - but the ctor will have
+        // wrapped tm in a sortable interface, so check the type of the model to see if it
+        // is sortable
+        boolean isSortable = (tm instanceof ISortableTableModel);
         while (e.hasMoreElements())
         {
             int columnIndex = convertColumnIndexToModel(viewColumnIndex); 
             int alignment = getTableHeaderAlignmentByClass(tm.getColumnClass(columnIndex));
-            TextHeaderRenderer headerRenderer = new TextHeaderRenderer(alignment, this.enableClientSideSorting);
+            TextHeaderRenderer headerRenderer = new TextHeaderRenderer(alignment, isSortable);
             TableColumn column = (TableColumn)e.nextElement();
             column.setHeaderRenderer(headerRenderer);
             viewColumnIndex++;
@@ -318,28 +323,11 @@ public class Table extends JTable
 	 */
 	public void setModel(TableModel dataModel) throws IllegalArgumentException
 	{
-
-        //tableModel = dataModel;
-        if (this.enableClientSideSorting) {
-          super.setModel(new TableSorter(dataModel));
-        } else {
-          super.setModel(dataModel);
-        }
-
+	    super.setModel(dataModel);
 		initializeColumnHeaders();
 	}
 
 
-	/**
-	 * Gets the data model for this table.
-	 * 
-	 * @return TableModel the data source for this table
-	 * @see JTable#setModel()
-	 */
-    public TableModel getModel() {
-        return super.getModel();
-    }
-	
 	/**
 	 * Sets the column model for this table to newModel and registers 
 	 * for listener notifications from the new column model. Also sets 
