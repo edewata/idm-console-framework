@@ -489,7 +489,14 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
         _tfWorkstationList.setText(_oldWorkstationList);
         
         _oldExpiredDate = observable.get(_NT_USER_ACCT_EXPIRED,0);
-        _lAccountExpired.setText(_oldExpiredDate);
+        Date dt = ADUtil.convertToJavaDateTime(_oldExpiredDate);
+        if (ADUtil.neverExpires(dt)) {
+            _lAccountExpired.setText(_resource.getString("resourceEditor", "NeverExpires"));
+        } else if (dt != null) {
+            _lAccountExpired.setText(dt.toString());
+        } else {
+            _lAccountExpired.setText("");
+        }
         _newExpiredDate = _oldExpiredDate;
     }
     
@@ -617,24 +624,19 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
         } else if (e.getSource()==_bExpiredDate)
         {
             // expire date
-            String sFormat = "yyyyMMddHHmmss";
-            SimpleDateFormat formatter = new SimpleDateFormat(sFormat);
-            Date d = new Date();
-            if (!_newExpiredDate.equals(""))
-            {
-                ParsePosition p = new ParsePosition(0);
-                d = formatter.parse(_newExpiredDate,p);
-            }
+            Date dt = ADUtil.convertToJavaDateTime(_newExpiredDate);
             Calendar c = Calendar.getInstance();
-            c.setTime(d);
+            if (!ADUtil.neverExpires(dt) && (dt != null)) {
+                c.setTime(dt);
+            }
             DateTimePicker picker = new DateTimePicker(UtilConsoleGlobals.getActivatedFrame(),c);
             picker.show();
             if (!picker.isCancel())
             {
                 c = picker.getCalendar();
-                d = c.getTime();
-                _newExpiredDate = formatter.format(d);
-                _lAccountExpired.setText(_newExpiredDate);
+                dt = c.getTime();
+                _newExpiredDate = ADUtil.convertToFileTime(dt);
+                _lAccountExpired.setText(dt.toString());
             }
         }
     }
