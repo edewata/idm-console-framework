@@ -19,14 +19,16 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.topology;
 
-import java.util.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.tree.*;
-import com.netscape.management.client.*;
-import com.netscape.management.client.console.*;
-import com.netscape.management.client.util.*;
-import netscape.ldap.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
+
+import javax.swing.tree.MutableTreeNode;
+
+import com.netscape.management.client.IResourceObject;
+import com.netscape.management.client.console.Console;
+import com.netscape.management.client.console.SplashScreen;
+import com.netscape.management.client.util.Debug;
 
 
 /**
