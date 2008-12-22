@@ -19,17 +19,39 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.topology;
 
-import java.util.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.tree.*;
+import javax.swing.JCheckBox;
+import javax.swing.JPasswordField;
+import javax.swing.event.ChangeListener;
+import javax.swing.tree.MutableTreeNode;
+
+import netscape.ldap.LDAPAttribute;
+import netscape.ldap.LDAPConnection;
+import netscape.ldap.LDAPEntry;
+import netscape.ldap.LDAPException;
+import netscape.ldap.LDAPModification;
+import netscape.ldap.LDAPSearchResults;
+
 import java.awt.Component;
 import java.text.MessageFormat;
-import com.netscape.management.client.*;
-import com.netscape.management.client.util.*;
-import com.netscape.management.client.console.*;
-import com.netscape.management.nmclf.*;
-import netscape.ldap.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
+
+import com.netscape.management.client.IMenuInfo;
+import com.netscape.management.client.IMenuItem;
+import com.netscape.management.client.IPage;
+import com.netscape.management.client.IResourceObject;
+import com.netscape.management.client.ResourceModel;
+import com.netscape.management.client.ResourcePage;
+import com.netscape.management.client.console.Console;
+import com.netscape.management.client.console.ConsoleInfo;
+import com.netscape.management.client.console.SplashScreen;
+import com.netscape.management.client.util.Debug;
+import com.netscape.management.client.util.LDAPUtil;
+import com.netscape.management.client.util.RemoteImage;
+import com.netscape.management.client.util.ResourceSet;
+import com.netscape.management.client.util.SingleBytePasswordField;
+import com.netscape.management.nmclf.SuiPasswordField;
 
 
 /**
