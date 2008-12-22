@@ -19,19 +19,41 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.security;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import java.util.zip.*;
-import java.util.jar.*;
-import java.net.*;
+import java.awt.Component;
+import java.awt.Dialog;
+import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.Vector;
+import java.util.jar.Attributes;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
+import java.util.zip.ZipEntry;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.InputStream;
-import javax.swing.*;
-import javax.swing.event.*;
-import com.netscape.management.client.console.*;
-import com.netscape.management.client.components.*;
+import java.net.URL;
+
+import javax.swing.ButtonGroup;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+import com.netscape.management.client.security.csr.ICAPlugin;
+import com.netscape.management.client.security.csr.IUIPage;
 import com.netscape.management.client.util.ModalDialogUtil;
 import com.netscape.management.client.util.ResourceSet;
 import com.netscape.management.client.util.MultilineLabel;
@@ -41,9 +63,19 @@ import com.netscape.management.client.util.Debug;
 import com.netscape.management.client.util.AdmTask;
 import com.netscape.management.client.util.Help;
 import com.netscape.management.client.util.Browser;
-import com.netscape.management.nmclf.*;
-import com.netscape.management.client.security.csr.*;
-import com.netscape.management.client.preferences.*;
+import com.netscape.management.client.preferences.LDAPPreferences;
+import com.netscape.management.client.components.ErrorDialog;
+import com.netscape.management.client.components.IDataCollectionModel;
+import com.netscape.management.client.components.IWizardSequenceManager;
+import com.netscape.management.client.components.Wizard;
+import com.netscape.management.client.components.WizardDataCollectionModel;
+import com.netscape.management.client.components.WizardPage;
+import com.netscape.management.client.components.WizardSequenceManager;
+import com.netscape.management.client.console.Console;
+import com.netscape.management.client.console.ConsoleInfo;
+import com.netscape.management.nmclf.SuiConstants;
+import com.netscape.management.nmclf.SuiScrollPane;
+
 import netscape.ldap.*;
 
 /**
@@ -401,7 +433,6 @@ public class CertRequestWizard  {
 		    String jarFilename = fList[i].getParent()+"/"+fList[i].getName();
 		    JarFile jarfile = new JarFile(jarFilename); 
 		    Manifest mf = jarfile.getManifest();
-		    Map map = mf.getEntries();
 
 		    Set set = mf.getEntries().keySet();
 		    Iterator iterator = set.iterator();
