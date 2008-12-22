@@ -19,11 +19,13 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.preferences;
 
-import java.util.*;
 import java.io.File;
 import java.io.FilenameFilter;
-import com.netscape.management.client.console.*;
-import com.netscape.management.client.util.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
+
+import com.netscape.management.client.console.Console;
+import com.netscape.management.client.util.Debug;
 
 /**
  * A PreferenceManager that reads and stores preference
