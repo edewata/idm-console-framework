@@ -186,8 +186,20 @@ public class CertRequestInfoPage extends JPanel implements SuiConstants, IUIPage
 	_sessionData.put("organization", o.getText());
 	_sessionData.put("org_unit", ou.getText());
 	_sessionData.put("locality", l.getText());
-	_sessionData.put("country" , (c.getSelectedItem() != null)?((String)(c.getSelectedItem())).substring(0, 2):"");
-	_sessionData.put("state" , (st.getSelectedItem()!=null)?((String)(st.getSelectedItem())).substring(0,2):"");
+	String c_str = (String)c.getSelectedItem();
+	if ((c_str != null) && (c_str.length() >= 2)) {
+	    c_str = c_str.substring(0, 2);
+	} else {
+	    c_str = "";
+	}
+	_sessionData.put("country" , c_str);
+	String st_str = (String)st.getSelectedItem();
+	if ((st_str != null) && (st_str.length() >= 2)) {
+	    st_str = st_str.substring(0, 2);
+	} else {
+	    st_str = "";
+	}
+	_sessionData.put("state" , st_str);
 	
         
 	setDN();
