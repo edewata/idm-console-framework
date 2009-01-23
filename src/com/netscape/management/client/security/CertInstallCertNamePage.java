@@ -41,8 +41,15 @@ class CertInstallCertNamePage extends WizardPage implements SuiConstants {
 	if (dataModel.getValue("certtype").equals(Integer.toString(CertInstallWizard.CA))) {
 	    CertificateList certList = (CertificateList)(dataModel.getValue("certlist"));
 	    Vector cert = (Vector)(certList.getCACerts());
-	    certName.setText(KeyCertUtility.getCertName((Hashtable)(cert.elementAt(0)), _tokenName, _consoleInfo, _sie));
-
+	    if ((cert == null) || cert.isEmpty()) {
+	        cert = (Vector)(certList.getServerCerts());
+	    }
+	    if ((cert == null) || cert.isEmpty()) {
+	        cert = (Vector)(certList.getCerts());	        
+	    }
+	    if ((cert != null) && !cert.isEmpty()) {
+	        certName.setText(KeyCertUtility.getCertName((Hashtable)(cert.elementAt(0)), _tokenName, _consoleInfo, _sie));
+	    }
 	    certName.setEnabled(false);	    
 	    certType.setText(resource.getString("CertInstallCertNamePage", "caCert"));
 	} else {
