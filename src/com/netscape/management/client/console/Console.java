@@ -266,8 +266,9 @@ public class Console implements CommClient {
              * nsserveraddress might not be defined, which means that the
              * admin server should listen on all interfaces rather than on
              * a specific one. Read serverhostname from the SIE entry.
+             * admin server uses 0.0.0.0 to mean listen on all interfaces
              */
-            if (host == null || host.trim().length() == 0) {
+            if ((host == null) || (host.trim().length() == 0) || host.equals("0.0.0.0")) {
                 LDAPEntry sieEntry = ldc.read(dn=adminServerDN, new String[] {"serverhostname"});
                 if (sieEntry == null) {
                     Debug.println("ERROR Console.getInstanceAdminURL: " +
