@@ -365,8 +365,9 @@ public class ClassLoaderUtil {
              * nsserveraddress might not be defined, which means that the
              * admin server should listen on all interfaces rather than on
              * a specific one. Read serverhostname from the SIE entry.
+             * admin server uses 0.0.0.0 to mean listen on all interfaces
              */
-            if (sHost == null || sHost.trim().length() == 0) {
+            if ((sHost == null) || (sHost.trim().length() == 0) || sHost.equals("0.0.0.0")) {
                 LDAPEntry sieEntry = readEntry(ldc, sLocation, new String[] {"serverhostname"});
                 if (sieEntry == null) {
                     throw new LDAPException(
