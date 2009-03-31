@@ -76,7 +76,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_javadir}/idm-console-nmclf_en.jar
 
 %changelog
-* Tue Jan  6 2009 Rich Megginson <rmeggins@redhat.com> 1.1.3-1
+* Tue Mar 31 2009 Rich Megginson <rmeggins@redhat.com> 1.1.3-1
 - this is the 1.1.3 release
 - use the epoch with the java-devel version
 
