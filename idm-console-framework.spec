@@ -1,5 +1,5 @@
 %define major_version 1.1
-%define minor_version 2
+%define minor_version 3
 
 Name: idm-console-framework
 Version: %{major_version}.%{minor_version}
@@ -14,12 +14,13 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 Source: http://directory.fedoraproject.org/sources/%{name}-%{version}.tar.bz2
 Requires: ldapjdk
-Requires: jss
-Requires: java
+Requires: jss >= 4.2
+# Urge use of OpenJDK for runtime
+Requires: java >= 1:1.6.0
+BuildRequires: java-devel >= 1:1.6.0
 BuildRequires: ant >= 1.6.2
 BuildRequires: ldapjdk
-BuildRequires: jss
-BuildRequires: java-devel
+BuildRequires: jss >=  4.2 
 
 %description
 A Java Management Console framework used for remote server management.
@@ -75,6 +76,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_javadir}/idm-console-nmclf_en.jar
 
 %changelog
+* Tue Jan  6 2009 Rich Megginson <rmeggins@redhat.com> 1.1.3-1
+- this is the 1.1.3 release
+- use the epoch with the java-devel version
+
 * Wed Jul  2 2008 Rich Megginson <rmeggins@redhat.com> 1.1.2-1
 - numerous fixes for threading issues and help for debugging and eclipse
 
