@@ -758,6 +758,14 @@ public class LDAPUtil {
         return res.toString();
     }
 
+    /**
+     * A method to escape DN string (RFC 4514)
+     * Note: #<HEX><HEX> format hasn't been supported
+     */
+    public static String escapeDnString(String s) {
+        return s.replaceAll("[\"+,;<>=]", "\\\\$0");
+    }
+
     // DS ldbm database configuration root DN
     final static String LDBM_PLUGIN_ROOT = "cn=ldbm database, cn=plugins, cn=config";
 }

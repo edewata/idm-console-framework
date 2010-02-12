@@ -937,12 +937,15 @@ public class Console implements CommClient {
 
             // this *should* already be created at install time, but just in case
             // note: if this entry is created here, then ACIs (for non-admins) will break
+            String authDN = _info.getAuthenticationDN();
+            String escapedAuthDN = LDAPUtil.escapeDnString(authDN);
+            Debug.println("Console.initialize: authDN: "+authDN+
+                          ", escaped: "+escapedAuthDN);
             String userPreferenceDN = LDAPUtil.createEntry(ldc,
                     LDAPUtil.getUserPreferenceOU(),
                     LDAPUtil.getInstalledSoftwareDN());
             userPreferenceDN = LDAPUtil.createEntry(ldc,
-                    "\""+_info.getAuthenticationDN() + "\"",
-                    userPreferenceDN, true);
+                    escapedAuthDN, userPreferenceDN, true);
             _info.setUserPreferenceDN(userPreferenceDN);
         }
         // Always enable context help.
