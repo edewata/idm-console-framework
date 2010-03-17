@@ -868,6 +868,7 @@ public class Console implements CommClient {
                             while (eValues.hasMoreElements()) {
                                 String sJarClassName =
                                         (String) eValues.nextElement();
+                                if (sJarClassName.indexOf("@") >= 0) continue;
                                 Class c = ClassLoaderUtil.getClass(
                                         _info, sJarClassName);
 
@@ -889,6 +890,7 @@ public class Console implements CommClient {
                             while (deleteClasses.hasMoreElements()) {
                                 String jarClassname = (String)
                                         deleteClasses.nextElement();
+                                if (jarClassname.indexOf("@") >= 0) continue;
                                 Class c = ClassLoaderUtil.getClass(
                                         _info, jarClassname);
                                 if (c != null) {
