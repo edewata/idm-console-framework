@@ -31,6 +31,7 @@ import com.netscape.management.client.*;
 import com.netscape.management.client.console.*;
 import com.netscape.management.client.components.*;
 import com.netscape.management.client.ace.*;
+import com.netscape.management.client.ug.*;
 import com.netscape.management.client.util.*;
 import netscape.ldap.*;
 import netscape.ldap.controls.*;
@@ -1288,6 +1289,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
                         }
                     }
                 so.initialize(ci);
+                loadResourceEditorExtension(ci, jarName);
                 if (so instanceof ResourceObject) 
                     {
                         ((ResourceObject) so).setName(serverID);
@@ -1306,6 +1308,111 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
             {
                 setBusyIndicator(null, false, null);
             }
+    }
+
+    public void loadResourceEditorExtension(ConsoleInfo ci, String jarName) {
+
+        LDAPConnection ldc = ci.getLDAPConnection();
+        if (ldc == null) return;
+
+        String ldapLocation = "";
+        LDAPSearchConstraints cons;
+        LDAPSearchResults result;
+        LDAPAttribute attribute;
+
+        try {
+            cons = ldc.getSearchConstraints();
+            cons.setBatchSize(1);
+            // then get the resource editor extension
+            ldapLocation = "cn=ResourceEditorExtension,"+
+                    LDAPUtil.getAdminGlobalParameterEntry();
+            result = ldc.search(ldapLocation,
+                    LDAPConnection.SCOPE_ONE, "(Objectclass=nsAdminResourceEditorExtension)",
+                    null, false, cons);
+            Hashtable hResourceEditorExtension = ResourceEditor.getResourceEditorExtension();
+            Hashtable deleteResourceEditorExtension = ResourceEditor.getDeleteResourceEditorExtension();
+
+            if (result != null) {
+                while (result.hasMoreElements()) {
+                    LDAPEntry ExtensionEntry;
+                    try {
+                        ExtensionEntry = (LDAPEntry) result.next();
+                    } catch (Exception e) {
+                        // ldap exception
+                        continue;
+                    }
+
+                    attribute = ExtensionEntry.getAttribute("cn",
+                            LDAPUtil.getLDAPAttributeLocale());
+                    Enumeration eValues = attribute.getStringValues();
+                    String sCN = "";
+                    while (eValues.hasMoreElements()) {
+                        sCN = (String) eValues.nextElement(); // Take the first CN
+                        break;
+                    }
+
+                    attribute =
+                            ExtensionEntry.getAttribute("nsClassname",
+                            LDAPUtil.getLDAPAttributeLocale());
+                    if (attribute != null) {
+                        eValues = attribute.getStringValues();
+
+                        Vector vClass = (Vector)hResourceEditorExtension.get(
+                                sCN.toLowerCase());
+                        if (vClass == null) {
+                            vClass = new Vector();
+                            hResourceEditorExtension.put(
+                                    sCN.toLowerCase(), vClass);
+                        }
+
+                        while (eValues.hasMoreElements()) {
+                            String sJarClassName =
+                                    (String) eValues.nextElement();
+                            if (!sJarClassName.endsWith("@"+jarName)) continue;
+
+                            Class c = ClassLoaderUtil.getClass(
+                                    ci, sJarClassName);
+
+                            if (c != null) {
+                                vClass.addElement(c);
+                            }
+                        }
+                    }
+
+                    attribute =
+                            ExtensionEntry.getAttribute("nsDeleteClassname",
+                            LDAPUtil.getLDAPAttributeLocale());
+                    if (attribute != null) {
+                        Enumeration deleteClasses =
+                                attribute.getStringValues();
+
+                        Vector deleteClassesVector = (Vector)deleteResourceEditorExtension.get(
+                                sCN.toLowerCase());
+                        if (deleteClassesVector == null) {
+                            deleteClassesVector = new Vector();
+                            deleteResourceEditorExtension.put(
+                                    sCN.toLowerCase(), deleteClassesVector);
+                        }
+ 
+                        while (deleteClasses.hasMoreElements()) {
+                            String jarClassname = (String)
+                                    deleteClasses.nextElement();
+                            if (!jarClassname.endsWith("@"+jarName)) continue;
+
+                            Class c = ClassLoaderUtil.getClass(
+                                    ci, jarClassname);
+                            if (c != null) {
+                                deleteClassesVector.addElement(c);
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+        catch (LDAPException e) {
+            Debug.println("Console: Cannot open "+ldapLocation);
+        }
     }
 
     /**
