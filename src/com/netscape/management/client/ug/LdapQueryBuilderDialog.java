@@ -272,7 +272,7 @@ public class LdapQueryBuilderDialog extends AbstractModalDialog {
       */
     private void createQueryString() {
         _queryString = "ldap:///";
-        _queryString += _baseDN.getText();
+        _queryString += LDAPUrl.encode(_baseDN.getText());
 
         switch (_searchScope.getSelectedIndex()) {
         case 0: // Base DN only
@@ -287,30 +287,31 @@ public class LdapQueryBuilderDialog extends AbstractModalDialog {
             break;
         }
 
+        String filter;
         switch (_userOrGroup.getSelectedIndex()) {
         case 0: // users only
-            _queryString += "(&(objectclass=person)";
+            filter = "(&(objectclass=person)";
             break;
         case 1: // groups only
-            _queryString += "(&(objectclass=groupofuniquenames)";
+            filter = "(&(objectclass=groupofuniquenames)";
             break;
         case 2: // both users and groups
         default:
-            _queryString += "(&(|(objectclass=person)(objectclass=groupofuniquenames))";
+            filter = "(&(|(objectclass=person)(objectclass=groupofuniquenames))";
             break;
         }
 
         String value;
         for (int i = 0; i < _criteriaCount; i++) {
             if (_criteria[i]._condition.getSelectedIndex() == 3) {
-                _queryString += "(!(";
+                filter += "(!(";
             } else if (_criteria[i]._condition.getSelectedIndex() == 1) {
-                _queryString += "(!(";
+                filter += "(!(";
             } else {
-                _queryString += "(";
+                filter += "(";
             }
 
-            _queryString +=
+            filter +=
                     (String)(_criteria[i]._attribute.getSelectedItem());
 
             value = _criteria[i]._value.getText();
@@ -321,65 +322,67 @@ public class LdapQueryBuilderDialog extends AbstractModalDialog {
             switch (_criteria[i]._condition.getSelectedIndex()) {
             case 0: // contains
                 if (value.charAt(0) == '*')
-                    _queryString += "=";
+                    filter += "=";
                 else
-                    _queryString += "=*";
-                _queryString += value;
+                    filter += "=*";
+                filter += value;
                 if (value.charAt(value.length() - 1) == '*')
-                    _queryString += ")";
+                    filter += ")";
                 else
-                    _queryString += "*)";
+                    filter += "*)";
                 break;
             case 1: // does not contain (see above)
                 if (value.charAt(0) == '*')
-                    _queryString += "=";
+                    filter += "=";
                 else
-                    _queryString += "=*";
-                _queryString += value;
+                    filter += "=*";
+                filter += value;
                 if (value.charAt(value.length() - 1) == '*')
-                    _queryString += "))";
+                    filter += "))";
                 else
-                    _queryString += "*))";
+                    filter += "*))";
                 break;
             case 2: // is
-                _queryString += "=";
-                _queryString += value;
-                _queryString += ")";
+                filter += "=";
+                filter += value;
+                filter += ")";
                 break;
             case 3: // is not (see above)
-                _queryString += "=";
-                _queryString += value;
-                _queryString += "))";
+                filter += "=";
+                filter += value;
+                filter += "))";
                 break;
             case 4: // begins with
-                _queryString += "=";
-                _queryString += value;
+                filter += "=";
+                filter += value;
                 if (value.charAt(value.length() - 1) == '*')
-                    _queryString += ")";
+                    filter += ")";
                 else
-                    _queryString += "*)";
+                    filter += "*)";
                 break;
             case 5: // ends with
                 if (value.charAt(0) == '*')
-                    _queryString += "=";
+                    filter += "=";
                 else
-                    _queryString += "=*";
-                _queryString += value;
-                _queryString += ")";
+                    filter += "=*";
+                filter += value;
+                filter += ")";
                 break;
             case 6: // sounds like
-                _queryString += "~=";
-                _queryString += value;
-                _queryString += ")";
+                filter += "~=";
+                filter += value;
+                filter += ")";
                 break;
             default: // just in case treat like is
-                _queryString += "=";
-                _queryString += value;
-                _queryString += ")";
+                filter += "=";
+                filter += value;
+                filter += ")";
                 break;
             }
         }
-        _queryString += ")";
+        filter += ")";
+
+        _queryString += LDAPUrl.encode(filter);
     }
 
 
