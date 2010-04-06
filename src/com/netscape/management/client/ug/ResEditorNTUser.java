@@ -58,6 +58,24 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
     public static String _NT_USER_LOGON_SERVER="ntuserlogonserver";
     public static String _NT_USER_PROFILE="ntuserprofile";
     public static String _NT_USER_HOME_DIR_DRIVE="ntuserhomedirdrive";
+    public static String _NT_USER_PRIV="ntuserpriv";
+    public static String _NT_USER_FLAGS="ntuserflags";
+    public static String _NT_USER_AUTH_FLAGS="ntuserauthflags";
+    public static String _NT_USER_USR_COMMENT="ntuserusrcomment";
+    public static String _NT_USER_PARMS="ntuserparms";
+    public static String _NT_USER_LAST_LOGON="ntuserlastlogon";
+    public static String _NT_USER_LAST_LOGOFF="ntuserlastlogoff";
+    public static String _NT_USER_ACCT_EXPIRES="ntuseracctexpires";
+    public static String _NT_USER_MAX_STORAGE="ntusermaxstorage";
+    public static String _NT_USER_UNITS_PER_WEEK="ntuserunitsperweek";
+    public static String _NT_USER_BAD_PW_COUNT="ntuserbadpwcount";
+    public static String _NT_USER_NUM_LOGONS="ntusernumlogons";
+    public static String _NT_USER_COUNTRY_CODE="ntusercountrycode";
+    public static String _NT_USER_CODE_PAGE="ntusercodepage";
+    public static String _NT_USER_UNIQUE_ID="ntuseruniqueid";
+    public static String _NT_USER_PRIMARY_GROUP_ID="ntuserprimarygroupid";
+    public static String _NT_USER_PASSWORD_EXPIRED="ntuserpasswordexpired";
+    public static String _NT_UNIQUE_ID="ntUniqueId";
     
     PickerEditorResourceSet _resource = new PickerEditorResourceSet();
     private String ID;
@@ -782,6 +800,24 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
             observable.delete(_NT_USER_LOGON_SERVER, "");
             observable.delete(_NT_USER_PROFILE, "");
             observable.delete(_NT_USER_HOME_DIR_DRIVE, "");
+            observable.delete(_NT_USER_PRIV, "");
+            observable.delete(_NT_USER_FLAGS, "");
+            observable.delete(_NT_USER_AUTH_FLAGS, "");
+            observable.delete(_NT_USER_USR_COMMENT, "");
+            observable.delete(_NT_USER_PARMS, "");
+            observable.delete(_NT_USER_LAST_LOGON, "");
+            observable.delete(_NT_USER_LAST_LOGOFF, "");
+            observable.delete(_NT_USER_ACCT_EXPIRES, "");
+            observable.delete(_NT_USER_MAX_STORAGE, "");
+            observable.delete(_NT_USER_UNITS_PER_WEEK, "");
+            observable.delete(_NT_USER_BAD_PW_COUNT, "");
+            observable.delete(_NT_USER_NUM_LOGONS, "");
+            observable.delete(_NT_USER_COUNTRY_CODE, "");
+            observable.delete(_NT_USER_CODE_PAGE, "");
+            observable.delete(_NT_USER_UNIQUE_ID, "");
+            observable.delete(_NT_USER_PRIMARY_GROUP_ID, "");
+            observable.delete(_NT_USER_PASSWORD_EXPIRED, "");
+            observable.delete(_NT_UNIQUE_ID, "");
             return true;
         }
         
