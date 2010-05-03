@@ -203,7 +203,7 @@ public class TimeDayPanel extends JPanel implements UIConstants
     {
         JTable t = new JTable(new TimeTableModel());
         timeTable = t;
-        t.setRowSelectionAllowed(false);
+        t.setRowSelectionAllowed(true);
         t.setColumnSelectionAllowed(true);
         t.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         t.setCellSelectionEnabled(true);
@@ -436,6 +436,10 @@ public class TimeDayPanel extends JPanel implements UIConstants
             timeTable.clearSelection();
         else
             timeTable.setColumnSelectionInterval(startHour+1, endHour+1);
+    }
+    
+    public void setDayHourSelection(int day, int hour) {
+        timeTable.changeSelection(day, hour+1, true, true);
     }
     
     /**
