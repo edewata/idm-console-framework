@@ -22,8 +22,11 @@ package com.netscape.management.client.util;
 
 import java.util.*;
 import java.text.*;
+
 import netscape.ldap.*;
 import netscape.ldap.util.DN;
+import netscape.ldap.util.RDN;
+
 import com.netscape.management.client.console.*;
 import com.netscape.management.client.util.UtilConsoleGlobals;
 
@@ -768,4 +771,253 @@ public class LDAPUtil {
 
     // DS ldbm database configuration root DN
     final static String LDBM_PLUGIN_ROOT = "cn=ldbm database, cn=plugins, cn=config";
+
+    /**
+     * Check if the string is a valid dn 
+     *
+     */
+    static public boolean isValidDN (String dn){
+    	if (dn.equals (""))
+    		return true;
+
+    	if (!netscape.ldap.util.DN.isDN(dn))
+    		return false;
+
+    	int eq = dn.indexOf('=');
+
+    	return (eq > 0 && eq < dn.length () -1 );
+    }
+
+    static public boolean equalDNs(String dn1, String dn2) {
+    	boolean retVal = false;
+    	if (isValidDN(dn1) && isValidDN(dn2)) {
+    		retVal = equalDNs(new DN(dn1), new DN(dn2));
+    	}
+    	return retVal;
+    }
+
+    static public boolean equalDNs(DN dn1, DN dn2) {
+    	boolean status = (dn1 == null || dn2 == null);
+    	if (status) { // if at least one of the arguments is null
+    		status = (dn1 == dn2); // true if both are null, false otherwise
+    		return status; // short circuit
+    	}
+
+    	Vector thisRDNs = dn1.getRDNs();
+    	Vector thatRDNs = dn2.getRDNs();
+    	if (thisRDNs != null && thatRDNs != null &&
+    			thisRDNs.size() == thatRDNs.size()) {
+    		int ii;
+    		for (ii = 0; ii < thisRDNs.size(); ++ii) {
+    			RDN thisRDN = (RDN)thisRDNs.elementAt(ii);
+    			RDN thatRDN = (RDN)thatRDNs.elementAt(ii);
+    			if (!thisRDN.equals(thatRDN))
+    				break;
+    		}
+
+    		// all RDNs were equal
+    		if (ii == thisRDNs.size())
+    			status = true;
+    	}
+
+    	return status;
+    }
+
+    /**
+     * Returns the RDN value after unescaping any escaped characters.
+     * Can be a simple escape - a \ followed by any character -
+     * this will just remove the \ and leave the character in the
+     * result unescaped.
+     * Can be a hex escape - a \ followed by two hex digits - the
+     * \ will be removed and the two hex digits converted to a single
+     * char in the string.
+     * Note that this is different than netscape.ldap.LDAPDN#unEscapeRDN(java.lang.String
+     * in that this function will handle hex escapes.
+     * If the rdn value is bogus or otherwise cannot be parsed correctly, the original
+     * rdn value will be returned, with escapes if it had them.
+     * <P>
+     *
+     * @param rdnval the RDN value to unescape
+     * @return the unescaped RDN value or the original RDN value if there were errors
+     * @see netscape.ldap.LDAPDN#escapeRDN(java.lang.String)
+     */
+    public static String unEscapeRDNVal(String rdnval) {
+    	StringBuffer copy = new StringBuffer();
+    	CharacterIterator it = new StringCharacterIterator(rdnval); 
+    	for (char ch = it.first(); ch != CharacterIterator.DONE; ch = it.next()) {
+    		if (ch == '\\') {
+    			ch = it.next();
+    			if (ch == CharacterIterator.DONE) {
+    				// bogus - escape at end of string
+    				return rdnval;
+    			}
+    			int val1 = Character.digit(ch, 16);
+    			if ((val1 >= 0) && (val1 < 16)) {
+    				val1 = val1 * 16;
+    				ch = it.next();
+    				if (ch == CharacterIterator.DONE) {
+    					// bogus - escape followed by only 1 hex digit
+    					return rdnval;
+    				}
+    				int val2 = Character.digit(ch, 16);
+    				if ((val2 < 0) || (val2 > 15)) {
+    					return rdnval;
+    				}
+    				// must be a two digit hex code if we got here
+    				ch = (char)(val1 + val2);
+    			}
+    		}
+    		copy.append(ch);
+    	}
+    	return copy.toString();
+    }
+
+    /**
+     * Returns the RDN after unescaping any escaped characters.
+     * Can be a simple escape - a \ followed by any character -
+     * this will just remove the \ and leave the character in the
+     * result unescaped.
+     * Can be a hex escape - a \ followed by two hex digits - the
+     * \ will be removed and the two hex digits converted to a single
+     * char in the string.
+     * Note that this is different than netscape.ldap.LDAPDN#unEscapeRDN(java.lang.String
+     * in that this function will handle hex escapes.
+     * If the rdn is bogus or otherwise cannot be parsed correctly, the original
+     * rdn value will be returned, with escapes if it had them.
+     * <P>
+     *
+     * @param rdn the RDN to unescape
+     * @return the unescaped RDN or the original RDN if there were errors
+     * @see netscape.ldap.LDAPDN#escapeRDN(java.lang.String)
+     */
+    public static String unEscapeRDN(String rdn) {
+    	RDN name = new RDN(rdn);
+    	String[] vals = name.getValues();
+    	if ( (vals == null) || (vals.length < 1) ) {
+    		return rdn;
+    	}
+    	String[] types = name.getTypes();
+
+    	StringBuffer rdnbuf = new StringBuffer();
+    	for (int ii = 0; ii < vals.length; ++ii) {
+    		if (rdnbuf.length() > 0) {
+    			rdnbuf.append("+");
+    		}
+    		rdnbuf.append(types[ii] + "=" + unEscapeRDNVal(vals[ii]));
+    	}
+
+    	return rdnbuf.toString();
+    }
+
+    /**
+     * Returns the DN after unescaping any escaped characters.
+     * Can be a simple escape - a \ followed by any character -
+     * this will just remove the \ and leave the character in the
+     * result unescaped.
+     * Can be a hex escape - a \ followed by two hex digits - the
+     * \ will be removed and the two hex digits converted to a single
+     * char in the string.
+     * If the dn is bogus or otherwise cannot be parsed correctly, the original
+     * dn value will be returned, with escapes if it had them.
+     * <P>
+     *
+     * @param dn the DN to unescape
+     * @return the unescaped DN or the original DN if there were errors
+     */
+    public static String unEscapeDN(String dn) {
+    	if ((dn == null) || (dn.equals(""))) {
+    		return dn;
+    	}
+    	String[] rdns = LDAPDN.explodeDN(dn, false);
+    	if ((rdns == null) || (rdns.length < 1)) {
+    		return dn;
+    	}
+    	StringBuffer retdn = new StringBuffer();
+    	for (int ii = 0; ii < rdns.length; ++ii) {
+    		if (retdn.length() > 0) {
+    			retdn.append(",");
+    		}
+    		retdn.append(unEscapeRDN(rdns[ii]));
+    	}
+
+    	return retdn.toString();
+    }
+
+    public static boolean[] DN_ESCAPE_CHARS = null;
+    static {
+    	// get max val of DN.ESCAPED_CHAR
+    	char maxval = 0;
+    	for (char ii = 0; ii < DN.ESCAPED_CHAR.length; ++ii) {
+    		if (maxval < DN.ESCAPED_CHAR[ii]) {
+    			maxval = DN.ESCAPED_CHAR[ii];
+    		}
+    	}
+    	// add the '='
+    	if (maxval < '=') {
+    		maxval = '=';
+    	}
+    	// create an array large enough to hold spaces
+    	// for all values up to maxval
+    	DN_ESCAPE_CHARS = new boolean[maxval+1];
+    	// set default value to false
+    	for (char ii = 0; ii < (int)maxval; ++ii) {
+    		DN_ESCAPE_CHARS[ii] = false;
+    	}
+    	// set escape char vals to true
+    	for (char ii = 0; ii < DN.ESCAPED_CHAR.length; ++ii) {
+    		DN_ESCAPE_CHARS[DN.ESCAPED_CHAR[ii]] = true;
+    	}
+    	// add the equals sign
+    	DN_ESCAPE_CHARS['='] = true;
+    }
+    /**
+     * Escape the given DN string value for use as an RDN value.  Uses
+     * the \XX hex escapes.
+     * @param dnval value to escape for use as an RDN value
+     * @return the escaped string
+     */
+    public static String escapeDNVal(String dnval) {
+    	StringBuffer copy = new StringBuffer();
+    	CharacterIterator it = new StringCharacterIterator(dnval); 
+    	for (char ch = it.first(); ch != CharacterIterator.DONE; ch = it.next()) {
+    		if ((ch > 0) && (ch < DN_ESCAPE_CHARS.length) && DN_ESCAPE_CHARS[ch]) {
+    			copy.append('\\');
+    			copy.append(Integer.toHexString((int)ch).toUpperCase());
+    		} else {
+    			copy.append(ch);
+    		}
+    	}
+    	return copy.toString();
+    }
+
+    /**
+     * This function was stolen from dsalib_dn.c.  It checks the string
+     * for LDAPv2 style quoting e.g. o="foo, bar", c=US, a format which
+     * is now deprecated.
+     *
+     * @param  dn  The DN to scan
+     * @return true if the given string contains LDAPv2 style quoting
+     */
+    static public boolean DNUsesLDAPv2Quoting(String dn) {
+    	char ESC = '\\';
+    	char Q = '"';
+    	boolean ret = false;
+
+    	// check dn for a even number (incl. 0) of ESC followed by Q
+    	if (dn == null)
+    		return ret;
+
+    	int p = dn.indexOf(Q);
+    	if (p >= 0)
+    	{
+    		int nESC = 0;
+    		for (--p; (p >= 0) && (dn.charAt(p) == ESC); --p)
+    			++nESC;
+    		// the quote is unescaped if it is preceded by an even
+    		// number of escape characters, including 0
+    		ret = ((nESC % 2) == 0);
+    	}
+
+    	return ret;
+    }
 }
