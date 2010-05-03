@@ -24,7 +24,10 @@ import java.awt.*;
 import java.util.*;
 
 import com.netscape.management.client.console.ConsoleInfo;
-import com.netscape.management.client.util.*;
+import com.netscape.management.client.util.Debug;
+import com.netscape.management.client.util.KingpinLDAPConnection;
+import com.netscape.management.client.util.LDAPUtil;
+import com.netscape.management.client.util.ResourceSet;
 
 import netscape.ldap.*;
 import netscape.ldap.util.*;
@@ -428,12 +431,15 @@ public class ResourcePageObservable extends Observable {
             LDAPConnection ldapConnection = _info.getUserLDAPConnection();
             try {
                 String DN = _entry.getDN();
+                String unescDN = LDAPUtil.unEscapeDN(DN);
+                boolean needesc = !unescDN.equals(DN);
                 String newRdnValue = get(_sIndexAttribute, 0);
                 if (newRdnValue == null || newRdnValue.trim().equals("")) {
                     _sIndexAttribute = "cn";
                     newRdnValue = get(_sIndexAttribute, 0);
-                }    
+                }
                 String newRDN = _sIndexAttribute + "=" + newRdnValue;
+                String newRDNEsc = _sIndexAttribute + "=" + LDAPUtil.escapeDNVal(newRdnValue);
                 
                 //for a group there is no ou so we have to check
                 String[] rdns = LDAPDN.explodeDN(DN, false);
@@ -448,11 +454,18 @@ public class ResourcePageObservable extends Observable {
 
                     Debug.println(6, "ResourcePageObservable.save: RDN=" + RDN);
                     Debug.println(6, "ResourcePageObservable.save: newRDN=" + newRDN);
-                    if (DN.length() > 0 && (new RDN(newRDN)).equals(new RDN(RDN)) == false) {
+                    Debug.println(6, "ResourcePageObservable.save: newRDNEsc=" + newRDNEsc);
+                    if (DN.length() > 0 &&
+                    	((new RDN(newRDN)).equals(new RDN(RDN)) == false) &&
+                    	((new RDN(newRDNEsc)).equals(new RDN(RDN)) == false)) {
                         Debug.println("ResourcePageObservable.save: rename " + DN + " --> new rdn=" + newRDN);
                         ldapConnection.rename(DN, newRDN, true); // Cannot rename same RDN.
                     }
-                    sDN = newRDN + newBaseDN.toString();
+                    if (needesc) {
+                    	sDN = newRDNEsc + newBaseDN.toString();
+                    } else {
+                    	sDN = newRDN + newBaseDN.toString();
+                    }
                 } else {
                     sDN = _entry.getDN();
                 }
