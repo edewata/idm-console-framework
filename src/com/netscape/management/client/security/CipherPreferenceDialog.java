@@ -55,7 +55,7 @@ public class CipherPreferenceDialog extends AbstractDialog {
     Help help; 
 
     /*property string */
-    String rc2, rc4, des, tripleDes, fips, none, v2, v3, tls, export, enabledTitle;
+    String aes, rc2, rc4, des, tripleDes, fips, none, v2, v3, tls, export, enabledTitle;
     String sha, md5, fortezza, cipherLabel, bits, msgAlgo, version, title;
 
 
@@ -90,11 +90,21 @@ public class CipherPreferenceDialog extends AbstractDialog {
     public final static String RSA_RC2_40_MD5  = "rsa_rc2_40_md5";
     /**SSL3 Export - No encryption, only MD5 message authentication*/
     public final static String RSA_NULL_MD5    = "rsa_null_md5";
+    /**SSL3 Export - No encryption, only SHA message authentication*/
+    public final static String RSA_NULL_SHA    = "rsa_null_sha";
 
     /**TLS Export - TLS_RSA_EXPORT1024_WITH_DES_CBC_SHA */
-    public final static String TLS_RSA_DES_SHA = "tls_rsa_export1024_with_des_cbc_sha";
+    public final static String TLS_RSA_DES_SHA_AUX = "tls_rsa_export1024_with_des_cbc_sha";
+    public final static String TLS_RSA_DES_SHA = "rsa_des_56_sha";
     /**TLS Export - TLS_RSA_EXPORT1024_WITH_RC4_56_SHA */
-    public final static String TLS_RSA_RC4_SHA = "tls_rsa_export1024_with_rc4_56_sha";
+    public final static String TLS_RSA_RC4_SHA_AUX = "tls_rsa_export1024_with_rc4_56_sha";
+    public final static String TLS_RSA_RC4_SHA = "rsa_rc4_56_sha";
+    /**TLS - TLS_RSA_WITH_AES_128_CBC_SHA */
+    public final static String TLS_RSA_WITH_AES_128_CBC_SHA_AUX = "tls_rsa_aes_128_sha";
+    public final static String TLS_RSA_WITH_AES_128_CBC_SHA = "rsa_aes_128_sha";
+    /**TLS - TLS_RSA_WITH_AES_256_CBC_SHA */
+    public final static String TLS_RSA_WITH_AES_256_CBC_SHA_AUX = "tls_rsa_aes_256_sha";
+    public final static String TLS_RSA_WITH_AES_256_CBC_SHA = "rsa_aes_256_sha";
 
     // domestic ssl3 cipher
     /**SSL3 Domestic - DES with 56 bit encryption and SHA message authentication*/
@@ -115,39 +125,55 @@ public class CipherPreferenceDialog extends AbstractDialog {
     public final static String FORTEZZA_NULL        = "fortezza_null";
 
     // FIPS ciphers
+    public final static String RSA_FIPS_DES_SHA_AUX  = "rsa_fips_des_sha";
     public final static String RSA_FIPS_DES_SHA  = "fips_des_sha";
+    public final static String RSA_FIPS_3DES_SHA_AUX = "rsa_fips_3des_sha";
     public final static String RSA_FIPS_3DES_SHA = "fips_3des_sha";
 
     /* default SSL V2 export ciphers */
-    final static String V2EXPORT   = "-"+RC4EXPORT+
-                                  ",-"+RC2EXPORT;
+    final static String V2EXPORT   = "-"+RC2EXPORT+
+                                  ",-"+RC4EXPORT;
 
     /* default SSL V2 domestic ciphers */
-    final static String V2DOMESTIC = "-"+RC4+
-                                  ",-"+RC2+
+    final static String V2DOMESTIC = "-"+RC2+
+                                  ",-"+RC4+
                                   ",-"+DES+
                                   ",-"+DES3;
     
     /* default SSL V3 domestic ciphers */
-    final static String V3EXPORT   = "+"+RSA_RC4_40_MD5+
-                                  ",+"+RSA_RC2_40_MD5+
-                                  ",-"+RSA_NULL_MD5;
+    final static String V3EXPORT   = "-"+RSA_NULL_MD5+
+                                  ",-"+RSA_NULL_SHA+
+                                  ",+"+RSA_RC4_40_MD5+
+                                  ",+"+RSA_RC2_40_MD5;
 
     /* default SSL V3 domestic ciphers */
-    final static String V3DOMESTIC = "+"+RSA_DES_SHA+
-				  ",+"+RSA_RC4_128_MD5+
-				  ",+"+RSA_3DES_SHA+
-				  ",+"+RSA_FIPS_DES_SHA+
-				  ",+"+RSA_FIPS_3DES_SHA;
+    final static String V3DOMESTIC = "+"+RSA_RC4_128_MD5+
+                                  ",+"+RSA_DES_SHA+
+                                  ",+"+RSA_FIPS_DES_SHA+
+                                  ",+"+RSA_3DES_SHA+
+                                  ",+"+RSA_FIPS_3DES_SHA;
+
+    final static String V3DOMESTIC_AUX = "+"+RSA_RC4_128_MD5+
+                                  ",+"+RSA_DES_SHA+
+                                  ",+"+RSA_FIPS_DES_SHA_AUX+
+                                  ",+"+RSA_3DES_SHA+
+                                  ",+"+RSA_FIPS_3DES_SHA_AUX;
 
     /* default SSL V3 domestic fortezza ciphers */
     final static String V3FORETEZZA = "+"+FORTEZZA+
-				   ",+"+FORTEZZA_RC4_128_SHA+
-				   ",-"+FORTEZZA_NULL;
+                                  ",+"+FORTEZZA_RC4_128_SHA+
+                                  ",-"+FORTEZZA_NULL;
 
     /* default SSL V3 domestic tls ciphers */
-    final static String V3TLS =  "+"+TLS_RSA_DES_SHA+
-                              ",+"+TLS_RSA_RC4_SHA;
+    final static String V3TLS = "+"+TLS_RSA_RC4_SHA+
+                                ",+"+TLS_RSA_DES_SHA+
+                                ",+"+TLS_RSA_WITH_AES_128_CBC_SHA+
+                                ",+"+TLS_RSA_WITH_AES_256_CBC_SHA;
+
+    final static String V3TLS_AUX = "+"+TLS_RSA_RC4_SHA_AUX+
+                                ",+"+TLS_RSA_DES_SHA_AUX+
+                                ",+"+TLS_RSA_WITH_AES_128_CBC_SHA_AUX+
+                                ",+"+TLS_RSA_WITH_AES_256_CBC_SHA_AUX;
 
     class cipherListModel extends AbstractTableModel {
 	Vector _header;
@@ -333,6 +359,7 @@ public class CipherPreferenceDialog extends AbstractDialog {
 
 	help = new Help(resource);
 
+	aes           = resource.getString("CipherPreferenceDialog", "aes");
 	rc2           = resource.getString("CipherPreferenceDialog", "rc2");
 	rc4           = resource.getString("CipherPreferenceDialog", "rc4");
 	des           = resource.getString("CipherPreferenceDialog", "des");
@@ -349,8 +376,8 @@ public class CipherPreferenceDialog extends AbstractDialog {
 	cipherLabel   = resource.getString("CipherPreferenceDialog", "cipherLabel");
 	bits          = resource.getString("CipherPreferenceDialog", "bits");
 	msgAlgo       = resource.getString("CipherPreferenceDialog", "msgAlgo");
-        version       = resource.getString("CipherPreferenceDialog", "sslV");
-        title         = resource.getString("CipherPreferenceDialog", "title");
+	version       = resource.getString("CipherPreferenceDialog", "sslV");
+	title         = resource.getString("CipherPreferenceDialog", "title");
 	enabledTitle  = resource.getString("CipherPreferenceDialog", "enabledTitle");
     }
 
@@ -530,8 +557,8 @@ public class CipherPreferenceDialog extends AbstractDialog {
 	    				  "Unknown SSLv2 cipher: " + cipher);
 	    }
 
-	//V3/TLS Cipher
-	} else if (SSLVersion.equals(SSL_TLS) || SSLVersion.equals(SSL_V3)) {
+	//V3 Cipher
+	} else if (SSLVersion.equals(SSL_V3)) {
 	    if (cipher.equals(RSA_RC4_128_MD5)) {
 		cipherEntry = new CipherEntry(cipher, true, rc4, 128, md5, SSL_V3);
 	    } else if (cipher.equals(RSA_3DES_SHA)) {
@@ -544,9 +571,15 @@ public class CipherPreferenceDialog extends AbstractDialog {
 		cipherEntry = new CipherEntry(cipher, true, rc2, 40, md5, SSL_V3, true);
 	    } else if (cipher.equals(RSA_NULL_MD5)) {
 		cipherEntry = new CipherEntry(cipher, false, none, 0, md5, SSL_V3);
+	    } else if (cipher.equals(RSA_NULL_SHA)) {
+		cipherEntry = new CipherEntry(cipher, false, none, 0, sha, SSL_V3);
 	    } else if (cipher.equals(RSA_FIPS_DES_SHA)) {
 		cipherEntry = new CipherEntry(cipher, true, des+" "+fips, 56, sha, SSL_V3);
+	    } else if (cipher.equals(RSA_FIPS_DES_SHA_AUX)) {
+		cipherEntry = new CipherEntry(cipher, true, des+" "+fips, 56, sha, SSL_V3);
 	    } else if (cipher.equals(RSA_FIPS_3DES_SHA)) {
+		cipherEntry = new CipherEntry(cipher, true, tripleDes+" "+fips, 168, sha, SSL_V3);
+	    } else if (cipher.equals(RSA_FIPS_3DES_SHA_AUX)) {
 		cipherEntry = new CipherEntry(cipher, true, tripleDes+" "+fips, 168, sha, SSL_V3);
 		
 	    //Fortezza ciphers
@@ -561,16 +594,27 @@ public class CipherPreferenceDialog extends AbstractDialog {
 	    				  "Unknown SSLv3 cipher: " + cipher);
 	    }
 
-	    //TLS ciphers
-	    if (SSLVersion.equals(SSL_TLS)) {
+	    //TLS Cipher
+	} else if (SSLVersion.equals(SSL_TLS)) {
 		if (cipher.equals(TLS_RSA_DES_SHA)) {
+		    cipherEntry = new CipherEntry(cipher, true, des, 56, sha, SSL_V3, true);
+		} else if (cipher.equals(TLS_RSA_DES_SHA_AUX)) {
 		    cipherEntry = new CipherEntry(cipher, true, des, 56, sha, SSL_V3, true);
 		} else if (cipher.equals(TLS_RSA_RC4_SHA)) {
 		    cipherEntry = new CipherEntry(cipher, true, rc4, 56, sha, SSL_V3, true);
+		} else if (cipher.equals(TLS_RSA_RC4_SHA_AUX)) {
+		    cipherEntry = new CipherEntry(cipher, true, rc4, 56, sha, SSL_V3, true);
+		} else if (cipher.equals(TLS_RSA_WITH_AES_128_CBC_SHA)) {
+		    cipherEntry = new CipherEntry(cipher, true, aes, 128, sha, SSL_V3, false);
+		} else if (cipher.equals(TLS_RSA_WITH_AES_128_CBC_SHA_AUX)) {
+		    cipherEntry = new CipherEntry(cipher, true, aes, 128, sha, SSL_V3, false);
+		} else if (cipher.equals(TLS_RSA_WITH_AES_256_CBC_SHA)) {
+		    cipherEntry = new CipherEntry(cipher, true, aes, 256, sha, SSL_V3, false);
+		} else if (cipher.equals(TLS_RSA_WITH_AES_256_CBC_SHA_AUX)) {
+		    cipherEntry = new CipherEntry(cipher, true, aes, 256, sha, SSL_V3, false);
 	    } else {
 	    	Debug.println("CipherPreferenceDialog.createCipherEntry(): " +
 	    				  "Unknown TLSv1 cipher: " + cipher);
-	    }
 	    }
 	}
 
@@ -789,6 +833,61 @@ public class CipherPreferenceDialog extends AbstractDialog {
 	     tls?(V3EXPORT+(isDomestic?","+V3DOMESTIC:"")+","+V3TLS):"");
     }
 
+    /**
+     * Create a default cipher preference dialog.
+     *
+     * @param parent the frame from which the dialog is displayed
+     * @param enableSSLV2 enable SSL v2 cipher
+     * @param enableSSLV3 enable SSL v3 cipher
+     * @param tls show TLS ciphers.
+     * @param isDomestic show domestic ciphers if true
+     * @param fortezza show fortezza ciphers.  If isDomestic is false or SSL_V3 is not enabled, then fortezza will not show.
+     * @param tlsonly does not include SSLV3 ciphers in TLS cipher list if true
+     *
+     */
+    public CipherPreferenceDialog(Frame parent,
+				  boolean enableSSLV2,
+				  boolean enableSSLV3,
+				  boolean tls,
+				  boolean isDomestic,
+				  boolean fortezza,
+				  boolean tlsonly) {
+
+	this(parent, 
+	     (enableSSLV2 ? V2EXPORT+(isDomestic?","+V2DOMESTIC:""):""),
+	     (enableSSLV3 ? V3EXPORT+(isDomestic?","+V3DOMESTIC:""):"")+
+	     ((enableSSLV3 & isDomestic & fortezza)?","+V3FORETEZZA:""),
+	     tls?(tlsonly?V3TLS:(V3EXPORT+(isDomestic?","+V3DOMESTIC:"")+","+V3TLS)):"");
+    }
+
+    /**
+     * Create a default cipher preference dialog.
+     *
+     * @param parent the frame from which the dialog is displayed
+     * @param enableSSLV2 enable SSL v2 cipher
+     * @param enableSSLV3 enable SSL v3 cipher
+     * @param tls show TLS ciphers.
+     * @param isDomestic show domestic ciphers if true
+     * @param fortezza show fortezza ciphers.  If isDomestic is false or SSL_V3 is not enabled, then fortezza will not show.
+     * @param tlsonly does not include SSLV3 ciphers in TLS cipher list if true
+     * @param dsstyle returns DS style cipher names (search _AUX in this file) if true
+     *
+     */
+    public CipherPreferenceDialog(Frame parent,
+				  boolean enableSSLV2,
+				  boolean enableSSLV3,
+				  boolean tls,
+				  boolean isDomestic,
+				  boolean fortezza,
+				  boolean tlsonly,
+				  boolean dsstyle) {
+
+	this(parent, 
+	     (enableSSLV2 ? V2EXPORT+(isDomestic?","+V2DOMESTIC:""):""),
+	     (enableSSLV3 ? V3EXPORT+(isDomestic?","+V3DOMESTIC_AUX:""):"")+
+	     ((enableSSLV3 & isDomestic & fortezza)?","+V3FORETEZZA:""),
+	     tls?(tlsonly?V3TLS_AUX:(V3EXPORT+(isDomestic?","+V3DOMESTIC_AUX:"")+","+V3TLS_AUX)):"");
+    }
 
     //for testing purpose
     /*public static void main(String args[]) {
