@@ -363,7 +363,12 @@ public class ResourcePageObservable extends Observable {
 
                 LDAPEntry newEntry = new LDAPEntry(newRDN, Attrs);
                 ldapConnection.add(newEntry);
+
                 _entry = newEntry;
+
+                // Refresh so we get a copy of the entrt from the DS.  This ensures
+                // that we see any updates that the DS added to the entry.
+                refresh();
             }
             catch (LDAPException e) {
                 Debug.println(0,
