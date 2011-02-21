@@ -87,6 +87,10 @@ public class PromptForTrustDialog extends AbstractDialog implements SuiConstants
         if (parent == null) {
             ModalDialogUtil.setCenteredDialog(this);
         }
+        // We need to call pack() twice to get the JTextArea we use to display at
+        // the right size.  See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4446522
+        // for more details.
+        pack();
         pack();
     }
 
