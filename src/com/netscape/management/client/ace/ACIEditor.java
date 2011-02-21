@@ -79,7 +79,7 @@ class ACIEditor extends GenericDialog
     private Vector tabVector = new Vector();  // elements instanceof IACITabs
     private JTabbedPane tabbedPane = null;
     private JFrame parentFrame = null;
-    private JTextArea aciNameField = new JTextArea();
+    private JTextArea aciNameField = new JTextArea(2,30);
     private LDAPConnection aciLdc;
     private LDAPConnection ugLdc;
     private String aciDN = null;
@@ -561,14 +561,14 @@ class ACIEditor extends GenericDialog
         gbc.gridwidth = 1;   gbc.gridheight = 1;
         gbc.weightx = 0.0;   gbc.weighty = 0.0;
         gbc.anchor = GridBagConstraints.EAST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(0, 0, 0, 0);
 
         aciNameField.setFont(FontFactory.getFont(FontFactory.FONT_MONOSPACED));
         aciNameField.setLineWrap(true);
         aciNameField.setWrapStyleWord(true);
         aciNameField.setBorder(UIManager.getBorder("TextField.border"));
-        p.add(aciNameField, gbc);
+        p.add(new JScrollPane(aciNameField), gbc);
             
         gbc.gridx = 0;       gbc.gridy = 1;
         gbc.gridwidth = 2;   gbc.gridheight = 1;
