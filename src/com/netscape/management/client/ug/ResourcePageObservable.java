@@ -125,6 +125,17 @@ public class ResourcePageObservable extends Observable {
 
 
     /**
+     * Synchronizes the objectclass list with the objectclass
+     * attribute values that are present in the observable.
+     *
+     * @param objectClassList  vector of object classes
+     */
+    public void syncObjectClassList() {
+        _objectClassList = get("objectclass");
+    }
+
+
+    /**
      * Gets the LDAPEntry for the specified DN
      *
      * @param DN  the LDAPEntry to retrieve
@@ -293,15 +304,21 @@ public class ResourcePageObservable extends Observable {
                                     } else if ( sAttribute.toLowerCase().
                                             equalsIgnoreCase(
                                             ID_FORMAT_FIRSTLETTER_LASTNAME)) {
-                                        sUID = get(STRING_GIVENNAME,
-                                                0).substring(0, 1) +
-                                                get(STRING_SN, 0);
+                                        String givenName = get(STRING_GIVENNAME, 0);
+                                        String sn = get(STRING_SN, 0);
+                                        if ((givenName != null) && !givenName.equals("") &&
+                                            (sn != null) && (!sn.equals(""))) {
+                                            sUID = givenName.substring(0, 1) + sn;
+                                        }
                                     } else if ( sAttribute.toLowerCase().
                                             equalsIgnoreCase(
                                             ID_FORMAT_GIVENNAME_FIRSTLETTER)) {
-                                        sUID = get(STRING_GIVENNAME,
-                                                0) + get(STRING_SN,
-                                                0).substring(0, 1);
+                                        String givenName = get(STRING_GIVENNAME, 0);
+                                        String sn = get(STRING_SN, 0);
+                                        if ((givenName != null) && !givenName.equals("") &&
+                                            (sn != null) && (!sn.equals(""))) {
+                                            sUID = givenName + sn.substring(0, 1);
+                                        }
                                     } else if ( sAttribute.toLowerCase().
                                             equalsIgnoreCase(
                                             ID_FORMAT_LASTNAME_GIVENNAME)) {
@@ -366,7 +383,7 @@ public class ResourcePageObservable extends Observable {
 
                 _entry = newEntry;
 
-                // Refresh so we get a copy of the entrt from the DS.  This ensures
+                // Refresh so we get a copy of the entry from the DS.  This ensures
                 // that we see any updates that the DS added to the entry.
                 refresh();
             }

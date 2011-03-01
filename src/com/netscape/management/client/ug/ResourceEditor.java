@@ -799,6 +799,8 @@ Observer {
             String sAttrName = (String) arg;
             if ((sAttrName != null) &&
                 (sAttrName.toLowerCase().equals("objectclass"))) {
+                // refresh the objectclass list
+                ((ResourcePageObservable)o).syncObjectClassList();
                 // update the plugin
                 setupPlugin(((ResourcePageObservable) o).get("objectclass"));
             }
