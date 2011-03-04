@@ -33,6 +33,7 @@ import com.netscape.management.nmclf.*;
 class CertInstallSetTrustPage extends WizardPage implements SuiConstants {
 
     JCheckBox clientTrust, serverTrust;
+    Hashtable pwdCache = new Hashtable();
     
     public boolean nextInvoked() {
 	boolean canProceed = false;
@@ -56,6 +57,10 @@ class CertInstallSetTrustPage extends WizardPage implements SuiConstants {
 	    args.put("dercert"  , dataCollectionModel.getValue("dercert"));
 	    args.put("certtype" , dataCollectionModel.getValue("certtype"));
 	    args.put("certname" , dataCollectionModel.getValue("certname"));
+	    for (Enumeration e=pwdCache.keys(); e.hasMoreElements();) {
+	        Object tokenPwd = e.nextElement();
+	        args.put(tokenPwd, pwdCache.get(tokenPwd));
+	    }
 
 	    int t = (clientTrust.isSelected()?EditTrustDialog.TRUSTED_CLIENT_CA:0) |
 	             (serverTrust.isSelected()?EditTrustDialog.TRUSTED_CA:0);
@@ -69,6 +74,8 @@ class CertInstallSetTrustPage extends WizardPage implements SuiConstants {
 						  "admin-serv/tasks/configuration/SecurityOp"),
 					  consoleInfo.getAuthenticationDN(),
 					  consoleInfo.getAuthenticationPassword());
+
+	    SecurityUtil.execWithPwdInput(admTask, args, pwdCache);
 
 	    admTask.setArguments(args);
 

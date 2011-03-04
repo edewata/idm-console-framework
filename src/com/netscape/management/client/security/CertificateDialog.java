@@ -285,6 +285,7 @@ public class CertificateDialog extends AbstractDialog implements SuiConstants {
                     }
 
                     CertificateDialog.this.serverCertificatePane.setTokenName(token.toString());
+                    CertificateDialog.this.caCertificatePane.setTokenName(token.toString());
 
                     SwingUtilities.invokeLater(new Runnable() {
                         public void run() {
