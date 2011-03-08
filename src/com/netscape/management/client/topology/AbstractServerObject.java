@@ -84,10 +84,11 @@ INodeInfo, SuiConstants {
     static String _7bitDataKey[] = new String[]{ "serverProductName", };
 
     static String _displayDataKey[] = new String[]{ "serverProductName",
-    "description", //"serverVersionNumber",
+            "description", //"serverVersionNumber",
             "installationTimeStamp", "nsProductName",
-    "nsVendor", "nsProductVersion", "nsBuildNumber", "nsRevisionNumber",
-    "nsBuildSecurity", };
+            "nsVendor", "nsProductVersion", "nsBuildNumber", "nsRevisionNumber",
+            //"nsBuildSecurity",
+            };
 
     static String _nodeNameKey = "serverProductName";
 
