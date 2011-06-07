@@ -512,7 +512,7 @@ class ACIEditor extends GenericDialog
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(0, 0, 0, 0);
-        textArea = new JTextArea();
+        textArea = new JTextArea(4,30);
         textArea.setFont(FontFactory.getFont(FontFactory.FONT_MONOSPACED));
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
