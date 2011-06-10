@@ -287,7 +287,7 @@ Observer, ActionListener, IRPCallBack {
 
         boolean oc_present = false;
         try {
-            LDAPEntry entry = observable.getLDAPEntry(observable.getDN());
+            LDAPEntry entry = observable.getLDAPEntry(observable.getDN(), isNewGroup);
             Enumeration attrVals = entry.getAttribute("objectclass").getStringValues();
             while (attrVals.hasMoreElements()){
                     if (attrVals.nextElement().toString().equalsIgnoreCase(_POSIXOBJECTCLASS)){

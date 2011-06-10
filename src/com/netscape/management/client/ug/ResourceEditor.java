@@ -536,6 +536,7 @@ Observer {
                 _fSaveOK = true;
             }
             catch (Exception err) {
+                LDAPException lex = (err instanceof LDAPException) ? (LDAPException)err : null;
                 if (Debug.isEnabled()) {
                     if (! (err instanceof LDAPException)) {
                         err.printStackTrace();
@@ -550,6 +551,9 @@ Observer {
                     err.printStackTrace();
                 }
                 ModalDialogUtil.sleep();
+                if ((lex != null) && (lex.getLDAPResultCode() == ResourcePageObservable.NEW_ENTRY_TIMEOUT)) {
+	                super.setVisible(false);
+                }
                 return;
             }
             super.setVisible(false);

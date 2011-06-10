@@ -77,7 +77,8 @@ public class ResourcePageObservable extends Observable {
     public String _sIndexAttribute = "cn";
     public String _sBaseDN;
 
-
+    static final int NEW_ENTRY_TIMEOUT = 0xff;
+    
     /**
     * Constructor
     *
@@ -139,31 +140,66 @@ public class ResourcePageObservable extends Observable {
      * Gets the LDAPEntry for the specified DN
      *
      * @param DN  the LDAPEntry to retrieve
+     * @param newEntry This is a new entry we just added - if we get
+     *                 a NO_SUCH_OBJECT (err=32), we assume this server
+     *                 is a replica, and we wait for the entry to show
+     *                 up
      * @return    the LDAPEntry for the specified DN
      */
-    public LDAPEntry getLDAPEntry(String DN) {
-        LDAPEntry ldapEntry = null;
-        try {
-            LDAPConnection ldapConnection = _info.getUserLDAPConnection();
-            if ((ldapConnection == null) ||
-                    (!ldapConnection.isConnected())) {
-                ldapConnection = new KingpinLDAPConnection(
-                        _info.getAuthenticationDN(),
-                        _info.getAuthenticationPassword());
-                ldapConnection.connect(LDAPUtil.LDAP_VERSION,
-                        _info.getUserHost(), _info.getUserPort(),
-                        _info.getAuthenticationDN(),
-                        _info.getAuthenticationPassword());
-                ldapEntry = ldapConnection.read(DN);
-                ldapConnection.disconnect();
-            } else {
-                ldapEntry = ldapConnection.read(DN);
-            }
-        } catch (LDAPException e) {
+    public LDAPEntry getLDAPEntry(String DN, boolean newEntry) {
+		LDAPEntry ldapEntry = null;
+		int tries = 10;
+		LDAPConnection ldapConnection = null;
+		boolean needdisconnect = false;
+		while (tries >= 0) {
+			try {
+				if (ldapConnection == null) {
+					ldapConnection = _info.getUserLDAPConnection();
+				}
+				if (ldapConnection == null) {
+					ldapConnection = new KingpinLDAPConnection(
+							_info.getAuthenticationDN(),
+							_info.getAuthenticationPassword());
+					needdisconnect = true;
+				}
+				if (!ldapConnection.isConnected()) {
+					ldapConnection.connect(LDAPUtil.LDAP_VERSION,
+							_info.getUserHost(), _info.getUserPort(),
+							_info.getAuthenticationDN(),
+							_info.getAuthenticationPassword());
+				}
+				ldapEntry = ldapConnection.read(DN);
+				break; // read was successful - break out of while loop
+			} catch (LDAPException e) {
+				if ((e.getLDAPResultCode() == LDAPException.NO_SUCH_OBJECT)
+						&& newEntry) {
+					Debug.println(6, "ResourcePageObservable.getLDAPEntry: "
+							+ "waiting for entry " + DN);
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e1) {
+						Debug.println("ResourcePageObservable.getLDAPEntry: sleep was "
+								+ "interrupted: " + e1);
+						break;
+					}
+					tries--;
+				} else {
+					Debug.println("ResourcePageObservable.getLDAPEntry: could not read entry ["
+							+ DN + "] " + "Error: " + e);
+					break; // hard error - done with while loop
+				}
+			}
+		}
 
-        }
-
-        return ldapEntry;
+		if (needdisconnect && (ldapConnection != null)) {
+			try {
+				ldapConnection.disconnect();
+			} catch (LDAPException e) {
+				Debug.println("ResourcePageObservable.getLDAPEntry: could not close connection "
+						+ "Error: " + e);
+			}
+		}
+		return ldapEntry;
     }
 
 
@@ -385,7 +421,13 @@ public class ResourcePageObservable extends Observable {
 
                 // Refresh so we get a copy of the entry from the DS.  This ensures
                 // that we see any updates that the DS added to the entry.
-                refresh();
+                refresh(true);
+                if (_entry == null) {
+                	String[] arg = {newRDN};
+                	String msg = _resource.getString("ResourcePageObservable",
+                			"couldNotReadNewEntry", arg);
+                	throw new LDAPException(msg, ResourcePageObservable.NEW_ENTRY_TIMEOUT);
+                }
             }
             catch (LDAPException e) {
                 Debug.println(0,
@@ -499,7 +541,7 @@ public class ResourcePageObservable extends Observable {
                 ldapConnection.modify(sDN, modificationSet);
 
                 _entry = ldapConnection.read(sDN);
-                refresh();
+                refresh(false);
             } catch (LDAPException e) {
                 Debug.println(0, "ResourcePageObservable.java:MODIFY LDAP ENTRY:"+e);
                 throw e;
@@ -510,8 +552,9 @@ public class ResourcePageObservable extends Observable {
 
     /**
       * remove all the elements in the observable and reload all the values
+     * @param newEntry TODO
       */
-    public void refresh() {
+    public void refresh(boolean newEntry) {
         attrAdd.removeAllElements();
         attrReplace.removeAllElements();
         attrDelete.removeAllElements();
@@ -522,12 +565,14 @@ public class ResourcePageObservable extends Observable {
 
         // read in the new attributes
         attributes.clear();
-        _entry = getLDAPEntry(_entry.getDN());
-        LDAPAttributeSet attrSet = _entry.getAttributeSet();
-        String attr = null;
-        for (int i = 0; i < attrSet.size(); i++) {
-            attr = attrSet.elementAt(i).getName().toLowerCase();
-            attributes.put(attr, attrSet.elementAt(i));
+        _entry = getLDAPEntry(_entry.getDN(), newEntry);
+        if (_entry != null) {
+        	LDAPAttributeSet attrSet = _entry.getAttributeSet();
+        	String attr = null;
+        	for (int i = 0; i < attrSet.size(); i++) {
+        		attr = attrSet.elementAt(i).getName().toLowerCase();
+        		attributes.put(attr, attrSet.elementAt(i));
+        	}
         }
     }
 
