@@ -151,6 +151,17 @@ public class TopologyInitializer extends FrameworkInitializer {
         } catch (LDAPException e) {
             Debug.println("Cannot open: "+ldapLocation);
         }
+        // if we could not find a topology plugin in the directory
+        // server, just use the default one
+        if (topologyPlugin.isEmpty()) {
+        	String defaultname = "com.netscape.management.client.topology.DefaultTopologyPlugin";
+        	Debug.println(5, "TopologyInitializer.getTopologyPluginFromDS: " +
+        					 "could not find a topology plugin under " +
+        					 ldapLocation +  ": using " + defaultname);
+        	ITopologyPlugin plugin = new DefaultTopologyPlugin();
+        	plugin.initialize(info);
+        	topologyPlugin.put(defaultname, plugin);
+        }
         return topologyPlugin;
     }
 
