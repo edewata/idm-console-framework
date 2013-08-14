@@ -86,13 +86,19 @@ public class CertRequestInfoPage extends JPanel implements SuiConstants, IUIPage
 	return resource.getString("CertRequestInfoPage", "pageTitle");
     }
     public int getRemainingPageCount() {
-	return 1;
+	return 2;
     }
 
 
 
     public IUIPage getNextPage() {
-	return (validated()?null:this);
+        IUIPage contentPage = null;
+
+        if (validated()) {
+            contentPage = new CertRequestKeyPage(_sessionData);
+        }
+
+	return contentPage;
     }
     public IUIPage getPreviousPage() {
 	return null;

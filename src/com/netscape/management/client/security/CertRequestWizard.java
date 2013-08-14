@@ -197,6 +197,16 @@ public class CertRequestWizard  {
 		args.put("dn", ic.getCertificateDN());
 		args.put("tokenname", getDataModel().getValue("tokenname"  , ""));
 
+                String keysize = ic.getProperty("keysize");
+                if (keysize != null) {
+                    args.put("keysize", keysize);
+                }
+
+                String signingalgo = ic.getProperty("signingalgo");
+                if (signingalgo != null) {
+                    args.put("signingalgo", signingalgo);
+                }
+
 		ConsoleInfo consoleInfo = (ConsoleInfo)(getDataModel().getValue("consoleInfo"));
 
 
@@ -579,7 +589,7 @@ public class CertRequestWizard  {
 	}
 
 	public int getMaxSteps() {
-	    return 4;
+	    return 5;
 	}
 
 	public void helpInvoked() {
