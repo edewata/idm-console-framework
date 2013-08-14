@@ -90,8 +90,17 @@ class InstallCRLDialog extends AbstractDialog implements SuiConstants {
 	
 	setTitle(resource.getString("InstallCRLDialog", "title"));
 
+        // Create a text area that looks like a multi-line label.
+        JTextArea description = new JTextArea(resource.getString("InstallCRLDialog", "description"));
+        description.setLineWrap(true);
+        description.setWrapStyleWord(true);
+        description.setMargin(UIManager.getInsets("Label.margin"));
+        description.setBackground(UIManager.getColor("Label.background"));
+        description.setForeground(UIManager.getColor("Label.foreground"));
+        description.setFont(UIManager.getFont("Label.font"));
+
 	JLabel enterFile = new JLabel(resource.getString("InstallCRLDialog", "enterFilename"));
-    enterFile.setLabelFor(filename);
+        enterFile.setLabelFor(filename);
 	crl = new JRadioButton(resource.getString("InstallCRLDialog", "crl"), true);
 	krl = new JRadioButton(resource.getString("InstallCRLDialog", "krl"), false);
 	ButtonGroup g = new ButtonGroup();
@@ -102,8 +111,14 @@ class InstallCRLDialog extends AbstractDialog implements SuiConstants {
 	
         int y = 0;
 
-        GridBagUtil.constrain(getContentPane(), enterFile,
+        GridBagUtil.constrain(getContentPane(), description,
                               0, y, 1, 1,
+                              1.0, 0.0,
+                              GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL,
+                              0, 0, COMPONENT_SPACE, 0);
+
+        GridBagUtil.constrain(getContentPane(), enterFile,
+                              0, ++y, 1, 1,
                               1.0, 0.0,
                               GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL,
                               0, 0, COMPONENT_SPACE, 0);
@@ -127,7 +142,9 @@ class InstallCRLDialog extends AbstractDialog implements SuiConstants {
                               GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL,
                               0, 0, 0, 0);
 
+        // We need to pack twice to prevent our text area from being truncated.
 	pack();
+        pack();
 	setResizable(false);
     }
 
