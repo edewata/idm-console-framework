@@ -207,6 +207,8 @@ SuiConstants {
 		result = _urlField.getSelectedItem();
 		if(result == null)
 			return "";
+		if(!((String)result).startsWith("http://") && !((String)result).startsWith("https://"))
+			result = "http://" + result;
 		return (String)result;
     }
 
