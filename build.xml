@@ -188,7 +188,7 @@ END COPYRIGHT BLOCK
   <!-- Package -->
   <target name="build_jars" depends="build,prepare_jars">
     <!-- Create jar files -->
-    <jar jarfile="${built.jardir}/${mcc.name}.jar" >
+    <jar jarfile="${built.jardir}/${mcc.core}.jar" >
       <fileset dir="${built.classdir}">
          <include name="com/netscape/management/client/**/*.class" />
          <include name="sun/net/www/protocol/https/**/*.class" />
@@ -211,26 +211,26 @@ END COPYRIGHT BLOCK
          <exclude name="com/netscape/management/client/console/VersionInfo.class"/>
       </fileset>
     </jar>
-    <jar jarfile="${built.jardir}/${mcc.name}_${lang}.jar" >
+    <jar jarfile="${built.jardir}/${mcc.core}_${lang}.jar" >
       <fileset dir="${java.src.dir}">
          <include name="com/netscape/management/client/**/*.properties" />
          <include name="com/netscape/management/client/**/*.gif" />
          <include name="com/netscape/management/client/**/*.jpg" />
       </fileset>
     </jar>
-    <jar jarfile="${built.jardir}/${nmclf.name}.jar" >
+    <jar jarfile="${built.jardir}/${nmclf.core}.jar" >
       <fileset dir="${built.classdir}">
          <include name="com/netscape/management/nmclf/**/*.class" />
       </fileset>
     </jar>
-    <jar jarfile="${built.jardir}/${nmclf.name}_${lang}.jar" >
+    <jar jarfile="${built.jardir}/${nmclf.core}_${lang}.jar" >
       <fileset dir="${java.src.dir}">
          <include name="com/netscape/management/nmclf/**/*.properties" />
          <include name="com/netscape/management/nmclf/**/*.gif" />
          <include name="com/netscape/management/nmclf/**/*.jpg" />
       </fileset>
     </jar>
-    <jar jarfile="${built.jardir}/${base.name}.jar" >
+    <jar jarfile="${built.jardir}/${base.core}.jar" >
       <fileset dir="${built.classdir}">
         <include name="com/netscape/management/client/topology/IServerObject.class"/>
         <include name="com/netscape/management/client/topology/IRemovableServerObject.class"/>
@@ -256,27 +256,11 @@ END COPYRIGHT BLOCK
   <!-- Package -->
   <target name="package" depends="build_jars,prepare_package,import_jss_lib,import_nss_lib,import_nspr_lib">
     <!-- Copy built jars to packaging area -->
-    <copy file="${built.jardir}/${mcc.name}.jar" todir="${java.dir}"/>
-    <copy file="${built.jardir}/${mcc.name}_${lang}.jar" todir="${java.dir}"/>
-    <copy file="${built.jardir}/${nmclf.name}.jar" todir="${java.dir}"/>
-    <copy file="${built.jardir}/${nmclf.name}_${lang}.jar" todir="${java.dir}"/>
-    <copy file="${built.jardir}/${base.name}.jar" todir="${java.dir}"/>
-    <!-- make a symlinks: e.g., prefix-mcc-1.0.0.jar to prefix-mcc-1.0.jar -->
-    <exec executable="ln" dir="${java.dir}" vmlauncher="true">
-      <arg line="-s ${mcc.name}.jar ${mcc.gen.name}.jar"/>
-    </exec>
-    <exec executable="ln" dir="${java.dir}" vmlauncher="true">
-      <arg line="-s ${mcc.name}_${lang}.jar ${mcc.gen.name}_${lang}.jar"/>
-    </exec>
-    <exec executable="ln" dir="${java.dir}" vmlauncher="true">
-      <arg line="-s ${nmclf.name}.jar ${nmclf.gen.name}.jar"/>
-    </exec>
-    <exec executable="ln" dir="${java.dir}" vmlauncher="true">
-      <arg line="-s ${nmclf.name}_${lang}.jar ${nmclf.gen.name}_${lang}.jar"/>
-    </exec>
-    <exec executable="ln" dir="${java.dir}" vmlauncher="true">
-      <arg line="-s ${base.name}.jar ${base.gen.name}.jar"/>
-    </exec>
+    <copy file="${built.jardir}/${mcc.core}.jar" todir="${java.dir}"/>
+    <copy file="${built.jardir}/${mcc.core}_${lang}.jar" todir="${java.dir}"/>
+    <copy file="${built.jardir}/${nmclf.core}.jar" todir="${java.dir}"/>
+    <copy file="${built.jardir}/${nmclf.core}_${lang}.jar" todir="${java.dir}"/>
+    <copy file="${built.jardir}/${base.core}.jar" todir="${java.dir}"/>
 
     <!-- Copy components into packaging area -->
     <copy file="${ldapjdk.local.location}/${ldapjdk.jar.name}" todir="${java.dir}"/>
