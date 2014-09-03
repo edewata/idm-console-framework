@@ -50,7 +50,6 @@ import com.netscape.management.client.util.Debug;
 import com.netscape.management.client.util.LDAPUtil;
 import com.netscape.management.client.util.RemoteImage;
 import com.netscape.management.client.util.ResourceSet;
-import com.netscape.management.client.util.SingleBytePasswordField;
 import com.netscape.management.nmclf.SuiPasswordField;
 
 
@@ -130,7 +129,7 @@ INodeInfo {
         String name = null;
         String description = null;
         JCheckBox cbSSL = new JCheckBox();
-        SuiPasswordField bindPasswordField = new SingleBytePasswordField();
+        SuiPasswordField bindPasswordField = new SuiPasswordField();
         bindPasswordField.setTransparentBorder(true);
 
         // need to re-read because ldapEntry search was too narrow

@@ -50,7 +50,7 @@ public class NewDomainDialog extends AbstractDialog {
     JTextField _baseDN;
     JTextField _username;
     JTextField _ownerDN;
-    SingleBytePasswordField _password;
+    SuiPasswordField _password;
     ConsoleInfo _info;
 
     /**
@@ -157,7 +157,7 @@ public class NewDomainDialog extends AbstractDialog {
                               GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
                               SuiConstants.SEPARATED_COMPONENT_SPACE, 0, 0, 0);
 
-        _password = new SingleBytePasswordField();
+        _password = new SuiPasswordField();
         label.setLabelFor(_password);
         GridBagUtil.constrain(panel, _password, 1, 5,
                               GridBagConstraints.REMAINDER, 1, 1.0, 0.0,

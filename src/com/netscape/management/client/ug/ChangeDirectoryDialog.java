@@ -67,7 +67,7 @@ public class ChangeDirectoryDialog extends AbstractDialog {
     JTextField _port;
     JTextField _baseDN;
     JTextField _username;
-    SingleBytePasswordField _password;
+    SuiPasswordField _password;
 
     ResourceSet _resource = TopologyInitializer._resource;
     static final String _sChangeDirectory = "ChangeDirectory";
@@ -192,7 +192,7 @@ public class ChangeDirectoryDialog extends AbstractDialog {
                               SuiConstants.SEPARATED_COMPONENT_SPACE,
                               SuiConstants.DIFFERENT_COMPONENT_SPACE, 0, 0);
 
-        _password = new SingleBytePasswordField();
+        _password = new SuiPasswordField();
         lblPassword.setLabelFor(_password);
         _password.setText(_info.getAuthenticationPassword());
         GridBagUtil.constrain(p, _password, 1, 4,

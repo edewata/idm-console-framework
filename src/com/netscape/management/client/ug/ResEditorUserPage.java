@@ -63,8 +63,8 @@ Observer, DocumentListener {
     JTextArea _email;
     JTextArea _phone;
     JTextArea _fax;
-    SingleBytePasswordField _newPassword;
-    SingleBytePasswordField _confirmPassword;
+    SuiPasswordField _newPassword;
+    SuiPasswordField _confirmPassword;
 
     ConsoleInfo _info;
 
@@ -351,9 +351,9 @@ Observer, DocumentListener {
         fullNameLabel.setLabelFor(_fullName);
         _userID = new JTextField();
         userIDLabel.setLabelFor(_userID);
-        _newPassword = new SingleBytePasswordField("");
+        _newPassword = new SuiPasswordField("");
         passwordLabel.setLabelFor(_newPassword);
-        _confirmPassword = new SingleBytePasswordField("");
+        _confirmPassword = new SuiPasswordField("");
         confirmPasswordLabel.setLabelFor(_confirmPassword);
         _email = new UGTextArea();
         emailLabel.setLabelFor(_email);

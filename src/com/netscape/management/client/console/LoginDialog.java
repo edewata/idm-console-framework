@@ -43,7 +43,7 @@ SuiConstants {
 
     JComboBox _urlField;
     JTextField _useridField = new JTextField(22);
-    JTextField _passwordField = new SingleBytePasswordField(22);
+    JTextField _passwordField = new SuiPasswordField(22);
 
     int _x = -1;
     int _y = -1;

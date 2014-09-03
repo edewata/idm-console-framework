@@ -30,6 +30,7 @@ import com.netscape.management.client.util.AbstractDialog;
 import com.netscape.management.client.util.GridBagUtil;
 import com.netscape.management.client.util.RemoteImage;
 import com.netscape.management.client.security.PromptForTrustDialog;
+import com.netscape.management.nmclf.SuiPasswordField;
 
 import org.mozilla.jss.ssl.SSLSocket;
 import org.mozilla.jss.ssl.SSLCertificateApprovalCallback.ValidityStatus;
@@ -45,8 +46,6 @@ import org.mozilla.jss.crypto.InternalCertificate;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-
-import com.netscape.management.client.util.SingleBytePasswordField;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
@@ -239,7 +238,7 @@ public class HttpsChannel extends HttpChannel implements
     class GetPasswordDialog extends AbstractDialog {
 
         JLabel enterPwdLabel = new JLabel();
-        SingleBytePasswordField pwd;
+        SuiPasswordField pwd;
         public GetPasswordDialog(JFrame parent) {
             super(parent, i18n("getPwdDialogTitle"), true, OK|CANCEL);
 
@@ -253,7 +252,7 @@ public class HttpsChannel extends HttpChannel implements
                                     GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
                                     0, 0, 0, 0);
 
-            pwd = new SingleBytePasswordField();
+            pwd = new SuiPasswordField();
             setFocusComponent(pwd);
             GridBagUtil.constrain(p, pwd,
                                     0, ++y, 1, 1,

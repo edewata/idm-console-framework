@@ -47,7 +47,7 @@ Observer {
     PickerEditorResourceSet _resource = new PickerEditorResourceSet();
     private String ID;
 
-    SingleBytePasswordField _newPassword, _confirmPassword;
+    SuiPasswordField _newPassword, _confirmPassword;
 
     String _password;
 
@@ -103,9 +103,9 @@ Observer {
                 SwingConstants.RIGHT);
         JLabel blankLabel = new JLabel(""); // Prevents components of this panel from centering
 
-        _newPassword = new SingleBytePasswordField("");
+        _newPassword = new SuiPasswordField("");
         passwordLabel.setLabelFor(_newPassword);
-        _confirmPassword = new SingleBytePasswordField("");
+        _confirmPassword = new SuiPasswordField("");
         confirmPasswordLabel.setLabelFor(_confirmPassword);
         _confirmPassword.addFocusListener(_focusAdaptor); // Only want to update when new == confirm
 
