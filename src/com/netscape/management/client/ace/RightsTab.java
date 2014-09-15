@@ -284,13 +284,7 @@ class RightsTab implements IACITab, UIConstants
         gbc.weightx = 1.0;   gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(0, 0, 0, 0);
-		
-		// Row highlight color is changed to disable highlighting
-		// it is misleading to allow users to select rows 
-		// unless specific actions can be taken on the selection.
-        rightsTable.setSelectionBackground(rightsTable.getBackground());
-        rightsTable.setSelectionForeground(rightsTable.getForeground());
-		
+
 		TableColumn col = rightsTable.getColumnModel().getColumn(0);
 		col.setMinWidth(30);
 		col.setMaxWidth(30);
