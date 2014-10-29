@@ -77,6 +77,8 @@ public class Console implements CommClient {
     public static final String PREFERENCE_LOCAL = "StorePrefsToDisk";
     public static final String PREFERENCE_X = "X";
     public static final String PREFERENCE_Y = "Y";
+    public static final String PREFERENCE_SSL_VERSION_MIN = "sslVersionMin";
+    public static final String PREFERENCE_SSL_VERSION_MAX = "sslVersionMax";
 
     public static final String PREFERENCE_DIR = System.getProperty("user.home") + File.separator +
                               _resource_theme.getString("console","prefsdir") + File.separator;
@@ -1053,7 +1055,7 @@ public class Console implements CommClient {
 
         Hashtable ht = new Hashtable();
 
-        boolean successfulAuth = invoke_task(url, user, pw, ht);
+        boolean successfulAuth = invoke_task(url, user, pw, ht, _preferences);
 
         String param;
 
@@ -1138,6 +1140,11 @@ public class Console implements CommClient {
 
     private synchronized final boolean invoke_task(URL url,
             String user, String pw, Hashtable ht) {
+        return invoke_task(url, user, pw, ht, null);
+    }
+
+    private synchronized final boolean invoke_task(URL url,
+            String user, String pw, Hashtable ht, Preferences pref) {
         HttpManager h = new HttpManager();
 
         InputStream is;
@@ -1146,7 +1153,7 @@ public class Console implements CommClient {
 
         try {
             h.get(url, this, r = new Response(user, pw),
-                    h.FORCE_BASIC_AUTH);
+                    h.FORCE_BASIC_AUTH, pref);
         } catch (Exception ioe) {
             String _url;
             try {

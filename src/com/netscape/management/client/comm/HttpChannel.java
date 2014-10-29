@@ -20,7 +20,6 @@
 package com.netscape.management.client.comm;
 
 import java.net.Socket;
-import java.net.SocketException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.io.IOException;
@@ -29,14 +28,10 @@ import java.io.InputStream;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStreamWriter;
 import java.io.InterruptedIOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.BitSet;
 import java.lang.reflect.Method;
-import java.io.UTFDataFormatException;
 
 import com.netscape.management.client.util.*;
 import com.netscape.management.client.util.Debug;
@@ -44,8 +39,8 @@ import com.netscape.management.client.util.IProgressListener;
 import com.netscape.management.client.util.Permissions;
 import com.netscape.management.client.util.URLByteEncoder;
 import com.netscape.management.client.console.VersionInfo;
+import com.netscape.management.client.preferences.Preferences;
 
-import java.util.*;
 
 /**
  * A HTTP protocol handler.
@@ -89,6 +84,10 @@ public class HttpChannel implements Runnable, CommChannel {
     }
 
     public void open() throws IOException {
+        open(null);
+    };
+
+    public void open(Preferences pref) throws IOException {
         Method m = Permissions.getEnablePrivilegeMethod();
 
         if (m != null) {

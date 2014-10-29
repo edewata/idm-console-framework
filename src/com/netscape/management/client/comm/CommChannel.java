@@ -20,6 +20,7 @@
 package com.netscape.management.client.comm;
 
 import java.io.IOException;
+import com.netscape.management.client.preferences.Preferences;
 
 /**
  * The CommChannel interface is implemented by any object
@@ -39,6 +40,8 @@ public interface CommChannel {
       * @exception IOException if an I/O error occurs.
       */
     public void open() throws IOException;
+
+    public void open(Preferences pref) throws IOException;
 
     /**
      * Closes a communication channel. The channel should be closed

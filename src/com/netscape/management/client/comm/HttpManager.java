@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import com.netscape.management.client.util.Debug;
+import com.netscape.management.client.preferences.Preferences;
 
 /**
  * This CommManager subclass implements connection management
@@ -122,6 +123,10 @@ public class HttpManager extends CommManager {
     public CommRecord get(URL url, CommClient client, Object arg,
             int mode) throws IOException {
         return send(url, client, arg, null, 0, mode);
+    }
+    public CommRecord get(URL url, CommClient client, Object arg,
+            int mode, Preferences pref) throws IOException {
+        return send(url, client, arg, null, 0, mode, null, pref);
     }
     public CommRecord get(URL url, CommClient client, Object arg,
             String[] hdrs) throws IOException {

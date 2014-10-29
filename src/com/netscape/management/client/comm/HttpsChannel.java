@@ -31,6 +31,7 @@ import com.netscape.management.client.util.GridBagUtil;
 import com.netscape.management.client.util.RemoteImage;
 import com.netscape.management.client.security.PromptForTrustDialog;
 import com.netscape.management.nmclf.SuiPasswordField;
+import com.netscape.management.client.preferences.Preferences;
 
 import org.mozilla.jss.ssl.SSLSocket;
 import org.mozilla.jss.ssl.SSLCertificateApprovalCallback.ValidityStatus;
@@ -74,7 +75,6 @@ public class HttpsChannel extends HttpChannel implements
     static HttpsChannel.SelectCertDialog selectCertDialog = null;
     static CertificateFactory cf;
     static ResourceSet resource;
-
     private JFrame _frame; 
 
     final static int MAX_PASSWORD_PROMPT = 10;
@@ -403,11 +403,49 @@ public class HttpsChannel extends HttpChannel implements
         return getPasswordDialog.getPassword();
     }
 
-    public void open() throws IOException {
+    private int getSSLVersionRangeEnum (String rangeString) {
+        if (rangeString == null)
+            return -1;
+        if (rangeString.equalsIgnoreCase("ssl3"))
+            return org.mozilla.jss.ssl.SSLSocket.SSLVersionRange.ssl3;
+        else if (rangeString.equalsIgnoreCase("tls1.0"))
+            return org.mozilla.jss.ssl.SSLSocket.SSLVersionRange.tls1_0;
+        else if (rangeString.equalsIgnoreCase("tls1.1"))
+            return org.mozilla.jss.ssl.SSLSocket.SSLVersionRange.tls1_1;
+        else if (rangeString.equalsIgnoreCase("tls1.2"))
+            return org.mozilla.jss.ssl.SSLSocket.SSLVersionRange.tls1_2;
+
+        return -1;
+    }
+
+    public void open(Preferences pref) throws IOException {
         cryptoManager.setPasswordCallback(this);
         try {
             nthPrompt = 0;
+
+            // Set our defaults
+            int min = org.mozilla.jss.ssl.SSLSocket.SSLVersionRange.tls1_1;
+            int max = org.mozilla.jss.ssl.SSLSocket.SSLVersionRange.tls1_2;
+
             Debug.println("CREATE JSS SSLSocket");
+
+            if(pref != null){
+                // Check if min/max have been a preference
+                int version;
+
+                if ((version = getSSLVersionRangeEnum(pref.getString("sslVersionMin"))) != -1 ){
+                    min = version;
+                }
+                if ((version = getSSLVersionRangeEnum(pref.getString("sslVersionMax"))) != -1){
+                    max = version;
+                }
+            }
+
+            org.mozilla.jss.ssl.SSLSocket.SSLVersionRange range =
+                new org.mozilla.jss.ssl.SSLSocket.SSLVersionRange(min, max);
+
+            SSLSocket.setSSLVersionRangeDefault(org.mozilla.jss.ssl.SSLSocket.SSLProtocolVariant.STREAM, range);
+
             socket = new SSLSocket(InetAddress.getByName(getHost()),
                                    getPort(), null, 0, true, this,
                                    this);

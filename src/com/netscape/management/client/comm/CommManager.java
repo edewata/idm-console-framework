@@ -26,6 +26,7 @@ import java.util.Locale;
 import com.netscape.management.client.util.Debug;
 import com.netscape.management.client.util.LinkedList;
 import com.netscape.management.client.util.LinkedListElement;
+import com.netscape.management.client.preferences.Preferences;
 
 /**
  * This abstract class is the superclass of all classes which
@@ -94,13 +95,14 @@ public abstract class CommManager {
       *  that basic auth information will be sent with the transaction; otherwise the transaction will be
       *  first attempted without basic auth, and retried if necessary on receipt of an auth request.
       * @param channelData optional data argument to be passed to the CommChannel.
+      * @param pref preferences containing max and min SSL versions
       * @see CommClient
       * @see CommRecord
       * @see CommChannel
       */
     public synchronized CommRecord send(Object target,
             CommClient client, Object arg, InputStream data,
-            int dataLength, int mode, Object channelData)
+            int dataLength, int mode, Object channelData, Preferences pref)
         throws IOException {
         Debug.println("CommManager> New CommRecord (" + target + ")");
         Debug.println(Debug.TYPE_HTTP,
@@ -124,7 +126,7 @@ public abstract class CommManager {
             CommChannel cc = createChannel(tid,
                     Integer.toString(CommChannelCount++) + ":" +
                     Integer.toString(i));
-            cc.open();
+            cc.open(pref);
             chv.addElement(cc);
         }
 
@@ -143,16 +145,29 @@ public abstract class CommManager {
     public synchronized CommRecord send(Object target,
             CommClient client, Object arg, InputStream data, int dataLength)
         throws IOException {
-        return send(target, client, arg, data, dataLength, 0, null);
+        return send(target, client, arg, data, dataLength, 0, null, null);
     }
 
     public synchronized CommRecord send(Object target,
             CommClient client, Object arg, InputStream data,
             int dataLength, int mode)
         throws IOException {
-        return send(target, client, arg, data, dataLength, mode, null);
+        return send(target, client, arg, data, dataLength, mode, null, null);
     }
 
+    public synchronized CommRecord send(Object target,
+            CommClient client, Object arg, InputStream data,
+            int dataLength, int mode, String[] headers)
+        throws IOException {
+        return send(target, client, arg, data, dataLength, mode, null, null);
+    }
+
+    public synchronized CommRecord send(Object target,
+            CommClient client, Object arg, InputStream data,
+            int dataLength, int mode, Preferences pref)
+        throws IOException {
+        return send(target, client, arg, data, dataLength, mode, null, pref);
+    }
     /**
       * Forcibly terminates a communication request. If the request is in the queue,
       * it is dequeued. If the request is in progress, an attempt is made to halt
