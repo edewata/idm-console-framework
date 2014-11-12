@@ -62,6 +62,7 @@ public class ACIManager extends GenericDialog
     private LDAPConnection aciLdc;
     private LDAPConnection ugLdc;
     private Vector extraACITabs = new Vector();
+    private static final String ACL_PLUGIN_DN = "cn=ACL Plugin,cn=plugins,cn=config";
     
     private static String i18n(String id) 
     {
@@ -218,6 +219,30 @@ public class ACIManager extends GenericDialog
         {
             ACI aci = new ACI((String)e.nextElement(), aciDN, isInherited, false/*modified*/);
             aciVector.addElement(aci);
+        }
+    }
+
+    public static void testACI( LDAPConnection ldc, String aci) throws LDAPException
+    {
+        // Add the aci to the ACL plugin entry to verify if its syntax is correct.
+        LDAPAttribute testACIAttr = new LDAPAttribute("aci");
+        testACIAttr = new LDAPAttribute("aci");
+        testACIAttr.addValue(aci);
+        LDAPModification mod = null;
+
+        try {
+            mod = new LDAPModification(LDAPModification.ADD, testACIAttr);
+            ldc.modify(ACL_PLUGIN_DN, mod);
+
+            mod = new LDAPModification(LDAPModification.DELETE, testACIAttr);
+            ldc.modify(ACL_PLUGIN_DN, mod);
+        }
+        catch (LDAPException e)
+        {
+            Debug.println("Failed to add/delete aci to testing entry: mod "
+                + mod.toString() + " - Error: " + e.getLDAPResultCode());
+            Debug.println("Message: " + e.getLDAPErrorMessage());
+            throw e;
         }
     }
     
@@ -393,16 +418,6 @@ public class ACIManager extends GenericDialog
         try
         {
             writeACIsFromDN(aciDN, aciVector.elements());
-            int length = aciDN.length();
-            for(int i = 0; i < length; i++)
-            {
-                String dn;
-                if(aciDN.charAt(i) == ',')
-                {
-                    dn = aciDN.substring(i+1);
-                    writeACIsFromDN(dn, aciVector.elements());
-                }
-            }
             super.okInvoked();
         }
         catch(LDAPException e)
@@ -452,27 +467,45 @@ public class ACIManager extends GenericDialog
         ACI aci = null;
         try 
         {
-            boolean isDirty = false;
             LDAPAttribute attr = new LDAPAttribute("aci");
             while(aciVector.hasMoreElements())
             {
                 aci = (ACI)aciVector.nextElement();
                 if(aci.getDN().equals(dn))
                 {
-                    if(aci.isModified())
-                       isDirty = true;
-                    
-                    if(!aci.isDeleted())
+                    if(aci.isDeleted() )
                     {
-                        String aciData = aci.getData();
+                        // Delete the original aci
+                        String aciData = aci.getOrigData();
                         attr.addValue(aciData);
+                        LDAPModification mod = new LDAPModification(LDAPModification.DELETE, attr);
+                        aciLdc.modify(dn, mod);
+                    }
+                    else if(aci.isModified())
+                    {
+                        String origData = aci.getOrigData();
+                        String currData = aci.getData();
+
+                        // First check that entry has actually changed
+                        if(!origData.equals(currData)){
+                            // Before we delete the old aci, make sure we can add the new aci.
+                            testACI(aciLdc, currData);
+
+                            // Delete the original aci first
+                            String aciData = aci.getOrigData();
+                            attr.addValue(aciData);
+                            LDAPModification mod = new LDAPModification(LDAPModification.DELETE, attr);
+                            aciLdc.modify(dn, mod);
+
+                            // Add the new/modified aci
+                            attr.removeValue(aciData);
+                            aciData = aci.getData();
+                            attr.addValue(aciData);
+                            mod = new LDAPModification(LDAPModification.ADD, attr);
+                            aciLdc.modify(dn, mod);
+                        }
                     }
                 }
-            }
-            if(isDirty)
-            {
-                LDAPModification mod = new LDAPModification(LDAPModification.REPLACE, attr);
-                aciLdc.modify(dn, mod);
             }
         }
         catch (LDAPException e)
@@ -480,7 +513,6 @@ public class ACIManager extends GenericDialog
             Debug.println("ACI Write Error: " + e.getLDAPResultCode());
             Debug.println("Message: " + e.getLDAPErrorMessage());
             throw e;
-
         }
     }
     
@@ -488,6 +520,7 @@ public class ACIManager extends GenericDialog
     {
         String dn;
         String data;
+        String orig_data;
         String name;
         boolean isInherited = false;
         boolean isModified = false;
@@ -498,6 +531,7 @@ public class ACIManager extends GenericDialog
             this.dn = dn;
             this.isInherited = isInherited;
             setData(data);
+            this.orig_data = new String(data);
             setModified(isModified);
         }
         
@@ -518,10 +552,15 @@ public class ACIManager extends GenericDialog
             return data;
         }
         
+        public String getOrigData()
+        {
+            return orig_data;
+        }
+
         public void setData(String data)
         {
             this.data = data;
-            String aciName = null;
+
             ACIAttribute a = ACIAttribute.getAttribute("acl", ACIAttribute.toArray(ACIParser.getACIAttributes(data)));
             
             //bug 516529 : need to accept either acl or aci for the name

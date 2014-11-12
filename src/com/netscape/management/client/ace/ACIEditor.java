@@ -22,9 +22,12 @@ package com.netscape.management.client.ace;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+
 import javax.swing.*;
 import javax.swing.event.*;
+
 import netscape.ldap.*;
+
 import com.netscape.management.client.console.*;
 import com.netscape.management.client.components.*;
 import com.netscape.management.client.util.*;
@@ -91,7 +94,8 @@ class ACIEditor extends GenericDialog
     private JButton modeButton = null;
     private JTextArea textArea = null;
     private boolean isInitialized = false;
-    
+    private LDAPAttribute origACIAttr = null;
+
     private static String i18n(String id)
     {
         return i18n.getString("ed", id);
@@ -585,68 +589,29 @@ class ACIEditor extends GenericDialog
     class SyntaxActionListener implements ActionListener
     {
         final String ACI_ALL = "(targetattr=\"*\")(version 3.0; acl \"Allow Everyone\"; allow (all) (userdn = \"ldap:///anyone\") ;)";
+        final String ACL_PLUGIN_DN = "cn=ACL Plugin,cn=plugins,cn=config";
+
         public void actionPerformed(ActionEvent event)
         {
             LDAPAttribute oldACIAttr = null;
             LDAPAttribute testACIAttr = null;
             LDAPModification mod = null;
-            boolean isSyntaxOK = false;
-            try
-            {
-                LDAPEntry entry = aciLdc.read(aciDN, new String[] {"aci"});
-                if (entry != null) 
-                    oldACIAttr = entry.getAttribute("aci");
-                testACIAttr = new LDAPAttribute("aci");
-                testACIAttr.addValue(ACI_ALL);
-                testACIAttr.addValue(getACI());
-                mod = new LDAPModification(LDAPModification.REPLACE, testACIAttr);
-                try
-                {
-                    aciLdc.modify(aciDN, mod);
-                    isSyntaxOK = true;
-                }
-                catch (LDAPException e)
-                {
-                    isSyntaxOK = false;
-                    Debug.println("ACI Write Error: " + e.getLDAPResultCode());
-                    Debug.println("Message: " + e.getLDAPErrorMessage());
-                }
-                try
-                {
-                    if(oldACIAttr != null)
-                        mod = new LDAPModification(LDAPModification.REPLACE, oldACIAttr);
-                    else
-                        mod = new LDAPModification(LDAPModification.DELETE, testACIAttr);
-                    aciLdc.modify(aciDN, mod);
-                }
-                catch (LDAPException e)
-                {
-                    Debug.println("ACI Replace Error: " + e.getLDAPResultCode());
-                }
-                
-                Container parent = SwingUtilities.getAncestorOfClass(JDialog.class, contentPanel);
-                
-                if(isSyntaxOK)
-                {
-                    String title = i18n("syntaxPassedTitle");
-                    String msg = i18n("syntaxPassedMsg");
-                    JOptionPane.showMessageDialog(parent, msg, title, JOptionPane.INFORMATION_MESSAGE);
-                }
-                else
-                {
-                    String title = i18n("syntaxFailedTitle");
-                    String msg = i18n("syntaxFailedMsg");
-                    JOptionPane.showMessageDialog(parent, msg, title, JOptionPane.ERROR_MESSAGE);
-                }
+            Container parent = SwingUtilities.getAncestorOfClass(JDialog.class, contentPanel);
+
+            try {
+                ACIManager.testACI(aciLdc, getACI());
+                String title = i18n("syntaxPassedTitle");
+                String msg = i18n("syntaxPassedMsg");
+                JOptionPane.showMessageDialog(parent, msg, title, JOptionPane.INFORMATION_MESSAGE);
             }
             catch (LDAPException e)
             {
-                Debug.println("ACI Read Error: " + e.getLDAPResultCode());
+                String title = i18n("syntaxFailedTitle");
+                String msg = i18n("syntaxFailedMsg");
+                JOptionPane.showMessageDialog(parent, msg, title, JOptionPane.ERROR_MESSAGE);
             }
-            
         }
     }
-    
 
     class ManualActionListener implements ActionListener
     {
