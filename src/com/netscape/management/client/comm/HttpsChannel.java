@@ -424,7 +424,7 @@ public class HttpsChannel extends HttpChannel implements
             nthPrompt = 0;
 
             // Set our defaults
-            int min = org.mozilla.jss.ssl.SSLSocket.SSLVersionRange.tls1_1;
+            int min = org.mozilla.jss.ssl.SSLSocket.SSLVersionRange.tls1_0;
             int max = org.mozilla.jss.ssl.SSLSocket.SSLVersionRange.tls1_2;
 
             Debug.println("CREATE JSS SSLSocket");
