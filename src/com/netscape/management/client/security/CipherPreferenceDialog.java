@@ -56,6 +56,7 @@ public class CipherPreferenceDialog extends AbstractDialog {
 
     /*property string */
     String aes, rc2, rc4, des, tripleDes, fips, none, v2, v3, tls, export, enabledTitle;
+    String aesGcm, cipherAll;
     String sha, md5, fortezza, cipherLabel, bits, msgAlgo, version, title;
 
 
@@ -105,6 +106,10 @@ public class CipherPreferenceDialog extends AbstractDialog {
     /**TLS - TLS_RSA_WITH_AES_256_CBC_SHA */
     public final static String TLS_RSA_WITH_AES_256_CBC_SHA_AUX = "tls_rsa_aes_256_sha";
     public final static String TLS_RSA_WITH_AES_256_CBC_SHA = "rsa_aes_256_sha";
+
+    /**TLS - TLS_RSA_WITH_AES_128_GCM_SHA256 */
+    public final static String TLS_RSA_WITH_AES_128_GCM_SHA256 = "TLS_RSA_WITH_AES_128_GCM_SHA256";
+    public final static String CIPHERALL = "all";
 
     // domestic ssl3 cipher
     /**SSL3 Domestic - DES with 56 bit encryption and SHA message authentication*/
@@ -253,21 +258,21 @@ public class CipherPreferenceDialog extends AbstractDialog {
 	public String _sslVersion;
 	public boolean _export;
 	public CipherEntry(String cipher, 
-		      boolean enabled, 
-		      String cipherLabel,
-		      int bits,
-		      String messageAlgo,
-		      String sslVersion) {
+	boolean enabled, 
+	String cipherLabel,
+	int bits,
+	String messageAlgo,
+	String sslVersion) {
 	    this(cipher, enabled, cipherLabel, bits, messageAlgo, sslVersion, false);
 	}
 
 	public CipherEntry(String cipher, 
-		      boolean enabled, 
-		      String cipherLabel,
-		      int bits,
-		      String messageAlgo,
-		      String sslVersion,
-		      boolean export) {
+		boolean enabled, 
+		String cipherLabel,
+		int bits,
+		String messageAlgo,
+		String sslVersion,
+		boolean export) {
 	    this._cipher = cipher;
 	    this._enabled = new JCheckBox("", enabled);
 	    this._cipherLabel = cipherLabel;
@@ -379,6 +384,9 @@ public class CipherPreferenceDialog extends AbstractDialog {
 	version       = resource.getString("CipherPreferenceDialog", "sslV");
 	title         = resource.getString("CipherPreferenceDialog", "title");
 	enabledTitle  = resource.getString("CipherPreferenceDialog", "enabledTitle");
+
+	aesGcm        = resource.getString("CipherPreferenceDialog", "aesgcm");
+	cipherAll     = resource.getString("CipherPreferenceDialog", "all");
     }
 
     /**
@@ -612,10 +620,14 @@ public class CipherPreferenceDialog extends AbstractDialog {
 		    cipherEntry = new CipherEntry(cipher, true, aes, 256, sha, SSL_V3, false);
 		} else if (cipher.equals(TLS_RSA_WITH_AES_256_CBC_SHA_AUX)) {
 		    cipherEntry = new CipherEntry(cipher, true, aes, 256, sha, SSL_V3, false);
-	    } else {
-	    	Debug.println("CipherPreferenceDialog.createCipherEntry(): " +
-	    				  "Unknown TLSv1 cipher: " + cipher);
-	    }
+		} else if (cipher.equals(TLS_RSA_WITH_AES_128_GCM_SHA256)) {
+		    cipherEntry = new CipherEntry(cipher, true, aesGcm, 128, sha, SSL_V3, false);
+		} else if (cipher.equals(CIPHERALL)) {
+		    cipherEntry = new CipherEntry(cipher, true, cipherAll, 128, sha, SSL_V3, false);
+		} else {
+		    Debug.println("CipherPreferenceDialog.createCipherEntry(): " +
+		    "Unknown TLSv1 cipher: " + cipher);
+		}
 	}
 
 	if (cipherEntry != null) {
@@ -754,6 +766,7 @@ public class CipherPreferenceDialog extends AbstractDialog {
 	}
 
 	if ((TLSCipherList != null) && (TLSCipherList.length()>0)) {
+	    Debug.println("CipherPreferenceDialog.CipherPreferenceDialog(): " + "TLSCipherList: " + TLSCipherList);
 	    tabbedPane.addTab(tls, new SSLCipherPref(SSL_TLS, TLSCipherList));
 	}
 

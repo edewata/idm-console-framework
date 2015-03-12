@@ -1,5 +1,5 @@
 %define major_version 1.1
-%define minor_version 7
+%define minor_version 9
 
 Name: idm-console-framework
 Version: %{major_version}.%{minor_version}
