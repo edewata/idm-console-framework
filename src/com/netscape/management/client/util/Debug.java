@@ -486,7 +486,97 @@ public class Debug {
             if (_showFlags != 0) {
                 System.err.println(getEntryPrefix(level) + s);
             } else {
-                System.err.println(s);
+                // Don't show password even in the debug print
+                // supported patterns
+                // ...ConsoleInfo(fqdn, port, adminDN, password, suffix) ...
+                // ... username=cn=Directory Manager password=password
+                // CHANGE PWD TO new_password
+                // ...change-sie-password?new_password)
+                // ...change-sie-password?new_password
+                // ...change-sie-password?new_password 0
+                // ...new credentials are <cn=Directory Manager> <password>
+                // ... {type='userPassword', values='new_password'} for ...
+                // ... {type='nsslapd-rootpw', values='new_password'}} to ...
+                // ... {type='userpassword', values='password'} ...
+                StringBuilder debugStr = new StringBuilder(s);
+                if (s.contains("ConsoleInfo(")) {
+                    // ...ConsoleInfo(fqdn, port, adminDN, password, suffix) ...
+                    int start = debugStr.indexOf("ConsoleInfo(");
+                    start = debugStr.indexOf(" ", ++start);
+                    start = debugStr.indexOf(" ", ++start);
+                    start = debugStr.indexOf(" ", ++start);
+                    int end = debugStr.indexOf(" ", ++start);
+                    if ((start > 0) && (end > 0)) {
+                        debugStr.replace(start, end - 1, "***password***");
+                    }
+                } else if (s.contains("password=")) {
+                    // ... username=cn=Directory Manager password=password
+                    int start = debugStr.indexOf("password=");
+                    start += 9;
+                    int end = debugStr.length();
+                    if ((start > 0) && (end > 0)) {
+                        debugStr.replace(start, end, "***password***");
+                    }
+                } else if (s.contains("CHANGE PWD TO")) {
+                    // CHANGE PWD TO new_password
+                    int start = debugStr.indexOf("TO");
+                    start = debugStr.indexOf(" ", ++start);
+                    int end = debugStr.length();
+                    if ((start > 0) && (end > 0)) {
+                        debugStr.replace(++start, end, "***password***");
+                    }
+                } else if (s.contains("change-sie-password?")) {
+                    // ...change-sie-password?new_password)
+                    // ...change-sie-password?new_password 0
+                    // ...change-sie-password?new_password
+                    int start = debugStr.indexOf("change-sie-password?");
+                    start += 20;
+                    int end = debugStr.indexOf(")", start);
+                    if ((start > 0) && (end > 0)) {
+                        debugStr.replace(start, end, "***password***");
+                    } else {
+                        end = debugStr.indexOf("0", start);
+                        if ((start > 0) && (end > 0)) {
+                            end -= 1;
+                            debugStr.replace(start, end, "***password***");
+                        } else {
+                            end = debugStr.length();
+                            if (start > 0) {
+                                debugStr.replace(start, end, "***password***");
+                            }
+                        }
+                    }
+                } else if (s.contains("new credentials are <")) {
+                    // ...new credentials are <cn=Directory Manager> <password>
+                    int start = debugStr.indexOf("new credentials are <");
+                    start += 21;
+                    start = debugStr.indexOf("<", ++start);
+                    int end = debugStr.indexOf(">", ++start);
+                    if ((start > 0) && (end > 0)) {
+                        debugStr.replace(start, end, "***password***");
+                    }
+                } else if (s.contains("type='userpassword',") ||
+                           s.contains("type='userPassword',")) {
+                    // ... {type='userPassword', values='new_password'} for ...
+                    // ... {type='userpassword', values='password'} ...
+                    int start = debugStr.indexOf("type='user");
+                    start += 20;
+                    start = debugStr.indexOf("'", start);
+                    int end = debugStr.indexOf("'", ++start);
+                    if ((start > 0) && (end > 0)) {
+                        debugStr.replace(start, end, "***password***");
+                    }
+                } else if (s.contains("type='nsslapd-rootpw',")) {
+                    // ... {type='nsslapd-rootpw', values='new_password'}} to ...
+                    int start = debugStr.indexOf("type='nsslapd-rootpw',");
+                    start += 22;
+                    start = debugStr.indexOf("'", start);
+                    int end = debugStr.indexOf("'", ++start);
+                    if ((start > 0) && (end > 0)) {
+                        debugStr.replace(start, end, "***password***");
+                    }
+                }
+                System.err.println(debugStr);
             }
 
             if (_fPrintCallStack) {
