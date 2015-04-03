@@ -1610,7 +1610,11 @@ public class Console implements CommClient {
 
         if (opt.hasOption('h'))// help
         {
-            System.err.println("Syntax:  Console [-a <URL>] [-l <Language Code>] [-s <SIE DN>] [-x <options>]");
+            String prog_name = System.getProperty("program.name");
+            if ((prog_name == null) || (prog_name.length() == 0)) {
+                prog_name = "389-console";
+            }
+            System.err.println("Syntax:  " + prog_name + " [-a <URL>] [-l <Language Code>] [-s <SIE DN>] [-x <options>]");
             System.err.println("         -a admin server base URL");
             System.err.println("         -l language code (en fr gr)");
             System.err.println("         -f <file> capture stderr and stdout to <file> (like Unix tee command)");
@@ -1620,7 +1624,7 @@ public class Console implements CommClient {
             System.err.println("         -w password");
             System.err.println("         -w - (read password from standard input)");
             System.err.println("         -y password_file (read password from a file)");
-            System.err.println("\nExample: Console -a https://hostname:10021 -l en");
+            System.err.println("\nExample: " + prog_name + " -a https://hostname:10021 -l en");
             waitForKeyPress(); // allow the user to read the msg on Win NT
             System.exit(0);
         }
