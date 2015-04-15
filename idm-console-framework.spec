@@ -1,5 +1,5 @@
 %define major_version 1.1
-%define minor_version 10
+%define minor_version 11
 
 Name: idm-console-framework
 Version: %{major_version}.%{minor_version}
@@ -14,13 +14,13 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 Source: http://port389.org/binaries/%{name}-%{version}.tar.bz2
 Requires: ldapjdk
-Requires: jss >= 4.2
+Requires: jss >= 4.2.6-35
 # Urge use of OpenJDK for runtime
 Requires: java >= 1:1.6.0
 BuildRequires: java-devel >= 1:1.6.0
 BuildRequires: ant >= 1.6.2
 BuildRequires: ldapjdk
-BuildRequires: jss >=  4.2 
+BuildRequires: jss >=  4.2.6-35
 
 %description
 A Java Management Console framework used for remote server management.
