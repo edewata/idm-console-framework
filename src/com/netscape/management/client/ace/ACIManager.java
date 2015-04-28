@@ -222,7 +222,7 @@ public class ACIManager extends GenericDialog
         }
     }
 
-    public static void testACI( LDAPConnection ldc, String aci) throws LDAPException
+    public static void testACI( LDAPConnection ldc, String DN, String aci) throws LDAPException
     {
         // Add the aci to the ACL plugin entry to verify if its syntax is correct.
         LDAPAttribute testACIAttr = new LDAPAttribute("aci");
@@ -232,17 +232,20 @@ public class ACIManager extends GenericDialog
 
         try {
             mod = new LDAPModification(LDAPModification.ADD, testACIAttr);
-            ldc.modify(ACL_PLUGIN_DN, mod);
+            ldc.modify(DN, mod);
 
             mod = new LDAPModification(LDAPModification.DELETE, testACIAttr);
-            ldc.modify(ACL_PLUGIN_DN, mod);
+            ldc.modify(DN, mod);
         }
         catch (LDAPException e)
         {
-            Debug.println("Failed to add/delete aci to testing entry: mod "
-                + mod.toString() + " - Error: " + e.getLDAPResultCode());
-            Debug.println("Message: " + e.getLDAPErrorMessage());
-            throw e;
+            // We can ignore ATTRIBUTE_OR_VALUE_EXISTS as the aci was not changed
+            if (e.getLDAPResultCode() != LDAPException.ATTRIBUTE_OR_VALUE_EXISTS){
+                Debug.println("Failed to add/delete aci to testing entry: mod "
+                    + mod.toString() + " - Error: " + e.getLDAPResultCode());
+                Debug.println("Message: " + e.getLDAPErrorMessage());
+                throw e;
+            }
         }
     }
     
@@ -489,7 +492,7 @@ public class ACIManager extends GenericDialog
                         // First check that entry has actually changed
                         if(!origData.equals(currData)){
                             // Before we delete the old aci, make sure we can add the new aci.
-                            testACI(aciLdc, currData);
+                            testACI(aciLdc, dn, currData);
 
                             // Delete the original aci first
                             String aciData = aci.getOrigData();

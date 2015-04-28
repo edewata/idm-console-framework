@@ -599,7 +599,7 @@ class ACIEditor extends GenericDialog
             Container parent = SwingUtilities.getAncestorOfClass(JDialog.class, contentPanel);
 
             try {
-                ACIManager.testACI(aciLdc, getACI());
+                ACIManager.testACI(aciLdc, aciDN, getACI());
                 String title = i18n("syntaxPassedTitle");
                 String msg = i18n("syntaxPassedMsg");
                 JOptionPane.showMessageDialog(parent, msg, title, JOptionPane.INFORMATION_MESSAGE);
