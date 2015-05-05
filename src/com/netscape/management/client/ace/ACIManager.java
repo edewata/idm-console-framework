@@ -330,6 +330,7 @@ public class ACIManager extends GenericDialog
         if(!ace.isCancel())
         {
             ACI aci = new ACI(ace.getACI(), aciDN, false/*inherited*/, true/*modified*/);
+            aci.setAdded(true);
             aciVector.addElement(aci);
             updateACIList(aciVector);
             ListSelectionModel lsm = aciList.getSelectionModel();
@@ -489,16 +490,20 @@ public class ACIManager extends GenericDialog
                         String origData = aci.getOrigData();
                         String currData = aci.getData();
 
-                        // First check that entry has actually changed
-                        if(!origData.equals(currData)){
-                            // Before we delete the old aci, make sure we can add the new aci.
-                            testACI(aciLdc, dn, currData);
-
-                            // Delete the original aci first
+                        // First check that entry has actually changed, or it's a new aci.
+                        if(aci.isAdded() || !origData.equals(currData)){
                             String aciData = aci.getOrigData();
+                            LDAPModification mod;
+
+                            // Test the syntax before make update the aci
+                            testACI(aciLdc, dn, currData);
                             attr.addValue(aciData);
-                            LDAPModification mod = new LDAPModification(LDAPModification.DELETE, attr);
-                            aciLdc.modify(dn, mod);
+                            if(!aci.isAdded())
+                            {
+                                // Delete the original aci first
+                                mod = new LDAPModification(LDAPModification.DELETE, attr);
+                                aciLdc.modify(dn, mod);
+                            }
 
                             // Add the new/modified aci
                             attr.removeValue(aciData);
@@ -528,6 +533,7 @@ public class ACIManager extends GenericDialog
         boolean isInherited = false;
         boolean isModified = false;
         boolean isDeleted = false;
+        boolean isAdded = false;
     
         ACI(String data, String dn, boolean isInherited, boolean isModified)
         {
@@ -602,12 +608,23 @@ public class ACIManager extends GenericDialog
             return isDeleted;
         }
         
+        public boolean isAdded()
+        {
+            return isAdded;
+        }
+
         public void setDeleted(boolean isDeleted)
         {
             this.isDeleted = isDeleted;
             setModified(true);
         }
-        
+
+        public void setAdded(boolean isAdded)
+        {
+            this.isAdded = isAdded;
+            setModified(true);
+        }
+
         public String toString()
         {
             if(isInherited)
