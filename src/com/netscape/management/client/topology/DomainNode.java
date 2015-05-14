@@ -187,17 +187,15 @@ INodeInfo {
             System.err.println(e);
         }
 
-        _nodeData = new NodeData[]{ _nameNodeData =
-                new NodeData("nsAdminDomainName",
-                i18n("nsAdminDomainName"), getName(), true, /*7bit*/false),
-        new NodeData("description", i18n("description"), description, true),
-        new NodeData("LDAPHost", i18n("LDAPHost"), _LDAPHost,
-                true, true), //			new NodeData("LDAPPort", i18n("LDAPPort"), _LDAPPort, true),
-                new NodeData("SSL", i18n("SSL"), cbSSL, true),
-        new NodeData("Subtree", i18n("Subtree"), _subTree,
-                true), new NodeData("BindDN", i18n("BindDN"), _bindDN,
-                true), new NodeData("BindPassword", i18n("BindPassword"),
-                bindPasswordField, true, true), };
+        _nodeData = new NodeData[]{
+            _nameNodeData = new NodeData("nsAdminDomainName", i18n("nsAdminDomainName"), getName(), true, /*7bit*/false),
+            new NodeData("description", i18n("description"), description, true),
+            new NodeData("LDAPHost", i18n("LDAPHost"), _LDAPHost, true, true),
+            // new NodeData("LDAPPort", i18n("LDAPPort"), _LDAPPort, true),
+            new NodeData("SSL", i18n("SSL"), cbSSL, true),
+            new NodeData("Subtree", i18n("Subtree"), _subTree, true),
+            new NodeData("BindDN", i18n("BindDN"), _bindDN, true),
+            new NodeData("BindPassword", i18n("BindPassword"), bindPasswordField, true, true)};
     }
 
     /**

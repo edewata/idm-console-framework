@@ -500,14 +500,14 @@ public class Debug {
                 // ... {type='userpassword', values='password'} ...
                 StringBuilder debugStr = new StringBuilder(s);
                 if (s.contains("ConsoleInfo(")) {
-                    // ...ConsoleInfo(fqdn, port, adminDN, password, suffix) ...
+                    // ...ConsoleInfo(fqdn, port, adminDN|cn=directory manager, password, suffix) ...
                     int start = debugStr.indexOf("ConsoleInfo(");
-                    start = debugStr.indexOf(" ", ++start);
-                    start = debugStr.indexOf(" ", ++start);
-                    start = debugStr.indexOf(" ", ++start);
-                    int end = debugStr.indexOf(" ", ++start);
+                    start = debugStr.indexOf(",", ++start);
+                    start = debugStr.indexOf(",", ++start);
+                    start = debugStr.indexOf(",", ++start);
+                    int end = debugStr.indexOf(",", ++start);
                     if ((start > 0) && (end > 0)) {
-                        debugStr.replace(start, end - 1, "***password***");
+                        debugStr.replace(start + 1, end, "***password***");
                     }
                 } else if (s.contains("password=")) {
                     // ... username=cn=Directory Manager password=password
