@@ -502,6 +502,9 @@ Observer {
             }
             observable.replace(_sAlias, vTmp);
         } else {
+            Vector vOC = observable.get("ObjectClass");
+            vOC.removeElement(_aliasObjectClass);
+            observable.replace("ObjectClass", vOC);
             observable.delete(_sAlias);
         }
 
