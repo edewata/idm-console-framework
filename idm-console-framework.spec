@@ -1,5 +1,5 @@
 %define major_version 1.1
-%define minor_version 13
+%define minor_version 14
 
 Name: idm-console-framework
 Version: %{major_version}.%{minor_version}
@@ -8,11 +8,11 @@ Summary: Identity Management Console Framework
 
 Group: System Environment/Libraries
 License: LGPLv2
-URL: http://directory.fedoraproject.org
+URL: https://directory.fedoraproject.org
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
-Source: http://port389.org/binaries/%{name}-%{version}.tar.bz2
+Source: https://port389.org/binaries/%{name}-%{version}.tar.bz2
 Requires: ldapjdk
 Requires: jss >= 4.2.6-35
 # Urge use of OpenJDK for runtime
