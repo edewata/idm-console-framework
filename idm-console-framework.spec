@@ -1,5 +1,5 @@
 %define major_version 1.1
-%define minor_version 14
+%define minor_version 15
 
 Name: idm-console-framework
 Version: %{major_version}.%{minor_version}
@@ -16,8 +16,8 @@ Source: https://port389.org/binaries/%{name}-%{version}.tar.bz2
 Requires: ldapjdk
 Requires: jss >= 4.2.6-35
 # Urge use of OpenJDK for runtime
-Requires: java >= 1:1.6.0
-BuildRequires: java-devel >= 1:1.6.0
+Requires: java >= 1.8.0
+BuildRequires: java-devel >= 1.8.0
 BuildRequires: ant >= 1.6.2
 BuildRequires: ldapjdk
 BuildRequires: jss >=  4.2.6-35
