@@ -660,11 +660,23 @@ public class Framework extends JFrame implements IFramework, SuiConstants {
                     PreferenceManager.getPreferenceManager(IDENTIFIER,
                     MAJOR_VERSION);
 
-        Preferences p =
-                _preferenceManager.getPreferences(PREFERENCES_GENERAL);
-
+        Dimension screenSize = getToolkit().getScreenSize();
+        // Bug 1261524 - Console window could be hidden after login via consoles on multiple hosts
+        // The location on one window system could be invalid on the other window
+        // which has a different resolution.  Don't set the location to avoid it.
+        int sizex = screenSize.width;
+        int sizey = screenSize.height;
+        Preferences p = _preferenceManager.getPreferences(PREFERENCES_GENERAL);
         int x = p.getInt(PREFERENCE_X, 0);
         int y = p.getInt(PREFERENCE_Y, 0);
+        if (x < -sizex / 2 || x > sizex / 2) {
+            Debug.println( "Windows Location: coordinate x " + x + " is less than " + -sizex / 2 + " or greater than " + sizex / 2 + ". Resetting to 0.");
+            x = 0;
+        }
+        if (y < -sizey / 2 || y > sizey / 2) {
+            Debug.println( "Windows Location: coordinate y " + y + " is less than " + -sizey / 2 + " or greater than " + sizey / 2 + ". Resetting to 0.");
+            y = 0;
+        }
         _initialLocation = new Point(x, y);
 
         int width = p.getInt(PREFERENCE_WIDTH, DEFAULT_WIDTH);
