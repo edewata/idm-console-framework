@@ -19,16 +19,48 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.ace;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
-import netscape.ldap.LDAPConnection;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Vector;
+
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
+
+import com.netscape.management.client.components.ButtonFactory;
+import com.netscape.management.client.components.GenericDialog;
+import com.netscape.management.client.components.Table;
+import com.netscape.management.client.components.UIConstants;
 import com.netscape.management.client.console.ConsoleHelp;
-import com.netscape.management.client.components.*;
-import com.netscape.management.client.util.*;
+import com.netscape.management.client.util.RemoteImage;
+import com.netscape.management.client.util.ResourceSet;
+
+import netscape.ldap.LDAPConnection;
+
 
 /**
  * This tab controls which hosts can access this object. 
@@ -51,7 +83,7 @@ class HostTab implements IACITab, UIConstants
     private boolean isInitialized = false;
     private GenericDialog addHostDialog;
     private JTextField dnsField;
-    private IPAddressField ipField;
+    private JTextField ipField;
     
     private static String i18n(String id) 
     {
@@ -331,8 +363,7 @@ class HostTab implements IACITab, UIConstants
     private void showAddHostDialog()
     {
         dnsField = new JTextField(30);
-        ipField = new IPAddressField();
-        ipField.setWildcardAllowed(true);
+        ipField = new JTextField(30);
         addHostDialog = new GenericDialog(parentFrame, "Add Host Filter");
         
         addHostDialog.getContentPane().add(createAddContentPanel());
@@ -345,7 +376,7 @@ class HostTab implements IACITab, UIConstants
         {
             if(ipField.isEnabled())
             {
-                addHost(ipField.getIPAddress(), true);
+                addHost(ipField.getText(), true);
             }
             else
             {
@@ -392,17 +423,17 @@ class HostTab implements IACITab, UIConstants
                 {
                     stateChanged();
                 }
-        
+
                 public void changedUpdate(DocumentEvent e)
                 {
                     stateChanged();
                 }
-        
+
                 public void removeUpdate(DocumentEvent e)
                 {
                     stateChanged();
                 }
-                
+
                 void stateChanged()
                 {
                     if(dnsField.isEnabled())
@@ -421,18 +452,30 @@ class HostTab implements IACITab, UIConstants
         ipField.getAccessibleContext().setAccessibleDescription(i18n("dialogIP"));
         gbl.setConstraints(ipPanel, gbc);
         p.add(ipPanel);
-        ipField.addChangeListener(new ChangeListener()
+        ipField.getDocument().addDocumentListener(new DocumentListener()
+        {
+            public void insertUpdate(DocumentEvent e)
             {
-                public void stateChanged(ChangeEvent e)
-                {
-                    IPAddressField ip = (IPAddressField)e.getSource();
-                    if(ip.isEnabled())
-                    {
-                        addHostDialog.setOKButtonEnabled(!ip.isEmpty());
-                    }
-                }
-            });
-        
+                stateChanged();
+            }
+
+            public void changedUpdate(DocumentEvent e)
+            {
+                stateChanged();
+            }
+
+            public void removeUpdate(DocumentEvent e)
+            {
+                stateChanged();
+            }
+
+            void stateChanged()
+            {
+                if(ipField.isEnabled())
+                    addHostDialog.setOKButtonEnabled(ipField.getText().length() > 0);
+            }
+        });
+
         ButtonGroup g = new ButtonGroup();
         g.add(dnsRadio);
         g.add(ipRadio);
