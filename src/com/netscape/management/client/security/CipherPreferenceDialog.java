@@ -19,20 +19,32 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.security;
 
-import java.awt.*;
-import java.awt.geom.Dimension2D.*;
-import java.awt.event.*;
-import java.util.*;
-import java.net.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
-import javax.swing.border.*;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
-import com.netscape.management.client.components.*;
-import com.netscape.management.client.console.*;
-import com.netscape.management.client.util.*;
-import com.netscape.management.nmclf.*;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellEditor;
+
+import com.netscape.management.client.components.Table;
+import com.netscape.management.client.util.AbstractDialog;
+import com.netscape.management.client.util.Debug;
+import com.netscape.management.client.util.GridBagUtil;
+import com.netscape.management.client.util.Help;
+import com.netscape.management.client.util.ResourceSet;
 
 /**
  * Cipher preference dialog
@@ -165,8 +177,8 @@ public class CipherPreferenceDialog extends AbstractDialog {
                                   ",+"+RSA_FIPS_3DES_SHA_AUX;
 
     /* default SSL V3 domestic fortezza ciphers */
-    final static String V3FORETEZZA = "+"+FORTEZZA+
-                                  ",+"+FORTEZZA_RC4_128_SHA+
+    final static String V3FORETEZZA = "-"+FORTEZZA+
+                                  ",-"+FORTEZZA_RC4_128_SHA+
                                   ",-"+FORTEZZA_NULL;
 
     /* default SSL V3 domestic tls ciphers */
