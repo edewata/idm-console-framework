@@ -1,9 +1,9 @@
 %define major_version 1.1
-%define minor_version 15
+%define minor_version 16
 
 Name: idm-console-framework
 Version: %{major_version}.%{minor_version}
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Identity Management Console Framework
 
 Group: System Environment/Libraries
