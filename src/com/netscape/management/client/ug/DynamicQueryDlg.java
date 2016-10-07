@@ -195,12 +195,6 @@ public class DynamicQueryDlg extends AbstractDialog {
         
         try {
             ldapurl = new LDAPUrl(LDAPUrl.decode(url));
-            // Do not accept host and port number
-            if (! url.startsWith("ldap:///") &&
-                ! url.startsWith("ldaps:///")) {
-                errmsg = _resource.getString("dynamicQuery", "errorHostPort");
-                ldapurl=null;
-            }
         }
         catch (MalformedURLException ex) {
             errmsg = _resource.getString("dynamicQuery", "errortext");
