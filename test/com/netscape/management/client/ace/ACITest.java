@@ -17,13 +17,15 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * END COPYRIGHT BLOCK **/
-package com.netscape.management.client.ace;
+package ace;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 import netscape.ldap.*;
+
+import com.netscape.management.client.ace.ACIManager;
 import com.netscape.management.client.components.*;
 import com.netscape.management.nmclf.*;
 

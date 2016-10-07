@@ -271,7 +271,8 @@ public class LdapQueryBuilderDialog extends AbstractModalDialog {
       * Creates the search URL.
       */
     private void createQueryString() {
-        _queryString = "ldap:///";
+        _queryString = ("ldap://" + _consoleInfo.getUserHost() + ":" +
+                        _consoleInfo.getUserPort() + "/");
         _queryString += LDAPUrl.encode(_baseDN.getText());
 
         switch (_searchScope.getSelectedIndex()) {

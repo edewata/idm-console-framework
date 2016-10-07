@@ -20,6 +20,7 @@
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.ImageIcon;
 import com.sun.java.swing.*;
 import com.sun.java.swing.event.*;
 import com.netscape.management.client.*;

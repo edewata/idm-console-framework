@@ -187,7 +187,8 @@ Observer, ActionListener {
         if (e.getSource().equals(_queryButton)) {
         } else if (e.getSource().equals(_addButton)) {
             String defaultQuery =
-                    "ldap:///"+_consoleInfo.getUserBaseDN() + "??sub?";
+                    ("ldap://" + _consoleInfo.getUserHost() + ":" + _consoleInfo.getUserPort() +
+                     "/" + _consoleInfo.getUserBaseDN() + "??sub?");
             DynamicQueryDlg dlg =
                     new DynamicQueryDlg(_consoleInfo, null, true,
                     defaultQuery);
