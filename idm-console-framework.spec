@@ -36,8 +36,8 @@ BuildRequires:    git
 
 BuildRequires:    java-devel >= 1.8.0
 BuildRequires:    ant >= 1.6.2
-BuildRequires:    jss >= 4.5.0-0.6
-BuildRequires:    ldapjdk
+BuildRequires:    jss >= 4.5.0-1
+BuildRequires:    ldapjdk >= 4.20.0
 
 ################################################################################
 # Runtime Dependencies
@@ -45,8 +45,8 @@ BuildRequires:    ldapjdk
 
 # Urge use of OpenJDK for runtime
 Requires:         java >= 1.8.0
-Requires:         jss >= 4.5.0-0.6
-Requires:         ldapjdk
+Requires:         jss >= 4.5.0-1
+Requires:         ldapjdk >= 4.20.0
 
 %description
 A Java Management Console framework used for remote server management.
