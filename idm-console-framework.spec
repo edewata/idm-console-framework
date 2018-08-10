@@ -55,7 +55,7 @@ A Java Management Console framework used for remote server management.
 %prep
 ################################################################################
 
-%setup -q
+%autosetup -n idm-console-framework-%{version}%{?_phase} -p 1 -S git
 
 ################################################################################
 %build
@@ -77,7 +77,6 @@ install -m644 built/release/jars/idm-console-* $RPM_BUILD_ROOT%{_javadir}
 %files
 ################################################################################
 
-%defattr(-,root,root,-)
 %doc LICENSE
 %{_javadir}/idm-console-base.jar
 %{_javadir}/idm-console-mcc.jar
