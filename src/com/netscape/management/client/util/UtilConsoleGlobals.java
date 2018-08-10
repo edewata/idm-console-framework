@@ -128,20 +128,12 @@ public class UtilConsoleGlobals {
                 CryptoManager.initialize(homePath);
             }
             catch (AlreadyInitializedException initialized) {}
-    
-        } catch (Exception e) {}
 
-        try {
-            if (Debug.isTraceTypeEnabled(Debug.TYPE_JSS)) {
-                org.mozilla.jss.util.Debug.setLevel(org.mozilla.jss.util.Debug.VERBOSE);
-            }
-            else {
-                //604378 Must explicitely disable JSS Debug, as by default the
-                //       JSS Debug level is set to Debug.ERROR.
-                org.mozilla.jss.util.Debug.setLevel(org.mozilla.jss.util.Debug.QUIET);
-            }
+        } catch (RuntimeException e) {
+            throw e;
+
         } catch (Exception e) {
-                Debug.println(0 , "Error jss.util.Debug.setLevel " + e);
+            throw new RuntimeException(e);
         }
 
     }

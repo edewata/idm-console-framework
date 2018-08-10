@@ -36,7 +36,7 @@ BuildRequires:    git
 
 BuildRequires:    java-devel >= 1.8.0
 BuildRequires:    ant >= 1.6.2
-BuildRequires:    jss >= 4.2.6-35
+BuildRequires:    jss >= 4.5.0-0.6
 BuildRequires:    ldapjdk
 
 ################################################################################
@@ -45,7 +45,7 @@ BuildRequires:    ldapjdk
 
 # Urge use of OpenJDK for runtime
 Requires:         java >= 1.8.0
-Requires:         jss >= 4.2.6-35
+Requires:         jss >= 4.5.0-0.6
 Requires:         ldapjdk
 
 %description

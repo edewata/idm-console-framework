@@ -96,6 +96,7 @@ public class HttpsChannel extends HttpChannel implements
             cf = UtilConsoleGlobals.getX509CertificateFactory();
             cryptoManager = CryptoManager.getInstance();
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -407,13 +408,13 @@ public class HttpsChannel extends HttpChannel implements
         if (rangeString == null)
             return -1;
         if (rangeString.equalsIgnoreCase("ssl3"))
-            return org.mozilla.jss.ssl.SSLSocket.SSLVersionRange.ssl3;
+            return org.mozilla.jss.ssl.SSLVersionRange.ssl3;
         else if (rangeString.equalsIgnoreCase("tls1.0"))
-            return org.mozilla.jss.ssl.SSLSocket.SSLVersionRange.tls1_0;
+            return org.mozilla.jss.ssl.SSLVersionRange.tls1_0;
         else if (rangeString.equalsIgnoreCase("tls1.1"))
-            return org.mozilla.jss.ssl.SSLSocket.SSLVersionRange.tls1_1;
+            return org.mozilla.jss.ssl.SSLVersionRange.tls1_1;
         else if (rangeString.equalsIgnoreCase("tls1.2"))
-            return org.mozilla.jss.ssl.SSLSocket.SSLVersionRange.tls1_2;
+            return org.mozilla.jss.ssl.SSLVersionRange.tls1_2;
 
         return -1;
     }
@@ -424,8 +425,8 @@ public class HttpsChannel extends HttpChannel implements
             nthPrompt = 0;
 
             // Set our defaults
-            int min = org.mozilla.jss.ssl.SSLSocket.SSLVersionRange.tls1_0;
-            int max = org.mozilla.jss.ssl.SSLSocket.SSLVersionRange.tls1_2;
+            int min = org.mozilla.jss.ssl.SSLVersionRange.tls1_0;
+            int max = org.mozilla.jss.ssl.SSLVersionRange.tls1_2;
 
             Debug.println("CREATE JSS SSLSocket");
 
@@ -441,10 +442,10 @@ public class HttpsChannel extends HttpChannel implements
                 }
             }
 
-            org.mozilla.jss.ssl.SSLSocket.SSLVersionRange range =
-                new org.mozilla.jss.ssl.SSLSocket.SSLVersionRange(min, max);
+            org.mozilla.jss.ssl.SSLVersionRange range =
+                new org.mozilla.jss.ssl.SSLVersionRange(min, max);
 
-            SSLSocket.setSSLVersionRangeDefault(org.mozilla.jss.ssl.SSLSocket.SSLProtocolVariant.STREAM, range);
+            SSLSocket.setSSLVersionRangeDefault(org.mozilla.jss.ssl.SSLProtocolVariant.STREAM, range);
 
             socket = new SSLSocket(InetAddress.getByName(getHost()),
                                    getPort(), null, 0, true, this,
