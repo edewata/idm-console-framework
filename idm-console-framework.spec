@@ -1,22 +1,34 @@
+################################################################################
+Name:             idm-console-framework
+################################################################################
+
 %define major_version 1.1
 %define minor_version 17
 
-Name: idm-console-framework
 Version: %{major_version}.%{minor_version}
-Release: 2%{?dist}
+Release: 4%{?_timestamp}%{?_commit_id}%{?dist}
 Summary: Identity Management Console Framework
 
-Group: System Environment/Libraries
 License: LGPLv2
 URL: https://directory.fedoraproject.org
 
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
-Source: https://port389.org/binaries/%{name}-%{version}.tar.bz2
+
+Source: https://github.com/dogtagpki/idm-console-framework/archive/v%{version}%{?_phase}/idm-console-framework-%{version}%{?_phase}.tar.gz
+
+################################################################################
+# Runtime Dependencies
+################################################################################
+
 Requires: ldapjdk
 Requires: jss >= 4.2.6-35
 # Urge use of OpenJDK for runtime
 Requires: java >= 1.8.0
+
+################################################################################
+# Build Dependencies
+################################################################################
+
 BuildRequires: java-devel >= 1.8.0
 BuildRequires: ant >= 1.6.2
 BuildRequires: ldapjdk
@@ -25,25 +37,32 @@ BuildRequires: jss >=  4.2.6-35
 %description
 A Java Management Console framework used for remote server management.
 
+################################################################################
 %prep
+################################################################################
+
 %setup -q
 
+################################################################################
 %build
+################################################################################
+
 %{ant} \
     -Dlib.dir=%{_libdir} \
     -Dbuilt.dir=`pwd`/built \
     -Dclassdest=%{_javadir}
 
+################################################################################
 %install
-rm -rf $RPM_BUILD_ROOT
+################################################################################
+
 install -d $RPM_BUILD_ROOT%{_javadir}
 install -m644 built/release/jars/idm-console-* $RPM_BUILD_ROOT%{_javadir}
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
+################################################################################
 %files
-%defattr(-,root,root,-)
+################################################################################
+
 %doc LICENSE
 %{_javadir}/idm-console-base.jar
 %{_javadir}/idm-console-mcc.jar
@@ -51,6 +70,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_javadir}/idm-console-nmclf.jar
 %{_javadir}/idm-console-nmclf_en.jar
 
+################################################################################
 %changelog
 * Tue Mar 31 2009 Rich Megginson <rmeggins@redhat.com> 1.1.3-1
 - this is the 1.1.3 release
