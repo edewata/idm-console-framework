@@ -21,7 +21,6 @@ package com.netscape.management.client.components;
 
 import java.awt.Graphics;
 import java.awt.Insets;
-import java.awt.Rectangle;
 import java.awt.Color;
 import java.awt.Component;
 import javax.swing.plaf.basic.*;

@@ -34,11 +34,9 @@ import com.netscape.management.nmclf.SuiPasswordField;
 import com.netscape.management.client.preferences.Preferences;
 
 import org.mozilla.jss.ssl.SSLSocket;
-import org.mozilla.jss.ssl.SSLCertificateApprovalCallback.ValidityStatus;
 import org.mozilla.jss.ssl.SSLCertificateApprovalCallback;
 import org.mozilla.jss.ssl.SSLClientCertificateSelectionCallback;
 import org.mozilla.jss.CryptoManager;
-import org.mozilla.jss.crypto.AlreadyInitializedException;
 import org.mozilla.jss.util.PasswordCallback;
 import org.mozilla.jss.util.PasswordCallbackInfo;
 import org.mozilla.jss.util.Password;
@@ -49,7 +47,6 @@ import javax.swing.SwingUtilities;
 
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
-import javax.swing.JPanel;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Container;

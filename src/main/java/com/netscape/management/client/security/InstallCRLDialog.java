@@ -20,8 +20,6 @@
 package com.netscape.management.client.security;
 
 import javax.swing.*;
-import javax.swing.border.*;
-
 import java.awt.*;
 import java.util.*;
 import java.net.*;

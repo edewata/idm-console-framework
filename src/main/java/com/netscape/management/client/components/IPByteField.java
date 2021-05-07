@@ -20,10 +20,8 @@
 package com.netscape.management.client.components;
 
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*; 
 import javax.swing.text.*; 
-import javax.swing.event.*; 
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;

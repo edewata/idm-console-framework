@@ -20,24 +20,12 @@
 package com.netscape.management.client.acleditor;
 
 import javax.swing.JTable;
-import javax.swing.table.TableColumn;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.JComponent;
 import javax.swing.JScrollPane;
-import javax.swing.JViewport;
-import javax.swing.JLabel;
-import javax.swing.BoxLayout;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingConstants;
-
 import java.awt.Rectangle;
 import java.awt.Graphics;
-import java.awt.Component;
-import java.awt.GridLayout;
 import java.awt.Dimension;
 import java.awt.Color;
-import java.awt.Point;
-import java.awt.ScrollPane;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseEvent;

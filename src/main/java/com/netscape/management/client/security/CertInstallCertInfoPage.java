@@ -25,7 +25,6 @@ import java.awt.event.*;
 import java.text.MessageFormat;
 import java.util.*;
 import javax.swing.*;
-import javax.swing.border.*;
 import com.netscape.management.client.util.*;
 import com.netscape.management.client.components.ErrorDialog;
 import com.netscape.management.nmclf.*;

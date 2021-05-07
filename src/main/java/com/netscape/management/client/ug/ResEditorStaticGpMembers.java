@@ -31,9 +31,6 @@ import com.netscape.management.nmclf.*;
 import netscape.ldap.*;
 
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.text.*;
-import javax.swing.border.*;
 
 
 /**

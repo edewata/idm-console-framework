@@ -21,7 +21,6 @@ package com.netscape.management.client.preferences;
 
 import java.util.*;
 import com.netscape.management.client.console.*;
-import com.netscape.management.client.util.*;
 
 /**
  * Implements partial functionality to create,

@@ -20,13 +20,9 @@
 package com.netscape.management.client.acleditor;
 
 import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.CompoundBorder;
 import javax.swing.event.DocumentListener;
@@ -43,14 +39,12 @@ import java.awt.GridBagConstraints;
 import java.util.Vector;
 import java.util.Enumeration;
 
-import com.netscape.management.client.acl.Rule;
 import com.netscape.management.client.ug.ResourcePickerDlg;
 import com.netscape.management.client.ug.IRPCallBack;
 import com.netscape.management.client.console.ConsoleInfo;
 import com.netscape.management.client.util.*;
 
 import netscape.ldap.LDAPEntry;
-import netscape.ldap.LDAPAttributeSet;
 import netscape.ldap.LDAPAttribute;
 
 /**

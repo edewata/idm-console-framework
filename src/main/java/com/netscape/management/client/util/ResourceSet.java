@@ -24,7 +24,6 @@ import java.util.Locale;
 import java.util.Hashtable;
 import java.io.InputStream;
 import java.io.IOException;
-import java.net.URL;
 
 /**
  * The ResourceSet class implements a simple API over the java.util.PropertyResourceBundle

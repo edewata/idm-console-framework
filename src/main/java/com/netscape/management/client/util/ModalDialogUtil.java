@@ -21,7 +21,6 @@ package com.netscape.management.client.util;
 
 import java.awt.*;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 
 
 /**

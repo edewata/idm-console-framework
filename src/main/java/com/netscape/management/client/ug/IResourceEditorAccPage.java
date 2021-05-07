@@ -19,13 +19,6 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.ug;
 
-import java.util.*;
-import netscape.ldap.*;
-
-import javax.swing.JDialog;
-
-import com.netscape.management.client.console.ConsoleInfo;
-
 
 /**
  * IResourceEditorAccPage interface defines the required methods for a

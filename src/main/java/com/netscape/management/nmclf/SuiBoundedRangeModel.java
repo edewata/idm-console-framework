@@ -19,11 +19,8 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.nmclf;
 
-import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.*;
-
-import java.io.Serializable;
 
 /**
  * An extension of DefaultBoundedRangeModel this problem:

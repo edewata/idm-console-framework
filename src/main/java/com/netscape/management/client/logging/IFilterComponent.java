@@ -19,9 +19,6 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.logging;
 
-import java.awt.*;
-import javax.swing.table.*;
-
 /**
   * Allows the Log Viewer to communicate with a filter component.
   *

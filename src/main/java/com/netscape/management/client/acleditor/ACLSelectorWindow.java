@@ -29,7 +29,6 @@ import javax.swing.DefaultListModel;
 import java.util.Vector;
 import java.awt.Insets;
 import java.awt.GridLayout;
-import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -39,7 +38,6 @@ import java.awt.event.MouseEvent;
 import netscape.ldap.LDAPException;
 
 import com.netscape.management.client.util.Debug;
-import com.netscape.management.client.acl.ACL;
 import com.netscape.management.client.acl.LdapACL;
 import com.netscape.management.client.acl.LdapACLSelector;
 

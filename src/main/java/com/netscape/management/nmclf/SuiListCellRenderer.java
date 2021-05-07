@@ -21,10 +21,7 @@ package com.netscape.management.nmclf;
 
 import java.awt.*;
 import javax.swing.*;
-import javax.swing.event.*;
 import javax.swing.border.*;
-import javax.swing.plaf.basic.*;
-import com.netscape.management.client.util.*;
 
 /**
  * 

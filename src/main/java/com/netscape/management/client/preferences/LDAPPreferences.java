@@ -19,7 +19,6 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.preferences;
 
-import java.util.*;
 import java.io.*;
 import netscape.ldap.*;
 import com.netscape.management.client.util.*;

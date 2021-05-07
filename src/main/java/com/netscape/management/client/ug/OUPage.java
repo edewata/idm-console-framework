@@ -24,11 +24,8 @@ import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 
-import com.netscape.management.client.console.ConsoleInfo;
 import com.netscape.management.client.util.*;
 import com.netscape.management.nmclf.*;
-
-import netscape.ldap.*;
 
 import javax.swing.*;
 

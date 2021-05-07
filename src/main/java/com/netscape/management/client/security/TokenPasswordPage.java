@@ -21,11 +21,8 @@ package com.netscape.management.client.security;
 
 import com.netscape.management.client.components.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
-import javax.swing.border.*;
 import javax.swing.text.*;
 import com.netscape.management.client.security.csr.*;
 import com.netscape.management.client.util.*;

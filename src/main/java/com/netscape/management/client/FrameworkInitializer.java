@@ -23,7 +23,6 @@ import java.util.*;
 import java.awt.*;
 import javax.swing.*;
 import com.netscape.management.client.util.*;
-import com.netscape.management.client.console.*;
 import com.netscape.management.client.preferences.*;
 
 import netscape.ldap.*;

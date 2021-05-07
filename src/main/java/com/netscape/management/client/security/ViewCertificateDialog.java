@@ -22,11 +22,9 @@ package com.netscape.management.client.security;
 import com.netscape.management.nmclf.*;
 import com.netscape.management.client.util.*;
 
-import java.awt.event.*;
 import java.awt.*;
 import java.util.*;
 import java.text.*;
-import javax.swing.border.*;
 import javax.swing.*;
 
 import org.mozilla.jss.ssl.SSLCertificateApprovalCallback.ValidityStatus;

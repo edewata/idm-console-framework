@@ -21,7 +21,6 @@
 package com.netscape.management.client.topology;
 
 import java.util.*;
-import java.net.*;
 import java.awt.*;
 import java.io.*;
 import java.awt.event.*;
@@ -30,7 +29,6 @@ import javax.swing.border.*;
 import com.netscape.management.client.*;
 import com.netscape.management.client.console.*;
 import com.netscape.management.client.components.*;
-import com.netscape.management.client.ace.*;
 import com.netscape.management.client.ug.*;
 import com.netscape.management.client.util.*;
 import netscape.ldap.*;

@@ -46,13 +46,6 @@ import javax.swing.event.TableModelEvent;
 
 // Imports for picking up mouse events from the JTable. 
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.InputEvent;
-import javax.swing.JTable;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableColumnModel;
-
 import com.netscape.management.client.util.Debug;
 
 public class TableSorter extends TableMap implements ISortableTableModel

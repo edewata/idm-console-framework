@@ -19,7 +19,6 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client;
 
-import java.util.*;
 import java.awt.*;
 import com.netscape.management.client.util.*;
 import javax.swing.*;

@@ -20,7 +20,6 @@
 package com.netscape.management.client.acl;
 
 import java.util.Vector;
-import java.util.Enumeration;
 import java.io.Reader;
 import java.io.Writer;
 import java.io.StringWriter;

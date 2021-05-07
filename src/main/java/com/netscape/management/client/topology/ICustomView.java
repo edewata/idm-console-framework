@@ -19,9 +19,7 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.topology;
 
-import java.awt.*;
 import javax.swing.tree.*;
-import com.netscape.management.client.*;
 import netscape.ldap.*;
 
 /**

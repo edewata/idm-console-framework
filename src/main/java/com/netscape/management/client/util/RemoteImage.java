@@ -21,8 +21,6 @@ package com.netscape.management.client.util;
 
 import javax.swing.ImageIcon;
 
-import java.net.URL;
-import java.net.MalformedURLException;
 import java.awt.Toolkit;
 import java.awt.Image;
 import java.io.*;

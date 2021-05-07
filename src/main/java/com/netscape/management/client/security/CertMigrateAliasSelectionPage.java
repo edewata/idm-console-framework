@@ -23,11 +23,8 @@ import com.netscape.management.client.components.*;
 import java.awt.*;
 import java.util.*;
 import java.awt.event.*;
-import java.net.*;
 import javax.swing.*;
 import javax.swing.event.*;
-import javax.swing.border.*;
-
 import com.netscape.management.client.util.*;
 import com.netscape.management.nmclf.*;
 import com.netscape.management.client.console.*;

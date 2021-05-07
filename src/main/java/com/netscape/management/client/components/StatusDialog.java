@@ -20,13 +20,8 @@
 package com.netscape.management.client.components;
 
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.text.*;
-import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
-import com.netscape.management.nmclf.*;
 import com.netscape.management.client.util.*;
 
 /**

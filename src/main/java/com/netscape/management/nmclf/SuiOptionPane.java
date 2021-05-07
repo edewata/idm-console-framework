@@ -19,13 +19,8 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.nmclf;
 
-import java.util.*;
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
-import com.netscape.management.client.util.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 /**
  * This is an extension of JOptionPane to fix various bugs in it.

@@ -20,8 +20,6 @@
 
 package com.netscape.management.client.util;
 
-import java.lang.reflect.Method;
-
 import netscape.ldap.*;
 
 /**

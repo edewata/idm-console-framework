@@ -20,18 +20,11 @@
 package com.netscape.management.client.acleditor;
 
 import javax.swing.JPanel;
-import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.SwingConstants;
-
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.GridBagLayout;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 
 import java.util.Enumeration;

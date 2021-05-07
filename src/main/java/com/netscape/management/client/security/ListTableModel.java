@@ -20,11 +20,7 @@
 package com.netscape.management.client.security;
 
 import java.util.*;
-import java.awt.event.*;
-
-import javax.swing.*;
 import javax.swing.table.*;
-import javax.swing.event.*;
 
 
 class ListTableModel extends AbstractTableModel {

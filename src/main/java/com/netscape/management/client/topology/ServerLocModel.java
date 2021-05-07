@@ -20,12 +20,9 @@
 
 package com.netscape.management.client.topology;
 
-import java.awt.Cursor;
 import javax.swing.*;
-import javax.swing.event.*;
 import com.netscape.management.client.*;
 import com.netscape.management.client.util.UtilConsoleGlobals;
-import java.awt.*;
 
 /**
 	* An interface defining methods that can drive a hierarchical control, such

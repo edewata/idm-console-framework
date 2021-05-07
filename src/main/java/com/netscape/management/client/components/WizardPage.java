@@ -20,9 +20,6 @@
 package com.netscape.management.client.components;
 import javax.swing.JPanel;
 import javax.swing.JComponent;
-
-
-import com.netscape.management.client.util.*;
 /**
  * Defines the common behaviors for all wizard page.
  *

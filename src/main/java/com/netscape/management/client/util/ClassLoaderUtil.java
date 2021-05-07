@@ -20,7 +20,6 @@
 package com.netscape.management.client.util;
 
 import java.util.Hashtable;
-import java.net.URL;
 import java.net.MalformedURLException;
 import java.io.*;
 

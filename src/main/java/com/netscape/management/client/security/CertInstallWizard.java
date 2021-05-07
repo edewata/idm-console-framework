@@ -29,7 +29,6 @@ import com.netscape.management.client.util.ModalDialogUtil;
 import com.netscape.management.client.util.GridBagUtil;
 import com.netscape.management.client.util.Debug;
 import com.netscape.management.client.util.AdmTask;
-import com.netscape.management.nmclf.*;
 
 /**
  * Certificate install wizard.

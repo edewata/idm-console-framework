@@ -19,8 +19,6 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.acleditor;
 
-import java.util.Hashtable;
-
 import com.netscape.management.client.util.Debug;
 import com.netscape.management.nmclf.*;
 

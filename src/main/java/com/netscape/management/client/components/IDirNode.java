@@ -19,7 +19,6 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.components;
 import javax.swing.Icon;
-import netscape.ldap.LDAPConnection;
 import netscape.ldap.LDAPEntry;
 
 /**

@@ -19,8 +19,6 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.console;
 
-import java.util.*;
-import java.io.*;
 import com.netscape.management.client.util.*;
 
 /**

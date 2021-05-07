@@ -21,14 +21,10 @@
 package com.netscape.management.client.ug;
 
 import java.awt.*;
-import java.awt.event.*;
 import java.util.*;
 
-import com.netscape.management.client.console.ConsoleInfo;
 import com.netscape.management.client.util.*;
 import com.netscape.management.nmclf.*;
-
-import netscape.ldap.*;
 
 import javax.swing.*;
 

@@ -21,10 +21,8 @@ package com.netscape.management.client.util;
 
 import java.awt.*;
 import java.util.*;
-import java.awt.image.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.border.*;
 import com.netscape.management.nmclf.*;
 
 class DatePicker extends JPanel implements SuiConstants {

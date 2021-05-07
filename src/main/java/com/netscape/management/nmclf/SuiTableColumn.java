@@ -19,9 +19,6 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.nmclf;
 
-import java.util.*;
-import java.awt.*;
-import javax.swing.*;
 import javax.swing.table.*;
 
 /**

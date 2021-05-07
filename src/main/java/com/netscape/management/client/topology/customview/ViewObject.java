@@ -19,12 +19,9 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.topology.customview;
 
-import java.util.*;
 import java.awt.*;
 import javax.swing.*;
-import javax.swing.tree.*;
 import com.netscape.management.client.*;
-import com.netscape.management.client.util.*;
 import com.netscape.management.client.topology.*;
 import javax.swing.event.*;
 

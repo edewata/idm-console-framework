@@ -23,13 +23,7 @@ package com.netscape.management.client.ug;
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.text.*;
-
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.border.*;
-
-import netscape.ldap.*;
 import com.netscape.management.client.console.*;
 import com.netscape.management.client.components.*;
 import com.netscape.management.client.util.*;

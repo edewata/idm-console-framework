@@ -19,12 +19,9 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client;
 
-import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.event.*;
-import com.netscape.management.client.util.Debug;
 
 /**
  * A status item that displays a progress gauge, on a

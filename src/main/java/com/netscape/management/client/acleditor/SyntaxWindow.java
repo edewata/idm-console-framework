@@ -22,14 +22,9 @@ package com.netscape.management.client.acleditor;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
-
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Dimension;
 import java.awt.Insets;
-import java.awt.GridBagLayout;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 
 import com.netscape.management.client.acl.ACL;

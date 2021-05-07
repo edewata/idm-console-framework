@@ -22,7 +22,6 @@ package com.netscape.management.client.security;
 import com.netscape.management.client.components.*;
 import java.awt.*;
 import java.util.*;
-import java.awt.event.*;
 import javax.swing.*;
 import com.netscape.management.client.util.*;
 import com.netscape.management.nmclf.*;

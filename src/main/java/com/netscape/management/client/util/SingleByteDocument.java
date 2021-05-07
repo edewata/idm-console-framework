@@ -24,8 +24,6 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.text.*;
 
-import com.netscape.management.nmclf.*;
-
 /**
  * SingleByteDocument is a document model which only accept single byte input.
  * If the user types in any double bytes character, it will popup a

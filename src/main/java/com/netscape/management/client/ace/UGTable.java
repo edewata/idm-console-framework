@@ -20,14 +20,8 @@
 package com.netscape.management.client.ace;
 
 import java.util.*;
-import java.awt.*;
-import java.awt.event.*;
-
 import javax.swing.*;
 import javax.swing.table.*;
-import javax.swing.event.*;
-import javax.swing.border.*;
-
 import netscape.ldap.*;
 import com.netscape.management.client.console.ConsoleInfo;
 import com.netscape.management.client.util.*;

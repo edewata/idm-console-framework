@@ -20,14 +20,11 @@
 
 package com.netscape.management.client.ug;
 
-import java.awt.Color;
 import java.awt.event.*;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.AbstractButton;
 
 /**
  * This class will create a set of menu items for the Resource Picker Dialog.

@@ -21,7 +21,6 @@ package com.netscape.management.client.preferences;
 
 import java.util.*;
 import netscape.ldap.*;
-import com.netscape.management.client.console.*;
 import com.netscape.management.client.util.*;
 
 /**

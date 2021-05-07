@@ -19,13 +19,9 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.components;
 
-import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.plaf.*;
-import com.netscape.management.client.util.*;
 
 /**
  * ComponentFactory is a collection of static methods that

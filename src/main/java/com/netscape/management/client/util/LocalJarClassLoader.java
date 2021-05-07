@@ -23,7 +23,6 @@ import java.util.*;
 import java.util.zip.*;
 import java.io.*;
 import java.net.URL;
-import java.net.MalformedURLException;
 import com.netscape.management.client.comm.*;
 import com.netscape.management.client.console.ConsoleInfo;
 import com.netscape.management.client.console.Console;

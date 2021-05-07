@@ -21,7 +21,6 @@ package com.netscape.management.client.logging;
 
 import java.io.*;
 import java.util.*;
-import java.net.*;
 import com.netscape.management.client.comm.*;
 
 

@@ -25,8 +25,6 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.table.*;
 import javax.swing.event.*;
-import netscape.ldap.*;
-import com.netscape.management.client.*;
 import com.netscape.management.client.console.*;
 import com.netscape.management.client.preferences.*;
 import com.netscape.management.client.util.*;

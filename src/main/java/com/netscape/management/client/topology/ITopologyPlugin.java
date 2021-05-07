@@ -19,7 +19,6 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.topology;
 
-import java.awt.*;
 import java.util.*;
 import com.netscape.management.client.console.*;
 import com.netscape.management.client.*;

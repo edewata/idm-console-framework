@@ -25,7 +25,6 @@ import java.io.Writer;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.StreamTokenizer;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.EOFException;
 import java.util.Hashtable;

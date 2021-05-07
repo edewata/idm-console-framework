@@ -28,7 +28,6 @@ import com.netscape.management.client.console.ConsoleInfo;
 import com.netscape.management.client.util.*;
 import com.netscape.management.nmclf.*;
 
-import netscape.ldap.*;
 import netscape.ldap.util.DN;
 
 import javax.swing.*;

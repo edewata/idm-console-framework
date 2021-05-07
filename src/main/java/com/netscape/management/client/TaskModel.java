@@ -20,12 +20,10 @@
 package com.netscape.management.client;
 
 import java.util.*;
-import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
 import com.netscape.management.client.util.*;
 import com.netscape.management.client.console.*;
-import netscape.ldap.*;
 
 /**
  * Implements a data model for TaskPage; responsible for providing:

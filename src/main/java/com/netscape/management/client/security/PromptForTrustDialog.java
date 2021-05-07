@@ -21,7 +21,6 @@
 package com.netscape.management.client.security;
 
 import com.netscape.management.nmclf.SuiConstants;
-import com.netscape.management.nmclf.SuiLookAndFeel;
 import com.netscape.management.client.util.*;
 
 

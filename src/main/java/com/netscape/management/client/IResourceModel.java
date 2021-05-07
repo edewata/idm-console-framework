@@ -20,7 +20,6 @@
 package com.netscape.management.client;
 
 import java.awt.*;
-import javax.swing.*;
 import javax.swing.tree.*;
 
 /**

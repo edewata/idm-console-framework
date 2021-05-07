@@ -23,7 +23,6 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.*;
-import com.netscape.management.client.util.Debug;
 
 /**
  * Table renderer for checkboxes

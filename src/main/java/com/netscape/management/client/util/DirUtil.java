@@ -20,11 +20,7 @@
 package com.netscape.management.client.util;
 
 import java.lang.reflect.Method;
-import java.util.*;
-import java.io.*;
-import java.net.*;
 import netscape.ldap.*;
-import netscape.ldap.util.*;
 
 /**
  * Utility class to prepare an LDAP connection, using a clear or an

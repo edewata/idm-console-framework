@@ -19,7 +19,6 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.components;
 
-import java.io.*;
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;

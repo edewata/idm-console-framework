@@ -20,8 +20,6 @@
 package com.netscape.management.client.comm;
 
 import java.io.*;
-import java.util.*;
-import java.net.*;
 
 public abstract class AbstractCommClient implements CommClient {
     boolean _finished = false;

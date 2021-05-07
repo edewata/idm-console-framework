@@ -20,8 +20,6 @@
 package com.netscape.management.client.components;
 import java.util.*;
 import java.io.Serializable;
-import java.awt.event.KeyEvent;
-import javax.swing.KeyStroke;
 import javax.swing.tree.TreePath;
 import javax.swing.*;
 import javax.swing.event.*;

@@ -20,17 +20,10 @@
 package com.netscape.management.client.security;
 
 import java.awt.*;
-import java.util.*;
-import java.net.*;
-import javax.swing.*;
 import com.netscape.management.client.components.*;
 import com.netscape.management.client.console.*;
 import com.netscape.management.client.util.UtilConsoleGlobals;
 import com.netscape.management.client.util.ModalDialogUtil;
-import com.netscape.management.client.util.GridBagUtil;
-import com.netscape.management.client.util.Debug;
-import com.netscape.management.client.util.AdmTask;
-import com.netscape.management.nmclf.*;
 
 /**
  * Certificate Migrate wizard.

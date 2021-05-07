@@ -22,12 +22,10 @@ package com.netscape.management.client.topology.ug;
 
 import java.util.*;
 import java.awt.*;
-import java.io.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.text.Document;
 import javax.swing.event.*;
-import javax.swing.border.*;
 import com.netscape.management.client.*;
 import com.netscape.management.client.components.*;
 import com.netscape.management.client.console.*;

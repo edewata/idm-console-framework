@@ -21,16 +21,12 @@
 package com.netscape.management.client.util;
 
 import javax.swing.*;
-import javax.swing.text.*;
 import javax.swing.border.*;
 
-import java.awt.event.*;
 import java.awt.*;
 import java.util.*;
 import java.io.*;
 import java.net.*;
-
-import com.netscape.management.nmclf.SuiLookAndFeel;
 
 /**
  * A dialog that displays an About screen.

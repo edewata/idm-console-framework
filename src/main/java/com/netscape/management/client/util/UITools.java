@@ -22,7 +22,6 @@ package com.netscape.management.client.util;
 
 import java.io.File;
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 

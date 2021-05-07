@@ -21,7 +21,6 @@ package com.netscape.management.client.util;
 
 import java.awt.*;
 import java.util.*;
-import java.awt.image.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;

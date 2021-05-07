@@ -20,11 +20,6 @@
 
 package com.netscape.management.client.ug;
 
-import java.util.*;
-import netscape.ldap.*;
-import javax.swing.JDialog;
-import com.netscape.management.client.console.ConsoleInfo;
-
 
 /**
  * IResourceEditorPage interface defines the methods that must be supported

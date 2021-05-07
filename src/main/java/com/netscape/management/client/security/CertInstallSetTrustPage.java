@@ -25,7 +25,6 @@ import java.awt.*;
 import java.net.*;
 import java.util.*;
 import javax.swing.*;
-import javax.swing.border.*;
 import com.netscape.management.client.util.*;
 import com.netscape.management.client.console.*;
 import com.netscape.management.nmclf.*;

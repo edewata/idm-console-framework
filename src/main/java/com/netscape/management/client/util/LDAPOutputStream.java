@@ -20,7 +20,6 @@
 package com.netscape.management.client.util;
 
 import java.io.*;
-import java.util.*;
 import netscape.ldap.*;
 
 /**

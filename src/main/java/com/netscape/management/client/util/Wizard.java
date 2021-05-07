@@ -24,13 +24,11 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 import java.awt.*;
-import java.util.*;
 import java.awt.event.*;
-import java.io.*;
+
 
 //import com.netscape.page.*;
 
-import com.netscape.management.client.console.*;
 import com.netscape.management.nmclf.SuiConstants;
 
 

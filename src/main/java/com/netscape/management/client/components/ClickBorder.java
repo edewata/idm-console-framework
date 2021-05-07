@@ -21,7 +21,6 @@ package com.netscape.management.client.components;
 
 import java.awt.*;
 import javax.swing.*;
-import javax.swing.border.*;
 
 /**
  * A border with clickable appearance.

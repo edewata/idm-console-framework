@@ -24,8 +24,6 @@ import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.border.*;
 import com.netscape.management.client.*;
 import com.netscape.management.client.console.*;
 import com.netscape.management.client.util.*;

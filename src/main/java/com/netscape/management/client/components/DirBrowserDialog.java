@@ -21,11 +21,8 @@ package com.netscape.management.client.components;
 
 import javax.swing.*;
 import javax.swing.event.*;
-import javax.swing.text.*;
-import javax.swing.border.*;
 import javax.swing.tree.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.*;
 import netscape.ldap.*;
 import com.netscape.management.client.console.ConsoleHelp;

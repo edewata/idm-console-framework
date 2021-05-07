@@ -26,11 +26,7 @@ import java.text.*;
 
 import javax.swing.*;
 import javax.swing.table.*;
-import javax.swing.event.*;
 import com.netscape.management.client.util.*;
-
-import com.netscape.management.nmclf.*;
-import com.netscape.management.client.comm.*;
 
 import netscape.ldap.*;
 import netscape.ldap.controls.*;

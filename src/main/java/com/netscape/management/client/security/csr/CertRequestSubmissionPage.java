@@ -20,17 +20,12 @@
 package com.netscape.management.client.security.csr;
 //package com.netscape.management.client.keycert;
 
-import com.netscape.management.client.components.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
-import javax.swing.border.*;
-import javax.swing.text.*;
-import java.net.*;
 import java.io.*;
-import com.netscape.management.client.console.*;
 import com.netscape.management.client.util.*;
 import com.netscape.management.nmclf.*;
 

@@ -21,17 +21,9 @@ package com.netscape.management.client.security;
 
 
 import java.util.*;
-import java.io.*;
 import java.net.*;
-import java.text.*;
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.table .*;
-
-//import com.netscape.management.client.console.ConsoleInfo;
-import com.netscape.management.client.components.*;
 import com.netscape.management.client.util.*;
 import com.netscape.management.client.console.ConsoleInfo;
 import com.netscape.management.nmclf.*;

@@ -19,10 +19,7 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.acleditor;
 
-import java.util.Enumeration;
-
 import javax.swing.Icon;
-import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.DefaultCellEditor;
 import javax.swing.table.DefaultTableCellRenderer;

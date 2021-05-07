@@ -23,17 +23,13 @@ import java.util.Hashtable;
 import java.util.Enumeration;
 
 import javax.swing.JComboBox;
-import javax.swing.JMenuItem;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.DefaultCellEditor;
 import javax.swing.table.TableCellEditor;
 
-import com.netscape.management.client.acl.LdapACL;
 import com.netscape.management.client.acl.ACL;
 import com.netscape.management.client.acl.Rule;
 import com.netscape.management.client.acl.AttributeList;
 import com.netscape.management.client.console.ConsoleInfo;
-import com.netscape.management.client.util.ResourceSet;
 
 /**
  * Data model for the table component.

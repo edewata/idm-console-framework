@@ -19,9 +19,6 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.logging;
 
-import java.util.*;
-import java.awt.*;
-import java.net.*;
 import javax.swing.table.*;
 
 /**

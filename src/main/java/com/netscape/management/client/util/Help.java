@@ -20,7 +20,6 @@
 package com.netscape.management.client.util;
 
 import java.applet.Applet;
-import java.io.*;
 import java.util.Locale;
 import java.net.URL;
 

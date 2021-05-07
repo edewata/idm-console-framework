@@ -20,12 +20,10 @@
 package com.netscape.management.client.preferences;
 
 import java.awt.*;
-import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import com.netscape.management.client.components.*;
-import com.netscape.management.client.Framework;
 import com.netscape.management.client.util.*;
 
 /**

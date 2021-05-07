@@ -20,7 +20,6 @@
 
 package com.netscape.management.client.ug;
 
-import java.awt.*;
 import java.util.*;
 
 import com.netscape.management.client.console.ConsoleInfo;

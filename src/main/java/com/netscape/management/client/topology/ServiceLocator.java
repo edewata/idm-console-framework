@@ -22,7 +22,6 @@ package com.netscape.management.client.topology;
 import java.util.*;
 import netscape.ldap.*;
 import netscape.ldap.controls.*;
-import com.netscape.management.client.*;
 import com.netscape.management.client.console.*;
 import com.netscape.management.client.util.*;
 

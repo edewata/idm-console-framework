@@ -19,10 +19,6 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.acleditor;
 
-import javax.swing.JLabel;
-import javax.swing.JCheckBox;
-import javax.swing.SwingConstants;
-import javax.swing.DefaultCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableCellEditor;
 

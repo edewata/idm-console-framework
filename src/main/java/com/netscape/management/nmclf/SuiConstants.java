@@ -19,10 +19,6 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.nmclf;
 
-import java.awt.Font;
-import java.awt.Color;
-import java.awt.SystemColor;
-
 /**
  * A set of numerical constants that define the amount
  * of spacing between UI widgets.

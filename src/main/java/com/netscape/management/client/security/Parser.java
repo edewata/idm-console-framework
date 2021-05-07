@@ -20,7 +20,6 @@
 package com.netscape.management.client.security;
 import java.util.*;
 import java.io.*;
-import com.netscape.management.client.util.*;
 
 class Parser extends Vector{
     public Parser(String unparsedString) {

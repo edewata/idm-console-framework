@@ -20,13 +20,9 @@
 package com.netscape.management.client.components;
 
 import java.util.*;
-import java.awt.*;
 import java.io.Serializable;
 import javax.swing.*;
-import javax.swing.tree.*;
 import netscape.ldap.*;
-import netscape.ldap.util.*;
-
 import com.netscape.management.client.util.*;
 
 /**

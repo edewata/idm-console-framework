@@ -19,8 +19,6 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client;
 
-import javax.swing.*;
-
 /**
   * A class that specifies properties and functionality for a tab
   * that appears in the Console window.  This interface is

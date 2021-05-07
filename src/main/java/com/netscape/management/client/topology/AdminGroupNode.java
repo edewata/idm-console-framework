@@ -20,8 +20,6 @@
 package com.netscape.management.client.topology;
 
 import java.util.*;
-import java.net.*;
-import java.io.*;
 import java.awt.*;
 import java.text.*;
 import java.awt.event.*;

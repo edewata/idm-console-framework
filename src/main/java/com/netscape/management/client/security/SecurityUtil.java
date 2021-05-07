@@ -19,14 +19,10 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.security;
 
-import com.netscape.management.nmclf.*;
 import java.util.*;
 import java.io.*;
-import java.net.*;
 import java.awt.*;
 import javax.swing.*;
-import javax.swing.border.*;
-
 //import com.netscape.management.client.console.ConsoleInfo;
 import com.netscape.management.client.components.*;
 import com.netscape.management.client.util.*;

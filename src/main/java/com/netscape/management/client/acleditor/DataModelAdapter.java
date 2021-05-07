@@ -23,7 +23,6 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableCellEditor;
-import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import com.netscape.management.client.util.ResourceSet;

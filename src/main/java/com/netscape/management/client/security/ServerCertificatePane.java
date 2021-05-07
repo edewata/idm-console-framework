@@ -19,18 +19,12 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.security;
 
-import java.awt.*;
-import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
-import javax.swing.JTable.*;
 import javax.swing.event.*;
-import java.net.*;
-
 import com.netscape.management.client.util.*;
 import com.netscape.management.client.console.*;
 import com.netscape.management.client.components.*;
-import com.netscape.management.nmclf.*;
 
 class ServerCertificatePane extends CertificateListPane {
 

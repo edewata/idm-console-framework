@@ -21,13 +21,9 @@
 package com.netscape.management.client.console;
 
 import java.awt.*;
-import java.awt.event.*;
 import java.util.*;
-import java.io.File;
-import java.net.URL;
 import javax.swing.*;
 import javax.swing.event.*;
-import javax.swing.text.*;
 import com.netscape.management.nmclf.*;
 import com.netscape.management.client.util.*;
 

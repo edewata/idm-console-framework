@@ -25,18 +25,15 @@ import java.io.StringReader;
 import java.io.StreamTokenizer;
 import java.io.IOException;
 import java.io.EOFException;
-import java.net.URL;
 import java.util.Enumeration;
 
 import netscape.ldap.LDAPEntry;
 import netscape.ldap.LDAPAttribute;
 import netscape.ldap.LDAPException;
 import netscape.ldap.LDAPConnection;
-import netscape.ldap.LDAPSSLSocketFactory;
 import netscape.ldap.LDAPModification;
 import netscape.ldap.LDAPAttributeSet;
 
-import com.netscape.management.client.comm.HttpsChannel;
 import com.netscape.management.client.util.KingpinLDAPConnection;
 import com.netscape.management.client.util.LDAPUtil;
 import com.netscape.management.client.util.Debug;

@@ -30,8 +30,6 @@ import com.netscape.management.nmclf.*;
 import com.netscape.management.client.console.*;
 import javax.swing.plaf.*;
 
-import java.io.*;
-
 /**
  *
  * Encryption panel used to configure server security settings.

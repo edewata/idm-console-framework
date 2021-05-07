@@ -28,7 +28,6 @@ import netscape.ldap.util.DN;
 import netscape.ldap.util.RDN;
 
 import com.netscape.management.client.console.*;
-import com.netscape.management.client.util.UtilConsoleGlobals;
 
 /**
  * A set of utility functions relating to LDAP.

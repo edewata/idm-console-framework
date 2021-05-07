@@ -20,8 +20,6 @@
 
 package com.netscape.management.client.util;
 
-import java.awt.*;
-import javax.swing.*;
 import javax.swing.text.*;
 import com.netscape.management.nmclf.*;
 

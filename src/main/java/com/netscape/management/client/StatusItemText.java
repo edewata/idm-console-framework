@@ -19,12 +19,8 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client;
 
-import java.util.*;
 import java.awt.*;
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.border.*;
-import com.netscape.management.client.util.Debug;
 
 /**
  * Implements a status item component that displays a

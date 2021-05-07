@@ -22,7 +22,6 @@ package com.netscape.management.client.acl;
 import java.util.Hashtable;
 import java.util.Enumeration;
 import java.util.StringTokenizer;
-import java.io.Reader;
 import java.io.Writer;
 import java.io.StreamTokenizer;
 import java.io.IOException;

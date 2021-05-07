@@ -19,9 +19,6 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.nmclf;
 
-import java.awt.*;
-import java.awt.event.*;
-
 import javax.swing.*;
 
 /**

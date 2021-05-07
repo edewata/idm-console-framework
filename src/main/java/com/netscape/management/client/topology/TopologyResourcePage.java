@@ -21,14 +21,11 @@ package com.netscape.management.client.topology;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
 import javax.swing.*;
-import javax.swing.tree.*;
 import com.netscape.management.client.*;
 import com.netscape.management.client.console.*;
 import com.netscape.management.client.util.*;
 import com.netscape.management.client.topology.customview.*;
-import netscape.ldap.*;
 
 /**
  * Setup the topology page with topology information

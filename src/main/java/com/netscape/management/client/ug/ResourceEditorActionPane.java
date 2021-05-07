@@ -23,15 +23,12 @@ package com.netscape.management.client.ug;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import com.netscape.management.client.util.ResourceSet;
 import com.netscape.management.client.util.GridBagUtil;
 import com.netscape.management.client.util.JButtonFactory;
-import com.netscape.management.client.util.Help;
 import com.netscape.management.nmclf.SuiLookAndFeel;
 
 

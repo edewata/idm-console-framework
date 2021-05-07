@@ -20,7 +20,6 @@
 package com.netscape.management.nmclf;
 
 import javax.swing.*;
-import com.netscape.management.client.util.*;
 
 /**
  * An extended JPasswordField to fix a JFC bug where

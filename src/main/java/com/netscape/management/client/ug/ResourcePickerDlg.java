@@ -27,11 +27,7 @@ import java.awt.event.*;
 import netscape.ldap.*;
 
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.text.*;
-
 import com.netscape.management.client.console.ConsoleInfo;
-import com.netscape.management.client.util.KingpinLDAPConnection;
 import com.netscape.management.nmclf.SuiLookAndFeel;
 import com.netscape.management.client.util.*;
 

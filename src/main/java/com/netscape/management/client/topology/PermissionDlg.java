@@ -30,7 +30,6 @@ import netscape.ldap.*;
 import com.netscape.management.client.util.*;
 import com.netscape.management.client.ug.*;
 import com.netscape.management.client.console.*;
-import com.netscape.management.client.*;
 import com.netscape.management.nmclf.*;
 
 /**

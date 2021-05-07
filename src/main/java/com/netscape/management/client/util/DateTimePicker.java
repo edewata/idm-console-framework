@@ -21,11 +21,9 @@ package com.netscape.management.client.util;
 
 import java.awt.*;
 import java.util.*;
-import java.awt.image.*;
 import java.awt.event.*;
 import java.text.*;
 import javax.swing.*;
-import javax.swing.border.*;
 import com.netscape.management.nmclf.*;
 
 /**

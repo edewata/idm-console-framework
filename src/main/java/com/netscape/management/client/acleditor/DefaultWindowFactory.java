@@ -19,8 +19,6 @@
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.acleditor;
 
-import java.applet.Applet;
-
 import com.netscape.management.client.acl.ACL;
 import com.netscape.management.client.acl.Rule;
 import com.netscape.management.client.util.Help;

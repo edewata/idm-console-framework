@@ -20,14 +20,11 @@
 
 package com.netscape.management.client.topology;
 
-import java.util.*;
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.Document;
-import javax.swing.border.*;
 import com.netscape.management.client.util.*;
 import com.netscape.management.nmclf.*;
 

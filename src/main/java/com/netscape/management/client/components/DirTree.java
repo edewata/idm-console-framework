@@ -20,11 +20,9 @@
 package com.netscape.management.client.components;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
-import javax.swing.border.*;
 import com.netscape.management.client.util.Debug;												
 public class DirTree extends JTree
                      implements TreeSelectionListener,

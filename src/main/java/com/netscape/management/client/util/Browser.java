@@ -22,8 +22,6 @@ package com.netscape.management.client.util;
 import java.io.*;
 import java.net.URL;
 import java.util.Properties;
-import javax.swing.*;
-
 import com.netscape.management.nmclf.*;
 
 

@@ -20,9 +20,6 @@
 package com.netscape.management.client.acleditor;
 
 import javax.swing.*;
-import javax.swing.BorderFactory;
-import javax.swing.border.BevelBorder;
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Image;
@@ -32,9 +29,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
-import java.awt.SystemColor;
-import java.awt.Color;
-
 import java.util.Hashtable;
 
 import com.netscape.management.client.util.*;

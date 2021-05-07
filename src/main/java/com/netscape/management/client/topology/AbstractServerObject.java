@@ -23,7 +23,6 @@ import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.Timer;
 import javax.swing.event.*;
 import com.netscape.management.client.*;
 import com.netscape.management.client.console.*;
