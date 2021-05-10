@@ -356,7 +356,7 @@ public class Table extends JTable
     {
         autoResizeMode = resizeMode;
         if(resizeMode == AUTO_RESIZE_DATA)
-            resizeMode = this.AUTO_RESIZE_OFF;
+            resizeMode = JTable.AUTO_RESIZE_OFF;
         super.setAutoResizeMode(resizeMode);
     }
     
@@ -584,8 +584,8 @@ class TextHeaderRenderer extends JButton implements TableCellRenderer
     
     public TextHeaderRenderer()
     {
-        setHorizontalAlignment(this.LEFT);
-        setHorizontalTextPosition(this.LEFT);
+        setHorizontalAlignment(SwingConstants.LEFT);
+        setHorizontalTextPosition(SwingConstants.LEFT);
         setBorder(new FlatBorder());
         setFocusPainted(false);
     }
@@ -595,7 +595,7 @@ class TextHeaderRenderer extends JButton implements TableCellRenderer
         this();
         this.isSortable = isSortable;
         setHorizontalAlignment(alignment);
-        if(alignment == this.RIGHT)
+        if(alignment == SwingConstants.RIGHT)
             setHorizontalTextPosition(alignment);
         if(isSortable)
         {

@@ -83,9 +83,9 @@ DocumentListener, IRPCallBack {
         // Top row
         JPanel p = new JPanel(new GridBagLayout());
         resetConstraints(gbc);
-        gbc.fill = gbc.HORIZONTAL;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 1.0;
-        gbc.anchor = gbc.WEST;
+        gbc.anchor = GridBagConstraints.WEST;
         gbc.ipady = 0;
         bp.add(p, gbc);
 
@@ -122,8 +122,8 @@ DocumentListener, IRPCallBack {
                 }
                 ));
         resetConstraints(gbc);
-        gbc.anchor = gbc.WEST;
-        gbc.fill = gbc.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 1.0;
         gbc.ipadx = gbc.ipady = gbc.gridx = gbc.gridy = 0;
         gbc.gridwidth = 1;
@@ -144,16 +144,16 @@ DocumentListener, IRPCallBack {
                     ));
         }
         resetConstraints(gbc);
-        gbc.fill = gbc.HORIZONTAL;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 1.0;
-        gbc.anchor = gbc.EAST;
+        gbc.anchor = GridBagConstraints.EAST;
         gbc.ipadx = gbc.ipady = gbc.gridy = 0;
         gbc.gridx = 1;
         p.add(p2, gbc);
 
         // list
         resetConstraints(gbc);
-        gbc.fill = gbc.BOTH;
+        gbc.fill = GridBagConstraints.BOTH;
         gbc.weightx = gbc.weighty = 1.0;
         bp.add(list = new Table(datamodel = (UserGroupDataModel) dma), gbc);
         list.getJTable().setShowGrid(false);
@@ -170,9 +170,9 @@ DocumentListener, IRPCallBack {
                 }
                 ), gbc);
         resetConstraints(gbc);
-        gbc.fill = gbc.HORIZONTAL;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 1.0;
-        gbc.anchor = gbc.WEST;
+        gbc.anchor = GridBagConstraints.WEST;
         gbc.ipady = 0;
         gbc.ipadx = 0;
         bp.add(p2, gbc);
@@ -182,24 +182,24 @@ DocumentListener, IRPCallBack {
             // Bottom row
             p = new JPanel(new GridBagLayout());
             resetConstraints(gbc);
-            gbc.fill = gbc.HORIZONTAL;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
             gbc.weightx = 1.0;
-            gbc.anchor = gbc.WEST;
+            gbc.anchor = GridBagConstraints.WEST;
             gbc.ipady = PAD / 2;
             gbc.ipadx = 0;
             gbc.insets = new Insets(PAD / 2, 0, PAD / 2, 0);
             bp.add(p, gbc);
 
             resetConstraints(gbc);
-            gbc.anchor = gbc.WEST;
+            gbc.anchor = GridBagConstraints.WEST;
             gbc.ipadx = gbc.ipady = gbc.gridx = gbc.gridy = 0;
             gbc.gridwidth = 1;
             gbc.insets = new Insets(0, 0, 0, PAD / 2);
             p.add(createInstruction("userdnattr"), gbc);
 
             resetConstraints(gbc);
-            gbc.anchor = gbc.WEST;
-            gbc.fill = gbc.HORIZONTAL;
+            gbc.anchor = GridBagConstraints.WEST;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
             gbc.weightx = 1.0;
             gbc.ipadx = gbc.ipady = gbc.gridy = 0;
             gbc.gridwidth = 1;
@@ -209,7 +209,7 @@ DocumentListener, IRPCallBack {
                     null), gbc);
 
             resetConstraints(gbc);
-            gbc.anchor = gbc.WEST;
+            gbc.anchor = GridBagConstraints.WEST;
             gbc.ipadx = gbc.ipady = gbc.gridy = 0;
             gbc.gridwidth = 1;
             gbc.gridx = 2;
@@ -217,8 +217,8 @@ DocumentListener, IRPCallBack {
             p.add(createInstruction("authmethod"), gbc);
 
             resetConstraints(gbc);
-            gbc.anchor = gbc.WEST;
-            gbc.fill = gbc.HORIZONTAL;
+            gbc.anchor = GridBagConstraints.WEST;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
             gbc.weightx = 1.0;
             gbc.ipadx = gbc.ipady = gbc.gridy = 0;
             gbc.gridwidth = 1;

@@ -86,15 +86,15 @@ class CertInstallCertPage extends WizardPage implements SuiConstants, ActionList
 
             Debug.println("Check request status:"+status);
 
-            if (status == ic.STATUS_ISSUED) {
+            if (status == ICAPlugin.STATUS_ISSUED) {
                 //query plugin for a certificate
                 getDataModel().setValue("dercert", ic.getCertificateData());
-            } else if (status == ic.STATUS_QUEUED) {
+            } else if (status == ICAPlugin.STATUS_QUEUED) {
                 //query plugin and resave the session back
                 //ask plugin for some ui, or don't continue.
                 //if plugin doesn't provide an ui we should just pop up our own ui.
                 return false;
-            } else if (status == ic.STATUS_ERROR) {
+            } else if (status == ICAPlugin.STATUS_ERROR) {
                 //ask plugin for some ui pages
                 return false;
             }
@@ -187,7 +187,7 @@ class CertInstallCertPage extends WizardPage implements SuiConstants, ActionList
             certText.paste();
         } else if (event.getActionCommand().equals("BROWSE")) {
             JFileChooser jfChooser = new JFileChooser();
-            if (jfChooser.showOpenDialog(this) == jfChooser.APPROVE_OPTION) {
+            if (jfChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
                 try {
                     certFilename.setText(jfChooser.getSelectedFile().getCanonicalPath());
                     validate();

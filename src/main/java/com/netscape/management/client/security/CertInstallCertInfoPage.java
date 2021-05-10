@@ -52,7 +52,7 @@ class CertInstallCertInfoPage extends WizardPage implements SuiConstants {
             new ErrorDialog(parent, title, msg, null, detail,
 			                ErrorDialog.OK, ErrorDialog.OK);
         infoDialog.hideDetail();
-        infoDialog.setIcon(infoDialog.INFORMATION_ICON);
+        infoDialog.setIcon(ErrorDialog.INFORMATION_ICON);
         
         // Delay the dialog display so it shows up over the CertName page
         SwingUtilities.invokeLater(new Runnable() {

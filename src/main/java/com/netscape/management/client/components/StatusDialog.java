@@ -182,8 +182,8 @@ public class StatusDialog extends GenericDialog implements UIConstants
         c.gridy = 0;
         c.gridwidth = 1;
         c.gridheight = 2;
-        c.fill = c.NONE;
-        c.anchor = c.CENTER;
+        c.fill = GridBagConstraints.NONE;
+        c.anchor = GridBagConstraints.CENTER;
         c.weightx = 0;
         c.weighty = 0;
         g.setConstraints(iconLabel, c);
@@ -191,12 +191,12 @@ public class StatusDialog extends GenericDialog implements UIConstants
         
         descriptionLabel.setHorizontalAlignment(SwingConstants.CENTER);
         c.insets = new Insets(0, COMPONENT_SPACE, 0, COMPONENT_SPACE);
-        c.fill = c.HORIZONTAL;
+        c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
         c.gridy = 0;
         c.gridwidth = 1;
         c.gridheight = 1;
-        c.anchor = c.CENTER;
+        c.anchor = GridBagConstraints.CENTER;
         c.weightx = 1;
         c.weighty = 1;
         g.setConstraints(descriptionLabel, c);
@@ -210,7 +210,7 @@ public class StatusDialog extends GenericDialog implements UIConstants
         c.gridheight = 1;
         c.weightx = 1;   
         c.weighty = 0;
-        c.anchor = c.CENTER;
+        c.anchor = GridBagConstraints.CENTER;
         g.setConstraints(progressLabel, c);
         contentPane.add(progressLabel);
         
@@ -232,7 +232,7 @@ public class StatusDialog extends GenericDialog implements UIConstants
         if(detailComponent != null)
         {
             c.insets = new Insets(COMPONENT_SPACE, 0, 0, 0);
-            c.fill = c.BOTH;
+            c.fill = GridBagConstraints.BOTH;
             c.gridx = 0;
             c.gridy = 3;
             c.gridwidth = 3;
@@ -256,7 +256,7 @@ public class StatusDialog extends GenericDialog implements UIConstants
         c.insets = new Insets(0, SEPARATED_COMPONENT_SPACE, 0, 0);
         c.gridx = 2;
         c.gridy = 0;
-        c.anchor = c.SOUTH;
+        c.anchor = GridBagConstraints.SOUTH;
         g.setConstraints(closeButton, c);
         contentPane.add(closeButton);
     

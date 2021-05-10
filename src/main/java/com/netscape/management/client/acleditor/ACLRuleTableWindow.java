@@ -84,15 +84,15 @@ public class ACLRuleTableWindow extends ACLEditorWindow implements SelectionList
 
         // Instructional text
         resetConstraints(gbc);
-        gbc.anchor = gbc.WEST;
+        gbc.anchor = GridBagConstraints.WEST;
         gbc.ipady = 0;
         gbc.insets = new Insets(PAD, 3 * PAD / 2, PAD, 3 * PAD / 2);
         _add(createInstruction("table"), gbc);
 
         // Horizontal Line
         resetConstraints(gbc);
-        gbc.anchor = gbc.WEST;
-        gbc.fill = gbc.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.ipady = 0;
         gbc.weightx = 1.0;
         gbc.insets = new Insets(0, 3 * PAD / 2, 0, 3 * PAD / 2);
@@ -100,7 +100,7 @@ public class ACLRuleTableWindow extends ACLEditorWindow implements SelectionList
 
         // Buttons and CheckBox above the Table
         resetConstraints(gbc);
-        gbc.anchor = gbc.WEST;
+        gbc.anchor = GridBagConstraints.WEST;
         gbc.ipady = 0;
         gbc.insets = new Insets(0, PAD / 2, 0, PAD / 2);
         p = new JPanel(new FlowLayout(FlowLayout.LEFT, PAD, PAD));
@@ -131,7 +131,7 @@ public class ACLRuleTableWindow extends ACLEditorWindow implements SelectionList
             resetConstraints(gbc);
             gbc.weightx = 1.0;
             gbc.weighty = 0.2;
-            gbc.fill = gbc.BOTH;
+            gbc.fill = GridBagConstraints.BOTH;
             gbc.ipady = 0;
             _add(inheritedPanel =
                     new JPanel(new GridLayout(1, 1, 0, 0)), gbc);
@@ -150,13 +150,13 @@ public class ACLRuleTableWindow extends ACLEditorWindow implements SelectionList
         gbc.weightx = 1.0;
         gbc.weighty = 0.8;
         gbc.ipadx = 0;
-        gbc.fill = gbc.BOTH;
+        gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(0, 3 * PAD / 2, 0, 3 * PAD / 2);
         _add(table, gbc);
 
         // Other Buttons below the Table
         resetConstraints(gbc);
-        gbc.anchor = gbc.WEST;
+        gbc.anchor = GridBagConstraints.WEST;
         gbc.ipady = 0;
         gbc.insets = new Insets(0, PAD / 2, 0, PAD / 2);
         p = new JPanel(new FlowLayout(FlowLayout.LEFT, PAD, PAD));
@@ -183,8 +183,8 @@ public class ACLRuleTableWindow extends ACLEditorWindow implements SelectionList
 
         // Horizontal Line
         resetConstraints(gbc);
-        gbc.anchor = gbc.WEST;
-        gbc.fill = gbc.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.ipady = 0;
         gbc.weightx = 1.0;
         gbc.insets = new Insets(0, 3 * PAD / 2, 0, 3 * PAD / 2);
@@ -193,7 +193,7 @@ public class ACLRuleTableWindow extends ACLEditorWindow implements SelectionList
         // Standard Window Footer
         p = createStandardFooter();
         resetConstraints(gbc);
-        gbc.anchor = gbc.EAST;
+        gbc.anchor = GridBagConstraints.EAST;
         gbc.ipady = 0;
         gbc.insets = new Insets(0, PAD / 2, 0, PAD / 2);
         _add(p, gbc);

@@ -333,7 +333,7 @@ public class CustomView implements ICustomView {
         LDAPSearchResults result = null;
         
         try {
-            result = _ldc.search(_ldapEntry.getDN(), _ldc.SCOPE_ONE,
+            result = _ldc.search(_ldapEntry.getDN(), LDAPv2.SCOPE_ONE,
                                  "(objectclass=nsTopologyCustomView)", null, false);
             if (result != null) {
                 while (result.hasMoreElements()) {

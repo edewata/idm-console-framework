@@ -431,7 +431,7 @@ public class CertificateDialog extends AbstractDialog implements SuiConstants {
         detail = MessageFormat.format(detail, new Object[] {token, module});        
         ErrorDialog dialog = new ErrorDialog(this, title, msg, null, detail,
             ErrorDialog.OK, ErrorDialog.OK);
-        dialog.setIcon(dialog.WARNING_ICON);
+        dialog.setIcon(ErrorDialog.WARNING_ICON);
         dialog.setVisible(true);
     }
 }

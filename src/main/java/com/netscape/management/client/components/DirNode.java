@@ -452,7 +452,7 @@ public class DirNode extends DefaultMutableTreeNode
             cons.setServerControls( controls );
             // Search for immediate children
             LDAPSearchResults result =
-                ldc.search( dn, ldc.SCOPE_ONE,
+                ldc.search( dn, LDAPv2.SCOPE_ONE,
                             getChildFilter(),
                             _baseAttrs, false, cons );
             Debug.println(9, "DirNode.getChildList: <" + dn +
@@ -520,7 +520,7 @@ public class DirNode extends DefaultMutableTreeNode
             Debug.println(9, "DirNode.countChildren: " +
                           "<" + dn + "> , " + filter );
             LDAPSearchResults result =
-                ldc.search( dn, ldc.SCOPE_ONE,
+                ldc.search( dn, LDAPv2.SCOPE_ONE,
                             filter,
                             attrs, false, cons );
 

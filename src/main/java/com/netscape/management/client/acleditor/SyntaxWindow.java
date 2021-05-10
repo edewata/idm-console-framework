@@ -56,7 +56,7 @@ public class SyntaxWindow extends ACLEditorWindow {
         resetConstraints(gbc);
         gbc.ipady = PAD / 2;
         gbc.insets = new Insets(PAD / 2, 0, PAD / 2, 0);
-        gbc.fill = gbc.BOTH;
+        gbc.fill = GridBagConstraints.BOTH;
         gbc.weightx = gbc.weighty = 1.0;
         scroll = new JScrollPane() {
                     public Dimension getPreferredSize() {

@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -20,16 +20,32 @@
 
 package com.netscape.management.client.ug;
 
-import java.util.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.CardLayout;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.util.Enumeration;
+import java.util.Vector;
 
-import netscape.ldap.*;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
-import javax.swing.*;
 import com.netscape.management.client.console.ConsoleInfo;
+import com.netscape.management.client.util.AbstractDialog;
+import com.netscape.management.client.util.AbstractModalDialog;
+import com.netscape.management.client.util.Debug;
+import com.netscape.management.client.util.GridBagUtil;
 import com.netscape.management.nmclf.SuiLookAndFeel;
-import com.netscape.management.client.util.*;
+
+import netscape.ldap.LDAPAttribute;
+import netscape.ldap.LDAPConnection;
+import netscape.ldap.LDAPEntry;
 
 /**
  * ResourcePickerDlg is a general UI for searching the directory server. By
@@ -701,18 +717,18 @@ ComponentListener/*, KeyListener*/
 
         if (_displayedPanel[SEARCH_PANEL] instanceof AdvancePanel) {
             AdvancePanel advPanel = (AdvancePanel)_displayedPanel[SEARCH_PANEL];
-            searchAdmin = advPanel.getSearchType().equals(advPanel.KEY_ADMINISTRATORS);
+            searchAdmin = advPanel.getSearchType().equals(AdvancePanel.KEY_ADMINISTRATORS);
         }
 
         else if (_displayedPanel[SEARCH_PANEL] instanceof BasicPanel) {
             BasicPanel basPanel = (BasicPanel)_displayedPanel[SEARCH_PANEL];
-            searchAdmin = basPanel.getSearchType().equals(basPanel.KEY_ADMINISTRATORS);
+            searchAdmin = basPanel.getSearchType().equals(BasicPanel.KEY_ADMINISTRATORS);
         }
 
         if (filter != null && filter.equals("") == false) {
             if (searchAdmin) {
                 _searchResultPanel.doSearch(
-                    _consoleInfo.getLDAPConnection(), // Config dir 
+                    _consoleInfo.getLDAPConnection(), // Config dir
                     ADMIN_BASE_DN, filter);
              }
              else {

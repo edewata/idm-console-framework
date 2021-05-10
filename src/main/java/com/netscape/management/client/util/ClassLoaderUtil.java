@@ -410,7 +410,7 @@ public class ClassLoaderUtil {
        String filter = "(" + attrs[0] + "=*)";
 
        LDAPSearchResults results =
-           ldc.search (DN, ldc.SCOPE_BASE, filter, attrs, false);
+           ldc.search (DN, LDAPv2.SCOPE_BASE, filter, attrs, false);
 
        return (results == null) ? null : results.next ();
    }

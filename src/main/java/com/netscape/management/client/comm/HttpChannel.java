@@ -178,9 +178,9 @@ public class HttpChannel implements Runnable, CommChannel {
 
             Debug.println(name + " accept> " + cr.getTarget());
 
-            if (cr.getStatus().equals(cr.ERROR)) {
+            if (cr.getStatus().equals(CommRecord.ERROR)) {
                 Debug.println(name + "error> CommRecord Status: " +
-                        cr.ERROR);
+                        CommRecord.ERROR);
                 continue;
             }
 

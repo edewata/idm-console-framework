@@ -74,12 +74,12 @@ MouseListener {
         GridBagConstraints gbc = new GridBagConstraints();
 
         resetConstraints(gbc);
-        gbc.anchor = gbc.WEST;
+        gbc.anchor = GridBagConstraints.WEST;
         gbc.ipady = PAD / 2;
         gbc.insets = new Insets(0, 0, PAD, PAD);
         bp.add(createInstruction("main2"), gbc);
 
-        gbc.fill = gbc.BOTH;
+        gbc.fill = GridBagConstraints.BOTH;
         gbc.weightx = gbc.weighty = 1.0;
         gbc.gridy = 1;
         gbc.gridwidth = 1;
@@ -99,7 +99,7 @@ MouseListener {
                 }
                 ));
         resetConstraints(gbc);
-        gbc.anchor = gbc.NORTH;
+        gbc.anchor = GridBagConstraints.NORTH;
         gbc.ipady = PAD / 2;
         gbc.insets = new Insets(0, 0, 0, 0);
         gbc.gridy = 1;

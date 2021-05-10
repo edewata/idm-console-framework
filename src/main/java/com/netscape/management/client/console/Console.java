@@ -55,6 +55,7 @@ import com.netscape.management.client.IResourceObject;
 import com.netscape.management.client.ResourceObject;
 import com.netscape.management.client.cmd.GetOpt;
 import com.netscape.management.client.comm.CommClient;
+import com.netscape.management.client.comm.CommManager;
 import com.netscape.management.client.comm.CommRecord;
 import com.netscape.management.client.comm.HttpChannel;
 import com.netscape.management.client.comm.HttpException;
@@ -1212,7 +1213,7 @@ public class Console implements CommClient {
 
         try {
             h.get(url, this, r = new Response(user, pw),
-                    h.FORCE_BASIC_AUTH, pref);
+                    CommManager.FORCE_BASIC_AUTH, pref);
         } catch (Exception ioe) {
             String _url;
             try {

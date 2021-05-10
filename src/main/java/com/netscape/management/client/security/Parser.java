@@ -56,7 +56,7 @@ class Parser extends Vector{
         StringBuffer token = new StringBuffer();
         //Vector tokenList = new Vector()
         try {
-            while (tokenizer.nextToken() != tokenizer.TT_EOF) {
+            while (tokenizer.nextToken() != StreamTokenizer.TT_EOF) {
                 if (((char)(tokenizer.ttype) == '\t') ||
                     ((char)(tokenizer.ttype) == '\n') /*||
                     ((char)(tokenizer.ttype) == '/')*/) {
@@ -73,7 +73,7 @@ class Parser extends Vector{
                     token.append((new Character((char)(tokenizer.ttype))).toString());
                     /*tokenList.*/addElement(token.toString());
                     token = new StringBuffer();
-                } else if (tokenizer.ttype == tokenizer.TT_WORD) {
+                } else if (tokenizer.ttype == StreamTokenizer.TT_WORD) {
                     token.append(tokenizer.sval);
                 /*} else if (tokenizer.ttype == tokenizer.TT_NUMBER) {
                     token.append((int)tokenizer.nval);*/

@@ -45,7 +45,7 @@ class CertificateInfoPanels implements SuiConstants {
     JLabel getBoldAlignLabel(String labelString, int align) {
 	JLabel label = new JLabel(labelString, align);
 	Font font = label.getFont();
-	label.setFont(new Font(font.getName(), font.getStyle() | font.BOLD, font.getSize()));
+	label.setFont(new Font(font.getName(), font.getStyle() | Font.BOLD, font.getSize()));
 
 	return label;
     }
@@ -248,14 +248,14 @@ class CertificateInfoPanels implements SuiConstants {
 	    t.setTime(formatter.parse((String)(_cert.get("AFTERDATE"))));
 
 	    String from = KeyCertUtility.replace( KeyCertUtility.replace( KeyCertUtility.replace(dateFormat, "%Y%",
-                Integer.toString(f.get(f.YEAR))), "%M%",
-                Integer.toString(f.get(f.MONTH) + 1)), "%D%",
-                Integer.toString(f.get(f.DATE)));
+                Integer.toString(f.get(Calendar.YEAR))), "%M%",
+                Integer.toString(f.get(Calendar.MONTH) + 1)), "%D%",
+                Integer.toString(f.get(Calendar.DATE)));
 
 	    String to = KeyCertUtility.replace( KeyCertUtility.replace( KeyCertUtility.replace(dateFormat, "%Y%",
-                Integer.toString(t.get(t.YEAR))), "%M%",
-                Integer.toString(t.get(t.MONTH) + 1)), "%D%",
-                Integer.toString(t.get(t.DATE)));
+                Integer.toString(t.get(Calendar.YEAR))), "%M%",
+                Integer.toString(t.get(Calendar.MONTH) + 1)), "%D%",
+                Integer.toString(t.get(Calendar.DATE)));
 
 
 	    JPanel datePanel = new JPanel();

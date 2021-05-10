@@ -196,7 +196,7 @@ public class Wizard extends JDialog
 	String locale = Locale.getDefault().getLanguage();
 	// 552699: Setting the font to bold on Japanese console causes empty boxes to be shown
 	if (!locale.equalsIgnoreCase("ja") && !locale.equalsIgnoreCase("zh")) {
-	   style |= currFont.BOLD;
+	   style |= Font.BOLD;
 	}
            m_stepName.setFont(new Font(currFont.getFamily(), style, currFont.getSize()+2));
         m_stepName.setBorder(new EmptyBorder(new Insets(SuiConstants.HORIZ_COMPONENT_INSET,
@@ -207,7 +207,7 @@ public class Wizard extends JDialog
         m_stepOf = new JLabel("", JLabel.RIGHT);
         //m_stepOf.setOpaque(true);
         //m_stepOf.setBackground(Color.white);
-        m_stepOf.setFont(new Font(currFont.getFamily(), currFont.getStyle() | currFont.BOLD, currFont.getSize()+2));
+        m_stepOf.setFont(new Font(currFont.getFamily(), currFont.getStyle() | Font.BOLD, currFont.getSize()+2));
         m_stepOf.setBorder(new EmptyBorder(new Insets(SuiConstants.HORIZ_COMPONENT_INSET,
                                                          0,
                                                          SuiConstants.HORIZ_COMPONENT_INSET,

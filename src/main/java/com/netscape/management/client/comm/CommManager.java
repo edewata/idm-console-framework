@@ -182,19 +182,19 @@ public abstract class CommManager {
         throws IOException {
         Object status = cr.getStatus();
 
-        if (status.equals(cr.COMPLETE) || status.equals(cr.ERROR)) {
+        if (status.equals(CommRecord.COMPLETE) || status.equals(CommRecord.ERROR)) {
             Debug.println("CommManager> Terminate request for " +
                     cr.getTarget() + " in " + status + " state. Ignored");
             return false;
         }
 
-        if (status.equals(cr.WAITING)) {
+        if (status.equals(CommRecord.WAITING)) {
             requests.remove(cr);
             Debug.println("CommManager> " + cr.getTarget() + " removed from the queue");
             return true;
         }
 
-        if (status.equals(cr.ASSIGNED) || status.equals(cr.SENT)) {
+        if (status.equals(CommRecord.ASSIGNED) || status.equals(CommRecord.SENT)) {
             CommChannel cc = cr.getChannel();
 
             if (cc == null)
@@ -293,7 +293,7 @@ public abstract class CommManager {
 
                 if (cr.getTID().equals(tid)) {
                     requests.remove(cr);
-                    cr.setStatus(cr.ASSIGNED);
+                    cr.setStatus(CommRecord.ASSIGNED);
                     return (cr);
                 }
             }

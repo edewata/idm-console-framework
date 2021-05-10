@@ -123,10 +123,10 @@ public class IndexDialog extends GenericDialog
         contentPane.setLayout( new GridBagLayout() );
         GridBagConstraints gbc = new GridBagConstraints();
 
-        gbc.gridwidth = gbc.REMAINDER;
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.weightx = 1;
         gbc.weighty = 0;
-        gbc.fill = gbc.HORIZONTAL;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
         JLabel lblTypeIn = new JLabel(_resource.getString(_section, "typeInLabel"));
         contentPane.add( lblTypeIn, gbc );
@@ -154,7 +154,7 @@ public class IndexDialog extends GenericDialog
         JPanel linkPanel = new JPanel(new GridBagLayout());
         gbc.weightx = 1.0;
         gbc.weighty = 0.0;
-        gbc.fill = gbc.HORIZONTAL;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(0, 0, 0, 0);
 
         JLabel lblLink = new JLabel(_resource.getString(_section, "selectItemLabel"));
@@ -170,7 +170,7 @@ public class IndexDialog extends GenericDialog
         _pane.addHyperlinkListener( this );
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
-        gbc.fill = gbc.BOTH;
+        gbc.fill = GridBagConstraints.BOTH;
         linkPanel.add(linkScrollPane, gbc);
 
         /* debugging code
@@ -187,7 +187,7 @@ public class IndexDialog extends GenericDialog
         JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, listScrollPane, linkPanel);
         splitPane.setBorder(BorderFactory.createEmptyBorder());
         //splitPane.setResizeWeight(0.6);    // TODO: jdk 1.3
-        gbc.fill = gbc.BOTH;
+        gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(0, 0, 0, 0);
         contentPane.add( splitPane, gbc );
         
@@ -523,7 +523,7 @@ public class IndexDialog extends GenericDialog
            // Handle property change events when a link is clicked
            dlg.addPropertyChangeListener( new PropertyChangeListener() {
                public void propertyChange(PropertyChangeEvent evt) {
-                   if ( evt.getPropertyName().equals( dlg.PROPERTY_NAME_URL ) ) {
+                   if ( evt.getPropertyName().equals( IndexDialog.PROPERTY_NAME_URL ) ) {
                        String url = (String)evt.getNewValue();
                        if ( (url != null) && (url.length() > 0) ) {
                            System.out.println( "Selected URL: " + url );

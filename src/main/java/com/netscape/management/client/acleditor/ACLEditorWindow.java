@@ -99,11 +99,11 @@ public abstract class ACLEditorWindow extends JDialog implements ACLEditorConsta
       */
     protected void resetConstraints(GridBagConstraints gbc) {
         gbc.gridx = 0;
-        gbc.gridy = gbc.RELATIVE;
-        gbc.gridwidth = gbc.REMAINDER;
+        gbc.gridy = GridBagConstraints.RELATIVE;
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.gridheight = 1;
-        gbc.fill = gbc.NONE;
-        gbc.anchor = gbc.CENTER;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.CENTER;
         gbc.ipadx = gbc.ipady = PAD;
         gbc.weightx = gbc.weighty = 0.0;
         gbc.insets = new Insets(0, 0, 0, 0);
@@ -125,18 +125,18 @@ public abstract class ACLEditorWindow extends JDialog implements ACLEditorConsta
         // with JDK1.1.3 and Swing0.3, but it's hosed in JDK1.1.4 and Swing0.4.1. -DT
 
         resetConstraints(gbc);
-        gbc.anchor = gbc.WEST;
+        gbc.anchor = GridBagConstraints.WEST;
         gbc.ipady = PAD / 2;
-        gbc.gridwidth = gbc.RELATIVE;
+        gbc.gridwidth = GridBagConstraints.RELATIVE;
         gbc.gridy = 0;
         gbc.insets = new Insets(PAD, PAD, PAD, PAD);
         _add(createInstruction(name), gbc);
 
         JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT, PAD, PAD));
         resetConstraints(gbc);
-        gbc.anchor = gbc.EAST;
+        gbc.anchor = GridBagConstraints.EAST;
         gbc.ipady = PAD / 2;
-        gbc.gridx = gbc.RELATIVE;
+        gbc.gridx = GridBagConstraints.RELATIVE;
         gbc.gridy = 0;
         p.add(createButton(name, callback));
         _add(p, gbc);
@@ -152,17 +152,17 @@ public abstract class ACLEditorWindow extends JDialog implements ACLEditorConsta
     protected void addInstructionLine(GridBagConstraints gbc,
             String name, ActionListener callback) {
         resetConstraints(gbc);
-        gbc.anchor = gbc.WEST;
+        gbc.anchor = GridBagConstraints.WEST;
         gbc.ipady = PAD / 2;
-        gbc.gridwidth = gbc.RELATIVE;
+        gbc.gridwidth = GridBagConstraints.RELATIVE;
         gbc.insets = new Insets(PAD, PAD, PAD, PAD);
         _add(createInstruction(name), gbc);
 
         JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT, PAD, PAD));
         resetConstraints(gbc);
-        gbc.anchor = gbc.EAST;
+        gbc.anchor = GridBagConstraints.EAST;
         gbc.ipady = PAD / 2;
-        gbc.gridx = gbc.RELATIVE;
+        gbc.gridx = GridBagConstraints.RELATIVE;
         p.add(createButton(name, callback));
         _add(p, gbc);
     }
@@ -377,7 +377,7 @@ public abstract class ACLEditorWindow extends JDialog implements ACLEditorConsta
         GridBagConstraints gbc = new GridBagConstraints();
 
         resetConstraints(gbc);
-        gbc.anchor = gbc.WEST;
+        gbc.anchor = GridBagConstraints.WEST;
         gbc.ipady = 0;
         gbc.insets = new Insets(PAD, 3 * PAD / 2, PAD, 3 * PAD / 2);
         _add(createInstruction("main"), gbc);
@@ -388,13 +388,13 @@ public abstract class ACLEditorWindow extends JDialog implements ACLEditorConsta
         resetConstraints(gbc);
         gbc.weightx = gbc.weighty = 1.0;
         gbc.ipadx = 0;
-        gbc.fill = gbc.BOTH;
+        gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(0, 3 * PAD / 2, 0, 3 * PAD / 2);
         _add(bp, gbc);
 
         JPanel p = createStandardFooter();
         resetConstraints(gbc);
-        gbc.anchor = gbc.EAST;
+        gbc.anchor = GridBagConstraints.EAST;
         gbc.ipady = 0;
         gbc.insets = new Insets(0, PAD / 2, 0, PAD / 2);
         _add(p, gbc);

@@ -248,8 +248,8 @@ public class CertRequestWizard  {
 		    //submit csr
 		    submitStatus = ic.submitCSR(_cert);
 
-		    if ((submitStatus == ic.STATUS_ERROR) ||
-			(submitStatus == ic.STATUS_QUEUED)) {
+		    if ((submitStatus == ICAPlugin.STATUS_ERROR) ||
+			(submitStatus == ICAPlugin.STATUS_QUEUED)) {
 			//just save the session, only do it for none default plugin
 			if (!defaultPluginUsed) {
 			    try {
@@ -283,7 +283,7 @@ public class CertRequestWizard  {
 			wizardDialog.addPage(endSequence.getStepName(), endSequence);
 			sequenceManager.setNext(pwdPage.getStepName(), endSequence.getStepName());
 			
-		    } else  if (submitStatus == ic.STATUS_ISSUED) {
+		    } else  if (submitStatus == ICAPlugin.STATUS_ISSUED) {
 			//get the cert and install it.
 			//then show the status
 			//probably want to queue it too.
@@ -572,8 +572,8 @@ public class CertRequestWizard  {
 
 		    ic = (ICAPlugin)(myClass.newInstance());
 
-		    PluginWizardPage firstPage = new PluginWizardPage(ic.getUIPageSequence(ic.UI_BEGINING_SEQUENCE));
-		    endSequence = new PluginWizardPage(ic.getUIPageSequence(ic.UI_ENDING_SEQUENCE));
+		    PluginWizardPage firstPage = new PluginWizardPage(ic.getUIPageSequence(ICAPlugin.UI_BEGINING_SEQUENCE));
+		    endSequence = new PluginWizardPage(ic.getUIPageSequence(ICAPlugin.UI_ENDING_SEQUENCE));
 
 		    wizardDialog.addPage(firstPage.getStepName(), firstPage);
 

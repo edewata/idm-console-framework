@@ -65,7 +65,7 @@ public class AttributesWindow extends ACLEditorWindow {
         JPanel p = new JPanel(
                 new FlowLayout(FlowLayout.RIGHT, PAD / 2, PAD / 2));
         resetConstraints(gbc);
-        gbc.anchor = gbc.EAST;
+        gbc.anchor = GridBagConstraints.EAST;
         gbc.ipady = PAD / 2;
         bp.add(p, gbc);
         p.add(createInstruction("aclName"));
@@ -73,7 +73,7 @@ public class AttributesWindow extends ACLEditorWindow {
 
         p = new JPanel(new FlowLayout(FlowLayout.RIGHT, PAD / 2, PAD / 2));
         resetConstraints(gbc);
-        gbc.anchor = gbc.EAST;
+        gbc.anchor = GridBagConstraints.EAST;
         gbc.ipady = PAD / 2;
         bp.add(p, gbc);
         p.add(createInstruction("target"));
@@ -83,7 +83,7 @@ public class AttributesWindow extends ACLEditorWindow {
 
         p = new JPanel(new FlowLayout(FlowLayout.RIGHT, PAD / 2, PAD / 2));
         resetConstraints(gbc);
-        gbc.anchor = gbc.EAST;
+        gbc.anchor = GridBagConstraints.EAST;
         gbc.ipady = PAD / 2;
         bp.add(p, gbc);
         p.add(createInstruction("filter"));
@@ -93,7 +93,7 @@ public class AttributesWindow extends ACLEditorWindow {
 
         p = new JPanel(new FlowLayout(FlowLayout.RIGHT, PAD / 2, PAD / 2));
         resetConstraints(gbc);
-        gbc.anchor = gbc.EAST;
+        gbc.anchor = GridBagConstraints.EAST;
         gbc.ipady = PAD / 2;
         bp.add(p, gbc);
         p.add(createInstruction("attributes"));

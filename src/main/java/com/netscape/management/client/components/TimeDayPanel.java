@@ -207,7 +207,7 @@ public class TimeDayPanel extends JPanel implements UIConstants
         t.setColumnSelectionAllowed(true);
         t.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         t.setCellSelectionEnabled(true);
-        t.setAutoResizeMode(t.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+        t.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
 	t.setPreferredSize(new Dimension(360, 400));
         t.setDefaultRenderer(Object.class, new TimeCellRenderer());
         t.setRowHeight(22);
@@ -243,8 +243,8 @@ public class TimeDayPanel extends JPanel implements UIConstants
         
         JScrollPane sp = new JScrollPane(t);
         sp.setBorder(BorderFactory.createEmptyBorder());
-        sp.setVerticalScrollBarPolicy(sp.VERTICAL_SCROLLBAR_NEVER);
-        sp.setHorizontalScrollBarPolicy(sp.HORIZONTAL_SCROLLBAR_NEVER);
+        sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        sp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         return sp;
     }
 

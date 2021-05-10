@@ -37,9 +37,9 @@ public class DirUtil {
     public static void setDefaultReferralCredentials( LDAPConnection ldc ) {
 		if ( ldc != null ) {
 			try {
-				ldc.setOption( ldc.REFERRALS, new Boolean(true) );
+				ldc.setOption( LDAPv2.REFERRALS, new Boolean(true) );
 				ldc.setOption(
-					ldc.REFERRALS_REBIND_PROC,
+					LDAPv2.REFERRALS_REBIND_PROC,
 					new SimpleReferral( ldc.getAuthenticationDN(),
 										ldc.getAuthenticationPassword() ) );
 			} catch ( LDAPException e ) {

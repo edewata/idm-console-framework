@@ -1656,8 +1656,8 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
             c.gridx = 0;      c.gridy = 0;
             c.gridwidth = 2;  c.gridheight = 1;
             c.weightx = 0.0;    c.weighty = 0.0;
-            c.fill = c.HORIZONTAL;
-            c.anchor = c.NORTH;
+            c.fill = GridBagConstraints.HORIZONTAL;
+            c.anchor = GridBagConstraints.NORTH;
             g.setConstraints(headingPanel, c);
             add(headingPanel);
 
@@ -1667,8 +1667,8 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
             c.gridx = 0;      c.gridy = 1;
             c.gridwidth = 2;  c.gridheight = 1;
             c.weightx = 1.0;    c.weighty = 0.0;
-            c.fill = c.HORIZONTAL;
-            c.anchor = c.NORTH;
+            c.fill = GridBagConstraints.HORIZONTAL;
+            c.anchor = GridBagConstraints.NORTH;
             c.insets = new Insets(COMPONENT_SPACE, 0, DIFFERENT_COMPONENT_SPACE, 0);
             g.setConstraints(separator, c);
             add(separator);
@@ -1678,8 +1678,8 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
             c.gridx = 0;      c.gridy = 2;
             c.gridwidth = 1;  c.gridheight = 1;
             c.weightx = 0.0;    c.weighty = 0.0;
-            c.fill = c.NONE;
-            c.anchor = c.NORTH;
+            c.fill = GridBagConstraints.NONE;
+            c.anchor = GridBagConstraints.NORTH;
             c.insets = new Insets(COMPONENT_SPACE, 0, DIFFERENT_COMPONENT_SPACE, 0);
             g.setConstraints(errorIcon, c);
             add(errorIcon);
@@ -1695,8 +1695,8 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
             c.gridx = 1;      c.gridy = 2;
             c.gridwidth = 1;  c.gridheight = 1;
             c.weightx = 1.0;    c.weighty = 1.0;
-            c.fill = c.BOTH;
-            c.anchor = c.NORTH;
+            c.fill = GridBagConstraints.BOTH;
+            c.anchor = GridBagConstraints.NORTH;
             c.insets = new Insets(COMPONENT_SPACE, COMPONENT_SPACE, DIFFERENT_COMPONENT_SPACE, 0);
             g.setConstraints(descriptionArea, c);
             add(descriptionArea);

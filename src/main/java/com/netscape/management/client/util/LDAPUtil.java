@@ -595,7 +595,7 @@ public class LDAPUtil {
 
             LDAPSearchResults res = 
                 ldc.search(backendInstance,
-                    ldc.SCOPE_ONE,
+                    LDAPv2.SCOPE_ONE,
                     "(objectclass=vlvSearch)",
                     null, false);
 
@@ -638,7 +638,7 @@ public class LDAPUtil {
                 // Check the sort attributes
                  LDAPSearchResults res1 = 
                     ldc.search(entry.getDN(),
-                               ldc.SCOPE_ONE,
+                               LDAPv2.SCOPE_ONE,
                                "(objectclass=vlvIndex)",
                                null, false);
                   if (res1.hasMoreElements()) {

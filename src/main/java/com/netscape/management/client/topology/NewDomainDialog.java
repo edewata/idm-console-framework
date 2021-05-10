@@ -110,7 +110,7 @@ public class NewDomainDialog extends AbstractDialog {
 
         
         _ssl = new JCheckBox(_resource.getString(sChangeDirectory, "ssl"));
-        _ssl.setHorizontalAlignment(_ssl.RIGHT);
+        _ssl.setHorizontalAlignment(SwingConstants.RIGHT);
         GridBagUtil.constrain(panel, _ssl, 2, 2, 1, 1, 1.0, 0.0,
                               GridBagConstraints.NORTHEAST, GridBagConstraints.NONE,
                               SuiConstants.SEPARATED_COMPONENT_SPACE,

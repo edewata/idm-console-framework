@@ -320,7 +320,7 @@ public class LdapACL extends ACL {
         st.quoteChar(QUOTE_CHAR);
         st.ordinaryChar('/');
 
-        while ((tokentype = st.nextToken()) != st.TT_EOF) {
+        while ((tokentype = st.nextToken()) != StreamTokenizer.TT_EOF) {
             switch (tokentype) {
             case '(':
                 Debug.println("Token type '('");

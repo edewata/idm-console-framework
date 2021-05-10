@@ -295,7 +295,7 @@ public class ViewSelectorComponent extends Box implements SwingConstants, SuiCon
         }
 
         try {
-            result = ldc.search(customViewDN, ldc.SCOPE_ONE, filter, null, false);
+            result = ldc.search(customViewDN, LDAPv2.SCOPE_ONE, filter, null, false);
             if (result != null) {
                 try {
                     while (result.hasMoreElements()) {

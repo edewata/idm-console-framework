@@ -199,8 +199,8 @@ public class ErrorDialog extends JDialog
         c.gridy = 0;
         c.gridwidth = 1;
         c.gridheight = 2;
-        c.anchor = c.NORTH;
-        c.fill = c.NONE;
+        c.anchor = GridBagConstraints.NORTH;
+        c.fill = GridBagConstraints.NONE;
         c.weightx = 0;
         c.weighty = 0;
         g.setConstraints(_iconLabel,c);
@@ -211,12 +211,12 @@ public class ErrorDialog extends JDialog
                 
         _errorLabel = new MultilineLabel(errorText,1,DEFAULT_TEXT_WIDTH);
         c.insets = new Insets(SuiConstants.VERT_WINDOW_INSET,SuiConstants.SEPARATED_COMPONENT_SPACE / 2,SuiConstants.COMPONENT_SPACE,SuiConstants.SEPARATED_COMPONENT_SPACE / 2);
-        c.fill = c.HORIZONTAL;
+        c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
         c.gridy = 0;
         c.gridwidth = 1;
         c.gridheight = 1;
-        c.anchor = c.NORTH;
+        c.anchor = GridBagConstraints.NORTH;
         c.weightx = 1;
         g.setConstraints(_errorLabel, c);
         _contentPane.add(_errorLabel);
@@ -249,7 +249,7 @@ public class ErrorDialog extends JDialog
          _scrollPane = new JScrollPane(_detailLabel,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
          _scrollPane.setBorder(new EmptyBorder(0,0,0,0));
          c.insets = new Insets(0,SuiConstants.HORIZ_WINDOW_INSET ,SuiConstants.VERT_WINDOW_INSET,SuiConstants.HORIZ_WINDOW_INSET);
-         c.fill = c.BOTH;
+         c.fill = GridBagConstraints.BOTH;
          c.gridx = 0;
          c.gridy = 2;
          c.gridwidth = 3;
@@ -270,9 +270,9 @@ public class ErrorDialog extends JDialog
         c.gridy = 0;
         c.gridwidth = 1;
         c.gridheight = 2;
-        c.anchor = c.NORTH;
+        c.anchor = GridBagConstraints.NORTH;
         
-        c.fill = c.VERTICAL;
+        c.fill = GridBagConstraints.VERTICAL;
         c.weightx = 0;
         c.weighty = 0;
         g.setConstraints(_buttonPanel,c);
@@ -351,7 +351,7 @@ public class ErrorDialog extends JDialog
         
         c.gridx = 0;
         c.gridy = 0;
-        c.anchor = c.NORTH;
+        c.anchor = GridBagConstraints.NORTH;
         if (buttonOption == DEFAULT)
         {
             c.weighty = 1;
@@ -371,7 +371,7 @@ public class ErrorDialog extends JDialog
             
                 c.insets = new Insets(0,0,0,0);
                 c.weighty = 1;
-                c.anchor = c.SOUTH;
+                c.anchor = GridBagConstraints.SOUTH;
                 gridBag.setConstraints(_detailButton,c);
                 _buttonPanel.add(_detailButton);
             } 
@@ -392,7 +392,7 @@ public class ErrorDialog extends JDialog
                 c.insets = new Insets(0,0,0,0);
                 c.gridy = 2;
                 c.weighty = 1;
-                c.anchor = c.SOUTH;
+                c.anchor = GridBagConstraints.SOUTH;
                 gridBag.setConstraints(_detailButton,c);
                 _buttonPanel.add(_detailButton);
             }

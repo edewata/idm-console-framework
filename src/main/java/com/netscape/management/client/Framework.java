@@ -785,7 +785,7 @@ public class Framework extends JFrame implements IFramework, SuiConstants {
             dlg.addPropertyChangeListener( new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent evt) {
                     if ( evt.getPropertyName().equals(
-                        dlg.PROPERTY_NAME_URL ) ) {
+                        IndexDialog.PROPERTY_NAME_URL ) ) {
                         String url = (String)evt.getNewValue();
                         Debug.println( "Selected URL: " + url );
                         if ( (url != null) && (url.length() > 0) ) {

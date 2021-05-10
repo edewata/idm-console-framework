@@ -71,46 +71,46 @@ public class TimeWindow extends ACLEditorWindow {
         gbc = new GridBagConstraints();
 
         resetConstraints(gbc);
-        gbc.anchor = gbc.WEST;
+        gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(0, 0, 2 * PAD, PAD);
         gbc.ipady = 0;
         bp.add(createInstruction("main2"), gbc);
 
         resetConstraints(gbc);
-        gbc.anchor = gbc.EAST;
+        gbc.anchor = GridBagConstraints.EAST;
         gbc.gridy = 1;
         gbc.gridwidth = 1;
         gbc.ipady = PAD / 2;
         bp.add(createInstruction("beginning"), gbc);
 
         resetConstraints(gbc);
-        gbc.gridx = gbc.RELATIVE;
+        gbc.gridx = GridBagConstraints.RELATIVE;
         gbc.gridy = 1;
         gbc.gridwidth = 1;
         bp.add(begMenu = createTextField("beginningMenu", 4, null), gbc);
 
         resetConstraints(gbc);
-        gbc.anchor = gbc.EAST;
+        gbc.anchor = GridBagConstraints.EAST;
         gbc.gridy = 2;
         gbc.gridwidth = 1;
         gbc.ipady = PAD / 2;
         bp.add(createInstruction("end"), gbc);
 
         resetConstraints(gbc);
-        gbc.gridx = gbc.RELATIVE;
+        gbc.gridx = GridBagConstraints.RELATIVE;
         gbc.gridy = 2;
         gbc.gridwidth = 1;
         bp.add(endMenu = createTextField("endMenu", 4, null), gbc);
 
         resetConstraints(gbc);
-        gbc.anchor = gbc.EAST;
+        gbc.anchor = GridBagConstraints.EAST;
         gbc.gridy = 3;
         gbc.gridwidth = 1;
         gbc.ipady = PAD / 2;
         bp.add(createInstruction("day"), gbc);
 
         resetConstraints(gbc);
-        gbc.gridx = gbc.RELATIVE;
+        gbc.gridx = GridBagConstraints.RELATIVE;
         gbc.gridy = 3;
         gbc.gridwidth = 1;
         bp.add(dayMenu = createComboBox("dayMenu", null), gbc);

@@ -53,7 +53,7 @@ class CertRequestSubmissionPage extends JPanel implements IUIPage, SuiConstants,
             tmp.copy();
         } else if (e.getActionCommand().equals("SAVE")) {
 	    JFileChooser jfchooser = new JFileChooser();
-	    if (jfchooser.showSaveDialog(this) == jfchooser.APPROVE_OPTION){
+	    if (jfchooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
 		try {
 		    File f = jfchooser.getSelectedFile();
 

@@ -476,8 +476,8 @@ class PanelHeader extends JButton
     public PanelHeader(String text)
     {
         setText(text);
-        setHorizontalAlignment(this.RIGHT);
-        setHorizontalTextPosition(this.RIGHT);
+        setHorizontalAlignment(SwingConstants.RIGHT);
+        setHorizontalTextPosition(SwingConstants.RIGHT);
         setBorder(new FlatBorder());
         setFocusPainted(false);
     }
