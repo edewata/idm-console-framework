@@ -423,7 +423,8 @@ public class Debug {
                 System.err.println(s);
             }
             if (_fPrintCallStack) {
-                Thread.currentThread().dumpStack();
+                Thread.currentThread();
+                Thread.dumpStack();
             }
         }
     }
@@ -444,7 +445,8 @@ public class Debug {
                 System.err.print(s);
             }
             if (_fPrintCallStack) {
-                Thread.currentThread().dumpStack();
+                Thread.currentThread();
+                Thread.dumpStack();
             }
         }
     }
@@ -580,7 +582,8 @@ public class Debug {
             }
 
             if (_fPrintCallStack) {
-                Thread.currentThread().dumpStack();
+                Thread.currentThread();
+                Thread.dumpStack();
             }
         }
     }
@@ -609,7 +612,8 @@ public class Debug {
                 System.err.print(s);
             }
             if (_fPrintCallStack) {
-                Thread.currentThread().dumpStack();
+                Thread.currentThread();
+                Thread.dumpStack();
             }
         }
     }

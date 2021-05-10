@@ -78,9 +78,9 @@ public class HttpChannel implements Runnable, CommChannel {
     protected HttpChannel(Object _tid, String _name, HttpManager _manager) {
         tid = (URL)_tid;
         manager = _manager;
-        language = manager.getLanguage();
+        language = CommManager.getLanguage();
         name = tid.toString() + "[" + _name + "]";
-        sendUTF8 = manager.getSendUTF8();
+        sendUTF8 = CommManager.getSendUTF8();
     }
 
     public void open() throws IOException {

@@ -51,7 +51,8 @@ public class ServerLocModel extends ResourceModel {
         if (f != null && f instanceof Framework) {
             ((Framework)f).setBusyCursor(true);
             try {
-                Thread.currentThread().sleep(200);
+                Thread.currentThread();
+                Thread.sleep(200);
             } catch (Exception e) {}
         }
     }

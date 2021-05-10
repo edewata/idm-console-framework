@@ -740,7 +740,8 @@ public class LocalJarClassLoader extends KingpinClassLoader {
                     }
                 }
 
-                Thread.currentThread().sleep(20);
+                Thread.currentThread();
+                Thread.sleep(20);
             }
 
             File f = new File(jarsDir);

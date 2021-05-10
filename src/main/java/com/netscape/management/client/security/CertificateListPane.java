@@ -7,25 +7,42 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.security;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import javax.swing.*;
-import com.netscape.management.client.util.*;
-import com.netscape.management.client.components.*;
-import com.netscape.management.nmclf.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.util.Hashtable;
+import java.util.Vector;
+
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.KeyStroke;
+
+import com.netscape.management.client.components.Table;
+import com.netscape.management.client.util.Debug;
+import com.netscape.management.client.util.GridBagUtil;
+import com.netscape.management.client.util.Help;
+import com.netscape.management.client.util.JButtonFactory;
+import com.netscape.management.client.util.ResourceSet;
+import com.netscape.management.nmclf.SuiConstants;
 
 class CertificateListPane extends JPanel implements SuiConstants{
 
@@ -42,7 +59,7 @@ class CertificateListPane extends JPanel implements SuiConstants{
 
     protected JButton detail, request, renew, install, edittrust, add, delete;
 
-    Help help; 
+    Help help;
 
     public CertificateListPane(Vector certs) {
         super();
@@ -57,7 +74,7 @@ class CertificateListPane extends JPanel implements SuiConstants{
     Vector getCerts() {
         return certs;
     }
-    
+
     void setCerts(Vector certs) {
         this.certs = certs;
     }
@@ -83,12 +100,12 @@ class CertificateListPane extends JPanel implements SuiConstants{
     protected String getSelectedCertAttribute(JTable table, String attrName) {
         String attrValue = "";
         int selectedRow = table.getSelectedRow();
-        
+
         if (selectedRow >=0  && selectedRow < certs.size()) {
             Hashtable cert = (Hashtable) certs.elementAt(selectedRow);
             if (cert.get(attrName) != null) {
                 attrValue = (String)cert.get(attrName);
-            }                
+            }
         }
 
         Debug.println("Selected " + attrName + "=" + attrValue);
@@ -109,10 +126,10 @@ class CertificateListPane extends JPanel implements SuiConstants{
     {
 
         //comment out until ErrorDialog is fixed
-        /*ErrorDialog errDlg = new ErrorDialog(null, 
-          i18n("removeCertTitle"), 
-          i18n("removeCertQuestion", certName), 
-          null, null, 
+        /*ErrorDialog errDlg = new ErrorDialog(null,
+          i18n("removeCertTitle"),
+          i18n("removeCertQuestion", certName),
+          null, null,
           ErrorDialog.YES_NO,
           ErrorDialog.NO);
           errDlg.setIcon(ErrorDialog.QUESTION_ICON);
@@ -121,10 +138,10 @@ class CertificateListPane extends JPanel implements SuiConstants{
 
           return  (errDlg.getButtonClicked()==ErrorDialog.YES);*/
 
-        int answer = JOptionPane.showConfirmDialog(this, 
-                                                   i18n("removeCertQuestion", certName), 
+        int answer = JOptionPane.showConfirmDialog(this,
+                                                   i18n("removeCertQuestion", certName),
                                                    i18n("removeCertTitle"),
-                                                   JOptionPane.YES_NO_OPTION, 
+                                                   JOptionPane.YES_NO_OPTION,
                                                    JOptionPane.QUESTION_MESSAGE);
 
         return (answer == JOptionPane.YES_OPTION);
@@ -135,23 +152,23 @@ class CertificateListPane extends JPanel implements SuiConstants{
     public void setContent(Table table, String tableTitle, int buttons) {
         JLabel label = new JLabel(tableTitle);
         label.setLabelFor(table);
-        GridBagUtil.constrain(this, 
+        GridBagUtil.constrain(this,
                               label,
                               0, 0, 1, 1,
                               1.0, 0.0,
                               GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL,
                               VERT_WINDOW_INSET,
-                              HORIZ_WINDOW_INSET, 
-                              VERT_WINDOW_INSET, 
+                              HORIZ_WINDOW_INSET,
+                              VERT_WINDOW_INSET,
                               HORIZ_WINDOW_INSET);
 
-        GridBagUtil.constrain(this, table.createScrollPaneForTable(table),
+        GridBagUtil.constrain(this, JTable.createScrollPaneForTable(table),
                               0, 1, 1, 1,
                               1.0, 1.0,
                               GridBagConstraints.NORTH, GridBagConstraints.BOTH,
                               0,
-                              HORIZ_WINDOW_INSET, 
-                              VERT_WINDOW_INSET, 
+                              HORIZ_WINDOW_INSET,
+                              VERT_WINDOW_INSET,
                               HORIZ_WINDOW_INSET);
 
         JPanel buttonPane = new JPanel();

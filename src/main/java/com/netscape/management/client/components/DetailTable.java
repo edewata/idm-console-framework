@@ -7,24 +7,51 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.components;
 
-import java.util.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.table.*;
-import javax.swing.event.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Rectangle;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.util.Vector;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JViewport;
+import javax.swing.ListSelectionModel;
+import javax.swing.Scrollable;
+import javax.swing.SwingConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 
 /**
   * DetailTable is a table component that offers the following
@@ -53,10 +80,10 @@ public class DetailTable extends JComponent
     JTextArea panelLabels[] = null;
     int lastSelectedRow = -1;
     boolean isInitialized = false;
-    
+
     protected boolean showTableScollBars = true;
     protected boolean showPanelScollBars = true;
-    
+
     /**
      * Constructs a DetailTable which is initialized with a default
      * data model, a default column model, and a default selection
@@ -80,7 +107,7 @@ public class DetailTable extends JComponent
      * @see JTable#createDefaultColumnModel
      * @see JTable#createDefaultSelectionModel
      */
-    public DetailTable(TableModel dm) 
+    public DetailTable(TableModel dm)
     {
         this(dm, null, null);
     }
@@ -98,7 +125,7 @@ public class DetailTable extends JComponent
     {
         this((enableClientSideSorting ? new TableSorter(dm) : dm), null, null);
     }
-    
+
     /**
      * Constructs a DetailTable which is initialized with <i>dm</i> as the
      * data model, <i>cm</i> as the column model, and a default selection
@@ -108,7 +135,7 @@ public class DetailTable extends JComponent
      * @param cm        The column model for the table
      * @see JTable#createDefaultSelectionModel
      */
-    public DetailTable(TableModel dm, TableColumnModel cm) 
+    public DetailTable(TableModel dm, TableColumnModel cm)
     {
         this(dm, cm, null);
     }
@@ -130,7 +157,7 @@ public class DetailTable extends JComponent
      * @see JTable#createDefaultColumnModel
      * @see JTable#createDefaultSelectionModel
      */
-    public DetailTable(TableModel dm, TableColumnModel cm, ListSelectionModel sm) 
+    public DetailTable(TableModel dm, TableColumnModel cm, ListSelectionModel sm)
     {
         table = new Table(dm, cm, sm);
         tableModel = dm;
@@ -194,7 +221,7 @@ public class DetailTable extends JComponent
         if(!isInitialized)
             initialize();
     }
-    
+
     protected void initialize()
     {
         isInitialized = true;
@@ -204,13 +231,13 @@ public class DetailTable extends JComponent
         tableAggregate = table;
         if(showTableScollBars)
         {
-            tableAggregate = table.createScrollPaneForTable(table);
+            tableAggregate = JTable.createScrollPaneForTable(table);
         }
-        
+
         panelAggregate = panel = new DetailPanel();
 
         GridBagLayout gbl = new GridBagLayout();
-        panel.setLayout(gbl);        
+        panel.setLayout(gbl);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -223,7 +250,7 @@ public class DetailTable extends JComponent
         gbc.insets = new Insets(0,0,0,5);
         int numColumns = tableModel.getColumnCount();
         panelLabels = new JTextArea[numColumns];
-        
+
         for(int colIndex = 0; colIndex < numColumns; colIndex++)
         {
             PanelHeader panelHeader = new PanelHeader(table.getColumnName(colIndex));
@@ -232,12 +259,12 @@ public class DetailTable extends JComponent
             gbc.fill = GridBagConstraints.BOTH;
             gbl.setConstraints(panelHeader, gbc);
             panel.add(panelHeader);
-            
+
             JTextArea label = new JTextArea();
             label.setFont(table.getFont());
             label.setEditable(false);
             label.setLineWrap(true);
-            // label.setWrapStyleWord(true);  // JDK1.2.2: this causes visual problems 
+            // label.setWrapStyleWord(true);  // JDK1.2.2: this causes visual problems
             label.setOpaque(false);
             label.setText(" ");
             panelLabels[colIndex] = label;
@@ -246,10 +273,10 @@ public class DetailTable extends JComponent
             gbc.fill = GridBagConstraints.BOTH;
             gbl.setConstraints(label, gbc);
             panel.add(label);
-            
+
             gbc.gridy = GridBagConstraints.RELATIVE;
         }
-        
+
         JPanel spacerPanel = new JPanel();
         spacerPanel.setPreferredSize(new Dimension(0,0));
         gbc.gridx = 0;
@@ -285,7 +312,7 @@ public class DetailTable extends JComponent
                     sizeDetailPanel();
                 }
             });
-        
+
         ListSelectionModel lsm = table.getSelectionModel();
         lsm.addListSelectionListener(new ListSelectionListener()
             {
@@ -299,7 +326,7 @@ public class DetailTable extends JComponent
                     }
                 }
             });
-                        
+
         tableModel.addTableModelListener(new TableModelListener()
             {
                 public void tableChanged(TableModelEvent e)
@@ -312,7 +339,7 @@ public class DetailTable extends JComponent
                     }
                 }
             });
-        
+
         add(c);
     }
 
@@ -334,7 +361,7 @@ public class DetailTable extends JComponent
             table.repaint();
         }
     }
-    
+
 
     /**
      * TODO: improve Javadocs
@@ -353,7 +380,7 @@ public class DetailTable extends JComponent
             }
             else
                 labelText = " ";
-            JTextArea label = (JTextArea)panelLabels[colIndex];
+            JTextArea label = panelLabels[colIndex];
             label.setText(labelText);
         }
     }
@@ -371,9 +398,9 @@ class DetailPanel extends JPanel implements Scrollable
      * required to acommodate all of the cells in its list however the
      * value of preferredScrollableViewportSize is the size required for
      * JList.getVisibleRowCount() rows.   A component without any properties
-     * that would effect the viewport size should just return 
+     * that would effect the viewport size should just return
      * getPreferredSize() here.
-     * 
+     *
      * @return The preferredSize of a JViewport whose view is this Scrollable.
      * @see JViewport#getPreferredSize
      */
@@ -386,13 +413,13 @@ class DetailPanel extends JPanel implements Scrollable
     /**
      * Components that display logical rows or columns should compute
      * the scroll increment that will completely expose one new row
-     * or column, depending on the value of orientation.  Ideally, 
-     * components should handle a partially exposed row or column by 
+     * or column, depending on the value of orientation.  Ideally,
+     * components should handle a partially exposed row or column by
      * returning the distance required to completely expose the item.
      * <p>
      * Scrolling containers, like JScrollPane, will use this method
      * each time the user requests a unit scroll.
-     * 
+     *
      * @param visibleRect The view area visible within the viewport
      * @param orientation Either SwingConstants.VERTICAL or SwingConstants.HORIZONTAL.
      * @param direction Less than zero to scroll up/left, greater than zero for down/right.
@@ -413,11 +440,11 @@ class DetailPanel extends JPanel implements Scrollable
     /**
      * Components that display logical rows or columns should compute
      * the scroll increment that will completely expose one block
-     * of rows or columns, depending on the value of orientation. 
+     * of rows or columns, depending on the value of orientation.
      * <p>
      * Scrolling containers, like JScrollPane, will use this method
      * each time the user requests a block scroll.
-     * 
+     *
      * @param visibleRect The view area visible within the viewport
      * @param orientation Either SwingConstants.VERTICAL or SwingConstants.HORIZONTAL.
      * @param direction Less than zero to scroll up/left, greater than zero for down/right.
@@ -428,20 +455,20 @@ class DetailPanel extends JPanel implements Scrollable
     {
         return getScrollableUnitIncrement(visibleRect, orientation, direction);
     }
-    
+
 
     /**
-     * Return true if a viewport should always force the width of this 
-     * Scrollable to match the width of the viewport.  For example a noraml 
+     * Return true if a viewport should always force the width of this
+     * Scrollable to match the width of the viewport.  For example a noraml
      * text view that supported line wrapping would return true here, since it
      * would be undesirable for wrapped lines to disappear beyond the right
      * edge of the viewport.  Note that returning true for a Scrollable
      * whose ancestor is a JScrollPane effectively disables horizontal
      * scrolling.
      * <p>
-     * Scrolling containers, like JViewport, will use this method each 
-     * time they are validated.  
-     * 
+     * Scrolling containers, like JViewport, will use this method each
+     * time they are validated.
+     *
      * @return True if a viewport should force the Scrollables width to match its own.
      */
     public boolean getScrollableTracksViewportWidth()
@@ -450,15 +477,15 @@ class DetailPanel extends JPanel implements Scrollable
     }
 
     /**
-     * Return true if a viewport should always force the height of this 
-     * Scrollable to match the height of the viewport.  For example a 
-     * columnar text view that flowed text in left to right columns 
+     * Return true if a viewport should always force the height of this
+     * Scrollable to match the height of the viewport.  For example a
+     * columnar text view that flowed text in left to right columns
      * could effectively disable vertical scrolling by returning
      * true here.
      * <p>
-     * Scrolling containers, like JViewport, will use this method each 
-     * time they are validated.  
-     * 
+     * Scrolling containers, like JViewport, will use this method each
+     * time they are validated.
+     *
      * @return True if a viewport should force the Scrollables height to match its own.
      */
     public boolean getScrollableTracksViewportHeight()
@@ -483,7 +510,7 @@ class PanelHeader extends JButton
     }
 
     public boolean isFocusTraversable()
-    { 
-        return false; 
+    {
+        return false;
     }
 }

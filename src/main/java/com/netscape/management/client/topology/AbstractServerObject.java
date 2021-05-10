@@ -541,7 +541,8 @@ INodeInfo, SuiConstants {
                 try {
                     Debug.println(7, "AbstractServerObject.StatusThread: waiting for change listeners to register");
                     _sleeping = true;
-                    Thread.currentThread().sleep(1000);
+                    Thread.currentThread();
+                    Thread.sleep(1000);
                     _sleeping = false;
                 } catch (Exception e) {}
             }
