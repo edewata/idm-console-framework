@@ -31,9 +31,6 @@ Source: https://github.com/dogtagpki/idm-console-framework/archive/v%{version}%{
 # Build Dependencies
 ################################################################################
 
-# autosetup
-BuildRequires:    git
-
 BuildRequires:    java-devel >= 1.8.0
 BuildRequires:    ant >= 1.6.2
 BuildRequires:    jss >= 4.5.0-1
@@ -55,7 +52,7 @@ A Java Management Console framework used for remote server management.
 %prep
 ################################################################################
 
-%autosetup -n idm-console-framework-%{version}%{?_phase} -p 1 -S git
+%autosetup -n idm-console-framework-%{version}%{?_phase} -p 1
 
 ################################################################################
 %build
