@@ -28,10 +28,18 @@ Source: https://github.com/dogtagpki/idm-console-framework/archive/v%{version}%{
 # Patch: idm-console-framework-VERSION-RELEASE.patch
 
 ################################################################################
+# Java
+################################################################################
+
+%define java_devel java-11-openjdk-devel
+%define java_headless java-11-openjdk-headless
+%define java_home /usr/lib/jvm/java-11-openjdk
+
+################################################################################
 # Build Dependencies
 ################################################################################
 
-BuildRequires:    java-devel >= 1.8.0
+BuildRequires:    %{java_devel}
 BuildRequires:    ant >= 1.6.2
 BuildRequires:    jss >= 4.5.0-1
 BuildRequires:    ldapjdk >= 4.20.0
@@ -40,8 +48,7 @@ BuildRequires:    ldapjdk >= 4.20.0
 # Runtime Dependencies
 ################################################################################
 
-# Urge use of OpenJDK for runtime
-Requires:         java >= 1.8.0
+Requires:         %{java_headless}
 Requires:         jss >= 4.5.0-1
 Requires:         ldapjdk >= 4.20.0
 
