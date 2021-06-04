@@ -8,9 +8,11 @@ License:          LGPLv2
 
 BuildArch:        noarch
 
-Version:          1.2.0
-Release:          1%{?_timestamp}%{?_commit_id}%{?dist}
-# global           _phase -a1
+# For development (i.e. unsupported) releases, use x.y.z-0.n.<phase>.
+# For official (i.e. supported) releases, use x.y.z-r where r >=1.
+Version:          1.3.0
+Release:          0.1.alpha1%{?_timestamp}%{?_commit_id}%{?dist}
+%global           _phase -alpha1
 
 # To create a tarball from a version tag:
 # $ git archive \
