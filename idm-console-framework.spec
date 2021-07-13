@@ -49,16 +49,16 @@ Source: https://github.com/dogtagpki/idm-console-framework/archive/v%{version}%{
 
 BuildRequires:    %{java_devel}
 BuildRequires:    ant >= 1.6.2
-BuildRequires:    jss >= 4.5.0-1
-BuildRequires:    ldapjdk >= 4.20.0
+BuildRequires:    jss >= 4.9.0, jss < 5.0.0
+BuildRequires:    ldapjdk >= 4.23.0, ldapjdk < 5.0.0
 
 ################################################################################
 # Runtime Dependencies
 ################################################################################
 
 Requires:         %{java_headless}
-Requires:         jss >= 4.5.0-1
-Requires:         ldapjdk >= 4.20.0
+Requires:         jss >= 4.9.0, jss < 5.0.0
+Requires:         ldapjdk >= 4.23.0, ldapjdk < 5.0.0
 
 %description
 A Java Management Console framework used for remote server management.
