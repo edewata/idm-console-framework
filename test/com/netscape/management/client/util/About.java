@@ -52,6 +52,7 @@ public class About extends AbstractDialog {
      * @param resourceSet    about dialog parameters
      * @deprecated           replaced by com.netscape.management.client.AboutDialog
      */
+    @Deprecated
     public About(JFrame parent, ResourceSet resourceSet) {
         //create a modal dialog with ok button
         super(parent, "", true, OK);

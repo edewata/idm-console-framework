@@ -39,6 +39,7 @@ public class LDAPUtil {
     /**
     * @deprecated Replaced by setInstalledSoftwareDN()
     **/
+    @Deprecated
     public static void setGlobalPreferenceLocation(String newLocation) {
         setInstalledSoftwareDN(newLocation);
     }
@@ -171,6 +172,7 @@ public class LDAPUtil {
       * @Return DN for the uid
       * @deprecated, not to be used, it does not suport secure connections
       */
+    @Deprecated
     public static String getDNFromUID(String sHost, int iPort,
             String sBaseDN, String uid) {
 
@@ -448,6 +450,7 @@ public class LDAPUtil {
       * @deprecated The method always returns true
       * 
       */
+    @Deprecated
     public static boolean isVersion4(LDAPConnection ldc) {
         return true;
     }

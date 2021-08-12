@@ -7,21 +7,25 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JProgressBar;
+import javax.swing.ToolTipManager;
 
 /**
  * A status item that displays a progress gauge, on a
@@ -45,7 +49,7 @@ public class StatusItemProgress extends JProgressBar implements IStatusItem {
 
     static private final String I18N_IDLE = Framework.i18n("progress", "idle");
     static private final String I18N_BUSY = Framework.i18n("progress", "busy");
-    
+
     public StatusItemProgress(String id) {
         setID(id);
         setMinimum(0);
@@ -54,7 +58,7 @@ public class StatusItemProgress extends JProgressBar implements IStatusItem {
         busyTimer = new javax.swing.Timer(DELAY, new BusyTimerActionListener());
         ToolTipManager.sharedInstance().registerComponent(this);
     }
-        
+
     public StatusItemProgress(String id, int percent) {
         this(id);
         setValue(percent);
@@ -95,18 +99,20 @@ public class StatusItemProgress extends JProgressBar implements IStatusItem {
         setValue(((Integer) state).intValue());
     }
 
-    /** 
+    /**
       * @deprecated  use setState(StatusItemProgress.STATE_BUSY) instead
       */
     // Miodrag: this method is used by cert4.x servers. need it for compatibility
+    @Deprecated
     public void start() {
         setState(STATE_BUSY);
     }
 
-    /** 
+    /**
       * @deprecated  use setState(new Integer(0)) instead
       */
     // Miodrag: this method is used by cert4.x servers. need it for compatibility
+    @Deprecated
     public void stop() {
         setState(new Integer(0));
     }
@@ -117,7 +123,7 @@ public class StatusItemProgress extends JProgressBar implements IStatusItem {
     public Object getState() {
         return new Integer(getValue());
     }
-    
+
     /**
      * Overridden to provide task status statistics in tooltip for accessibility compliance
      */

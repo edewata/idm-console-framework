@@ -278,6 +278,7 @@ ComponentListener/*, KeyListener*/
       * @deprecated  Replaced by setBasicSearchEnabled(boolean)
       * @see #setBasicSearchEnabled(boolean)
       */
+    @Deprecated
     public void setEnableBasicSearch(boolean value) {
         setBasicSearchEnabled(value);
     }
@@ -325,6 +326,7 @@ ComponentListener/*, KeyListener*/
       * @deprecated  Replaced by setAdvancedSearchEnabled(boolean)
       * @see #setAdvancedSearchEnabled(boolean)
       */
+    @Deprecated
     public void setEnableAdvanceSearch(boolean value) {
         setAdvancedSearchEnabled(value);
     }
@@ -347,6 +349,7 @@ ComponentListener/*, KeyListener*/
       * @deprecated  Replaced by setAttributeSearchFilter(AttributeSearchFilter)
       * @see #setAttributeSearchFilter(AttributeSearchFilter)
       */
+    @Deprecated
     public void setAtributeSearchFilter(AttributeSearchFilter arFilter[]) {
         _advancedPanel.setDisplayAttribute(arFilter);
     }
@@ -873,6 +876,7 @@ ComponentListener/*, KeyListener*/
     /**
       * @deprecated  No replacement. ResourcePickerDlg is a modal dialog.
       */
+    @Deprecated
     public boolean showModally() {
         super.show();
         return true;
@@ -883,6 +887,7 @@ ComponentListener/*, KeyListener*/
       * @deprecated  Replaced by setChangeDirectoryEnabled(boolean)
       * @see #setChangeDirectoryEnabled(boolean)
       */
+    @Deprecated
     public void setAllowChangeDirectory(boolean value) {
         setChangeDirectoryEnabled(value);
     }

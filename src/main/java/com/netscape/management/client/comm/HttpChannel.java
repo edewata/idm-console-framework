@@ -7,39 +7,39 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.comm;
 
-import java.net.Socket;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.io.IOException;
-import java.io.EOFException;
-import java.io.InputStream;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InterruptedIOException;
+import java.lang.reflect.Method;
+import java.net.Socket;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.lang.reflect.Method;
 
-import com.netscape.management.client.util.*;
+import com.netscape.management.client.console.VersionInfo;
+import com.netscape.management.client.preferences.Preferences;
 import com.netscape.management.client.util.Debug;
 import com.netscape.management.client.util.IProgressListener;
 import com.netscape.management.client.util.Permissions;
+import com.netscape.management.client.util.ResourceSet;
 import com.netscape.management.client.util.URLByteEncoder;
-import com.netscape.management.client.console.VersionInfo;
-import com.netscape.management.client.preferences.Preferences;
 
 
 /**
@@ -121,7 +121,7 @@ public class HttpChannel implements Runnable, CommChannel {
             bos.close();
             bos = null;
         }
-        
+
         if (bis != null) {
             bis.close();
             bis = null;
@@ -132,7 +132,7 @@ public class HttpChannel implements Runnable, CommChannel {
             socket = null;
             Debug.println(name + " close> Closed");
         }
-        
+
         if (thread != null) {
             thread = null;
         }
@@ -370,10 +370,10 @@ public class HttpChannel implements Runnable, CommChannel {
                 continue;
             }
 
-        
-            // A custom header, "Admin-Server", used by the AS5.0 and higher 
+
+            // A custom header, "Admin-Server", used by the AS5.0 and higher
             // Introduced to be able to specify the AS version independently
-            // of the HTTP server version 
+            // of the HTTP server version
             if (line.regionMatches(true, 0, "Admin-Server:", 0, 13)) {
             int ii = line.indexOf('/');
                 if (ii == -1) {
@@ -384,7 +384,7 @@ public class HttpChannel implements Runnable, CommChannel {
                     Debug.println("HttpChannel.invoke: admin version = " +
                                   _adminVersion);
                 }
-                    
+
                 continue;
             }
 
@@ -398,7 +398,7 @@ public class HttpChannel implements Runnable, CommChannel {
                     Debug.println("HttpChannel.invoke: admin version = " +
                                   _adminVersion);
                 }
-                    
+
                 continue;
             }
 
@@ -659,6 +659,7 @@ public class HttpChannel implements Runnable, CommChannel {
       * @return  the translated <code>String</code>.
       * @deprecated use URLEncoder.encode(String) instead
       */
+    @Deprecated
     public static String _encode(String s) {
         return URLEncoder.encode(s);
     }

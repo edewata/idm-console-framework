@@ -7,29 +7,49 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.ace;
 
-import java.awt.Cursor;
 import java.awt.Component;
-import java.util.*;
-import java.text.*;
+import java.awt.Cursor;
+import java.text.MessageFormat;
+import java.util.Enumeration;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
-import javax.swing.*;
-import javax.swing.table.*;
-import com.netscape.management.client.util.*;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.table.AbstractTableModel;
 
-import netscape.ldap.*;
-import netscape.ldap.controls.*;
+import com.netscape.management.client.ug.SearchResultPanel;
+import com.netscape.management.client.util.Debug;
+import com.netscape.management.client.util.LDAPUtil;
+import com.netscape.management.client.util.ModalDialogUtil;
+import com.netscape.management.client.util.RemoteImage;
+import com.netscape.management.client.util.ResourceSet;
+import com.netscape.management.client.util.UtilConsoleGlobals;
+
+import netscape.ldap.LDAPConnection;
+import netscape.ldap.LDAPControl;
+import netscape.ldap.LDAPEntry;
+import netscape.ldap.LDAPException;
+import netscape.ldap.LDAPSearchConstraints;
+import netscape.ldap.LDAPSearchResults;
+import netscape.ldap.LDAPSortKey;
+import netscape.ldap.controls.LDAPSortControl;
+import netscape.ldap.controls.LDAPVirtualListControl;
+import netscape.ldap.controls.LDAPVirtualListResponse;
 
 
 /**
@@ -41,11 +61,11 @@ import netscape.ldap.controls.*;
  *
  * @see SearchResultPanel
  * @see UGTable
- * 
+ *
  * @author Andy Hakim
  * @author Peter Lee
  */
-class UGTableModel extends AbstractTableModel 
+class UGTableModel extends AbstractTableModel
 {
     static final String EMPTY_STRING = "";
     private ResourceSet _resource  = new ResourceSet("com.netscape.management.client.ug.PickerEditorResource");
@@ -58,7 +78,7 @@ class UGTableModel extends AbstractTableModel
     private RemoteImage _anyoneIcon =new RemoteImage("com/netscape/management/client/images/anyone.gif");
     private RemoteImage _selfIcon =  new RemoteImage("com/netscape/management/client/images/self.gif");
     private RemoteImage _noIcon   =  new RemoteImage("com/netscape/management/client/images/red-ball-small.gif");
-    
+
     private int _maxResults;
     private Vector _header;
     private Vector _columnName;
@@ -86,7 +106,7 @@ class UGTableModel extends AbstractTableModel
      * @param columnIdentifier  vector of LDAP attributes to be displayed
      * @param columnName        vector of friendly names for the attributes to display
      */
-    public UGTableModel(Vector columnIdentifier, Vector columnName) 
+    public UGTableModel(Vector columnIdentifier, Vector columnName)
     {
         // Initialize data members
         _maxResults = Integer.parseInt(_resource.getString("SearchResult", "MaxResults"));
@@ -323,16 +343,16 @@ class UGTableModel extends AbstractTableModel
             // inconsistency between the number of items available to the user.
             //fireTableDataChanged();
         }
-        catch (LDAPException e) 
+        catch (LDAPException e)
         {
-            if (e.getLDAPResultCode() == LDAPException.PROTOCOL_ERROR) 
+            if (e.getLDAPResultCode() == LDAPException.PROTOCOL_ERROR)
             {
                 showMessageDialog(null,
                         _resource.getString("SearchError", "WrongLang"),
                         _resource.getString("SearchError", "Title"),
                         JOptionPane.ERROR_MESSAGE);
             }
-            else 
+            else
             {
                 showMessageDialog(null,
                         _resource.getString("SearchError", "General") + e,
@@ -361,35 +381,35 @@ class UGTableModel extends AbstractTableModel
         boolean isValidEntry = true;
         String adminDN = UGTab.ADMIN_BASE_DN.toLowerCase();
 
-        try 
+        try
         {
-                                    
+
             String objectClasses = LDAPUtil.flatting(
                     entry.getAttribute("objectclass",
                     LDAPUtil.getLDAPAttributeLocale())).toLowerCase();
             if (objectClasses != null &&
-                objectClasses.indexOf("person") != -1) 
+                objectClasses.indexOf("person") != -1)
             {
                 isUser = true;
             }
 
             else if (objectClasses != null &&
-                    objectClasses.indexOf("groupofuniquenames") != -1) 
+                    objectClasses.indexOf("groupofuniquenames") != -1)
             {
                 isGroup = true;
             }
             else if (objectClasses != null &&
-                    objectClasses.indexOf("nsroledefinition") != -1) 
+                    objectClasses.indexOf("nsroledefinition") != -1)
             {
                 isRole = true;
             }
-        } 
-        catch (Exception e) 
+        }
+        catch (Exception e)
         {
             isValidEntry = false;
             isUser = true;
         }
-        
+
         if(isUser)
         {
             if(entry.getDN().toLowerCase().endsWith(adminDN))
@@ -402,12 +422,12 @@ class UGTableModel extends AbstractTableModel
         Enumeration headings = _header.elements();
         Object rowInfo[] = new Object[_header.size()];
         String heading;
-        for (int i = 0; headings.hasMoreElements(); i++) 
+        for (int i = 0; headings.hasMoreElements(); i++)
         {
             heading = (String) headings.nextElement();
-            if (isValidEntry) 
+            if (isValidEntry)
             {
-                if (heading.equals("cn")) 
+                if (heading.equals("cn"))
                 {
                     if(entry.getDN().equals(UGTab.BIND_AUTHENTICATED))
                     {
@@ -433,7 +453,7 @@ class UGTableModel extends AbstractTableModel
                         rowInfo[i] = cellInfo;
                     }
                     else
-                    if (isUser) 
+                    if (isUser)
                     {
                         JLabel cellInfo = new JLabel();
                         cellInfo.setIcon(_userIcon);
@@ -441,9 +461,9 @@ class UGTableModel extends AbstractTableModel
                                 entry.getAttribute(heading,
                                 LDAPUtil.getLDAPAttributeLocale())));
                         rowInfo[i] = cellInfo;
-                    } 
+                    }
                     else
-                    if (isAdmin) 
+                    if (isAdmin)
                     {
                         JLabel cellInfo = new JLabel();
                         cellInfo.setIcon(_adminIcon);
@@ -451,9 +471,9 @@ class UGTableModel extends AbstractTableModel
                                 entry.getAttribute(heading,
                                 LDAPUtil.getLDAPAttributeLocale())));
                         rowInfo[i] = cellInfo;
-                    } 
-                    else 
-                    if (isGroup) 
+                    }
+                    else
+                    if (isGroup)
                     {
                         JLabel cellInfo = new JLabel();
                         cellInfo.setIcon(_groupIcon);
@@ -461,9 +481,9 @@ class UGTableModel extends AbstractTableModel
                                 entry.getAttribute(heading,
                                 LDAPUtil.getLDAPAttributeLocale())));
                         rowInfo[i] = cellInfo;
-                    } 
-                    else 
-                    if (isRole) 
+                    }
+                    else
+                    if (isRole)
                     {
                         JLabel cellInfo = new JLabel();
                         if (_roleIcon.getIconHeight() > 0) {
@@ -476,22 +496,22 @@ class UGTableModel extends AbstractTableModel
                                 entry.getAttribute(heading,
                                 LDAPUtil.getLDAPAttributeLocale())));
                         rowInfo[i] = cellInfo;
-                    } 
-                } 
-                else 
+                    }
+                }
+                else
                 {
                     rowInfo[i] = LDAPUtil.flatting(
                             entry.getAttribute(heading,
                             LDAPUtil.getLDAPAttributeLocale()));
                 }
-            } 
-            else 
+            }
+            else
             {
-                if (i == 0) 
+                if (i == 0)
                 {
                     rowInfo[i] = entry.getDN();
-                } 
-                else 
+                }
+                else
                 {
                     rowInfo[i] = "";
                 }
@@ -608,7 +628,7 @@ class UGTableModel extends AbstractTableModel
         }
         return c;
     }
-*/    
+*/
 
     /**
       * Retrieves the value at the indicated row and column.
@@ -730,6 +750,7 @@ class UGTableModel extends AbstractTableModel
       * @deprecated  Replaced by doSearch(LDAPConnection,String,int,String)
       * @see  #doSearch(LDAPConnection,String,int,String)
       */
+    @Deprecated
     public void doSearch(LDAPConnection ldc, String baseDN, String filter) {
         doSearch(ldc, baseDN, LDAPConnection.SCOPE_SUB, filter);
     }
@@ -881,10 +902,10 @@ class UGTableModel extends AbstractTableModel
             fireTableRowsDeleted(removeIndex, removeIndex);
         }
     }
-    
+
     public void deleteRow(int removeIndex)
     {
-        if (removeIndex != -1) 
+        if (removeIndex != -1)
         {
             _entries.removeElementAt(removeIndex);
             _LDAPEntries.removeElementAt(removeIndex);
@@ -897,6 +918,7 @@ class UGTableModel extends AbstractTableModel
       * @deprecated  Replaced by deleteAllRows()
       * @see  #deleteAllRows()
       */
+    @Deprecated
     public void deleteAllRow() {
         deleteAllRows();
     }
@@ -911,7 +933,7 @@ class UGTableModel extends AbstractTableModel
         _LDAPEntries.removeAllElements();
         fireTableDataChanged();
     }
-    
+
     void showMessageDialog(final Component parent, final Object msg,
                            final String title, final int msgType) {
         if (SwingUtilities.isEventDispatchThread()) {
@@ -928,5 +950,5 @@ class UGTableModel extends AbstractTableModel
             catch (Exception ignore) {}
 
         }
-    }    
+    }
 }

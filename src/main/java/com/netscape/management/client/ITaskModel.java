@@ -7,19 +7,19 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client;
 
-import javax.swing.tree.*;
+import javax.swing.tree.TreeModel;
 
 /**
  * Defines the data model for TaskPage; responsible for providing:
@@ -38,6 +38,7 @@ public interface ITaskModel extends TreeModel {
       *
      * @deprecated multiple task views not supported
       */
+    @Deprecated
     public static final int VIEW_DETAIL = 0;
 
     /**
@@ -46,6 +47,7 @@ public interface ITaskModel extends TreeModel {
      *
     * @deprecated multiple task views not supported
      */
+    @Deprecated
     public static final int VIEW_BRIEF = 1;
 
     /**
@@ -69,6 +71,7 @@ public interface ITaskModel extends TreeModel {
      *
      * @deprecated multiple task views not supported
      */
+    @Deprecated
     public abstract int getViewCount();
 
     /**
@@ -78,6 +81,7 @@ public interface ITaskModel extends TreeModel {
     *
     * @deprecated multiple task views not supported
      */
+    @Deprecated
     public abstract String getViewName(int viewIndex);
 
     /**
@@ -85,6 +89,7 @@ public interface ITaskModel extends TreeModel {
      *
     * @deprecated multiple task views not supported
      */
+    @Deprecated
     public abstract int getViewType(int viewIndex);
 
     /**

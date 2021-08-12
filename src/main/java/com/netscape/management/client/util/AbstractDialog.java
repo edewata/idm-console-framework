@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -20,11 +20,36 @@
 
 package com.netscape.management.client.util;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import javax.swing.*;
-import com.netscape.management.nmclf.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.Vector;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+
+import com.netscape.management.nmclf.SuiConstants;
 
 /**
  * AbstractDialog defines a basic dialog which consists of two main areas:
@@ -666,6 +691,7 @@ SuiConstants {
      * 'meat' of the dialog.
      * @deprecated use setComponent
       */
+    @Deprecated
     public void setPanel(JPanel panel) {
         setComponent(panel);
     }
@@ -686,7 +712,7 @@ SuiConstants {
       */
     public void setFocusComponent(JComponent c) {
 
-        // This is a workaround for what appears to be a JDK bug;  if a 
+        // This is a workaround for what appears to be a JDK bug;  if a
         // button loses the focus as a result of setFocus() call, it might
         // still paint the focus (multiple buttons are painted with the focus)
         if (_focusComponent != null && _focusComponent instanceof JButton) {
@@ -724,6 +750,7 @@ SuiConstants {
       * Make the OK button visible or invisible.
      * @deprecated no longer needed because button panel can be customized
       */
+    @Deprecated
     public void setOKButtonVisible(boolean value) {
         _okButton.setVisible(value);
     }
@@ -744,6 +771,7 @@ SuiConstants {
       * Enable or disable Cancel button.
      * @deprecated should ALWAYS be able to cancel!
       */
+    @Deprecated
     public void setCancelButtonEnabled(boolean value) {
         _cancelButton.setEnabled(value);
     }
@@ -753,6 +781,7 @@ SuiConstants {
       * Make the Cancel button visible or invisible.
      * @deprecated no longer needed because button panel can be customized
       */
+    @Deprecated
     public void setCancelButtonVisible(boolean value) {
         _cancelButton.setVisible(value);
     }
@@ -782,7 +811,7 @@ SuiConstants {
         setCursorOnChildren(this, cursor);
         if (_cancelButton != null) {
         	_cancelButton.setCursor(Cursor.getDefaultCursor());
-        }	
+        }
     }
 
 	void setCursorOnChildren(Container container, Cursor cursor) {
@@ -793,7 +822,7 @@ SuiConstants {
 			}
 			comps[i].setCursor(cursor);
 		}
-	}	
+	}
 
     /**
      * Set Close button label.
@@ -810,6 +839,7 @@ SuiConstants {
       * Enable or disable Close button.
      * @deprecated help should always be available, else don't use HELP button
       */
+    @Deprecated
     public void setCloseButtonEnabled(boolean value) {
         _closeButton.setEnabled(value);
     }
@@ -819,6 +849,7 @@ SuiConstants {
       * Make the Close button visible or invisible.
      * @deprecated no longer needed because button panel can be customized
       */
+    @Deprecated
     public void setCloseButtonVisible(boolean value) {
         _closeButton.setVisible(value);
     }
@@ -828,6 +859,7 @@ SuiConstants {
       * Set Help button label.
      * @deprecated help should always be available, else don't use HELP button
       */
+    @Deprecated
     public void setHelpButtonText(String text) {
         _helpButton.setText(text);
         JButtonFactory.resizeGroup(_okButton, _closeButton,
@@ -848,6 +880,7 @@ SuiConstants {
       * Make the Help button visible or invisible.
      * @deprecated no longer needed because button panel can be customized
       */
+    @Deprecated
     public void setHelpButtonVisible(boolean value) {
         _helpButton.setVisible(value);
     }

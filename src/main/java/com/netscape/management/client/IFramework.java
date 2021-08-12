@@ -7,20 +7,21 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client;
 
-import java.awt.*;
-import javax.swing.*;
+import java.awt.Cursor;
+
+import javax.swing.JFrame;
 
 /**
   * Interface to access properties and functions of Console window
@@ -98,6 +99,7 @@ public interface IFramework {
      * @deprecated		as of Console 4.1, replaced by Framework.setBusyCursor
      * @see	Framework#setBusyCursor(Cursor)
      */
+    @Deprecated
     public abstract void setCursor(Cursor cursor);
 
     /**

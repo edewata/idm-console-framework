@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -20,14 +20,29 @@
 
 package com.netscape.management.client.util;
 
-import java.util.*;
-import java.text.*;
+import java.text.CharacterIterator;
+import java.text.DateFormat;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.text.StringCharacterIterator;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.TimeZone;
+import java.util.Vector;
 
-import netscape.ldap.*;
+import com.netscape.management.client.console.Console;
+
+import netscape.ldap.LDAPAttribute;
+import netscape.ldap.LDAPAttributeSet;
+import netscape.ldap.LDAPConnection;
+import netscape.ldap.LDAPDN;
+import netscape.ldap.LDAPEntry;
+import netscape.ldap.LDAPException;
+import netscape.ldap.LDAPSearchResults;
+import netscape.ldap.LDAPv2;
 import netscape.ldap.util.DN;
 import netscape.ldap.util.RDN;
-
-import com.netscape.management.client.console.*;
 
 /**
  * A set of utility functions relating to LDAP.
@@ -41,6 +56,7 @@ public class LDAPUtil {
     /**
     * @deprecated Replaced by setInstalledSoftwareDN()
     **/
+    @Deprecated
     public static void setGlobalPreferenceLocation(String newLocation) {
         setInstalledSoftwareDN(newLocation);
     }
@@ -154,14 +170,14 @@ public class LDAPUtil {
     public static String getUIDFromDN(LDAPConnection ldc, String DN) {
         String sReturn = null;
         try {
-            
+
             LDAPEntry entry = ldc.read(DN, new String[] { "uid" });
             if (entry != null) {
                 LDAPAttribute attribute = entry.getAttribute("uid");
                 sReturn = flatting(attribute);
             }
         } catch (LDAPException e) {
-            Debug.println( 0, "LDAPUtil.getUIDFromDN: cannot read " + DN + " - " + e ); 
+            Debug.println( 0, "LDAPUtil.getUIDFromDN: cannot read " + DN + " - " + e );
         }
 
         return sReturn;
@@ -173,6 +189,7 @@ public class LDAPUtil {
       * @Return DN for the uid
       * @deprecated, not to be used, it does not suport secure connections
       */
+    @Deprecated
     public static String getDNFromUID(String sHost, int iPort,
             String sBaseDN, String uid) {
 
@@ -187,7 +204,7 @@ public class LDAPUtil {
       * @param sBaseDN base DN for uid search
       * @param uid uid to search for
       * @return DN for the uid
-      */    
+      */
     public static String getDNFromUID(String sHost, int iPort, boolean isSecure,
             String sBaseDN, String uid) {
         String sReturn = null;
@@ -208,14 +225,14 @@ public class LDAPUtil {
                     sFilter, null, false);
             if (result != null) {
                 while (result.hasMoreElements()) {
-                    LDAPEntry findEntry = (LDAPEntry) result.next();
+                    LDAPEntry findEntry = result.next();
 
                     // just use the first entry and ignore the rest
                     sReturn = findEntry.getDN();
                 }
             }
         } catch (LDAPException e) {
-            Debug.println( 0, "LDAPUtil.getDNFromUID: cannot read " + uid + " - " + e ); 
+            Debug.println( 0, "LDAPUtil.getDNFromUID: cannot read " + uid + " - " + e );
         }
         finally {
             if (ldc != null) {
@@ -411,7 +428,7 @@ public class LDAPUtil {
 
             // next sure that it is not an exception
             while (searchResults.hasMoreElements()) {
-                LDAPEntry e = (LDAPEntry) searchResults.next();
+                LDAPEntry e = searchResults.next();
             }
         } catch (LDAPException e) {
             Debug.println(0, "Cannot find: " + newDN);
@@ -448,8 +465,9 @@ public class LDAPUtil {
       *
       * @param ldc  the LDAPConnection object
       * @deprecated The method always returns true
-      * 
+      *
       */
+    @Deprecated
     public static boolean isVersion4(LDAPConnection ldc) {
         return true;
     }
@@ -478,8 +496,8 @@ public class LDAPUtil {
             error = 1; // Can not create Socket factory
             if (ssl) {
                 ldc = new KingpinLDAPConnection(
-                                 UtilConsoleGlobals.getLDAPSSLSocketFactory(), 
-                                 bindDN, 
+                                 UtilConsoleGlobals.getLDAPSSLSocketFactory(),
+                                 bindDN,
                                  bindPWD);
             } else {
                 ldc = new KingpinLDAPConnection(bindDN, bindPWD);
@@ -526,10 +544,10 @@ public class LDAPUtil {
             }
         }
     }
-    
+
     /**
      * Check if there is a VLV index for the specified search.
-     * 
+     *
      * @param ldc LDAP connection
      * @param vlvBase Search base
      * @param vlvScope Search scope
@@ -537,7 +555,7 @@ public class LDAPUtil {
      * @param vlvSort A space separated list of attributes to sort the results on
      * or <code>null</code> to match any value
      * @return true if the index exists
-     * 
+     *
      * @since SDK 6.1.1
      */
     public static boolean hasVLVIndex(LDAPConnection ldc,
@@ -545,7 +563,7 @@ public class LDAPUtil {
                                       String vlvFilter, String vlvSort) {
 
         String indexVLVSort = getVLVIndex(ldc, vlvBase, vlvScope,
-                                          vlvFilter, vlvSort);        
+                                          vlvFilter, vlvSort);
         if (indexVLVSort != null) {
             if (vlvSort == null) {
                 return true;
@@ -560,14 +578,14 @@ public class LDAPUtil {
     /**
      * Check for existence of a VLV index with some flexibility in regard
      * to the sort attribute list.
-     * 
-     * Check first if there is an exact match for all search parameters. If 
-     * not found, then check for a VLV index that differs only for the sort 
+     *
+     * Check first if there is an exact match for all search parameters. If
+     * not found, then check for a VLV index that differs only for the sort
      * attribute list.
-     * 
+     *
      * Return the sort attribute list for the matched index entry or
      * <code>null</code> if no index found.
-     * 
+     *
      * @param ldc LDAP connection
      * @param vlvBase Search base
      * @param vlvScope Search scope
@@ -575,25 +593,25 @@ public class LDAPUtil {
      * @param vlvSort A space separated list of attributes to sort the results on
      * or <code>null</code> to match any value
      * @return vlvSort for the VLV index entry or <code>null</code> if no index found
-     * 
+     *
      * @since 6.1.1
      */
     public static String getVLVIndex(LDAPConnection ldc,
                                      String vlvBase, int vlvScope,
                                      String vlvFilter, String vlvSort) {
-    
-        String backendInstance = getBackendForDN(ldc, vlvBase);        
+
+        String backendInstance = getBackendForDN(ldc, vlvBase);
         if (backendInstance == null) {
             return null;
         }
-        
+
         Debug.println("LDAPUtil.getVLVIndex " + vlvBase + " " +
                       vlvScope + " " + vlvFilter + " " + vlvSort);
         String indexVLVSort = null;
         try {
             String scope = (new Integer(vlvScope)).toString();
 
-            LDAPSearchResults res = 
+            LDAPSearchResults res =
                 ldc.search(backendInstance,
                     LDAPv2.SCOPE_ONE,
                     "(objectclass=vlvSearch)",
@@ -622,7 +640,7 @@ public class LDAPUtil {
                 if (!attr.getStringValueArray()[0].equals(scope)) {
                     continue;
                 }
-                
+
                 attr = entry.getAttribute("vlvFilter");
                 if (attr == null) {
                     Debug.println("LDAPUtil.getVLVIndex: no vlvFilter attr in "
@@ -634,9 +652,9 @@ public class LDAPUtil {
                 if (!val.equalsIgnoreCase(contractSpaces(vlvFilter))) {
                    continue;
                 }
-                
+
                 // Check the sort attributes
-                 LDAPSearchResults res1 = 
+                 LDAPSearchResults res1 =
                     ldc.search(entry.getDN(),
                                LDAPv2.SCOPE_ONE,
                                "(objectclass=vlvIndex)",
@@ -651,7 +669,7 @@ public class LDAPUtil {
                       }
                       val = attr.getStringValueArray()[0];
                       if (vlvSort == null) {
-                          // caller does not care about the vlvSort 
+                          // caller does not care about the vlvSort
                           Debug.println("    match="+val);
                           return val;
                       }
@@ -676,41 +694,41 @@ public class LDAPUtil {
 
     /**
      * Return the DS database DN where index configuration is stored
-     * 
+     *
      */
     static String getBackendForDN(LDAPConnection ldc, String entryDN) {
-  
-       
+
+
         String[] attrs = {"nsBackendSuffix"};
         LDAPEntry rootDSE = null;
 
-	    try {	        
+	    try {
             rootDSE = ldc.read( "", attrs);
         }
         catch (LDAPException e) {
             Debug.println("LDAPUtil.getBackendForDN:" + e);
             return null;
         }
-	        
+
         if (rootDSE == null) {
             Debug.println("LDAPUtil.getBackendForDN: no " + attrs[0] + " in rootDSE");
             return null;
         }
-	    
+
         LDAPAttribute attr = rootDSE.getAttribute(attrs[0]);
         if (attr == null) {
             Debug.println("LDAPUtil.getBackendForDN: no values for " + attrs[0] + " in rootDSE");
             return null;
         }
-        
+
         /**
          * Search for the suffix of entryDN and get the matching backend name.
          * As suffixes might have subsuffixes (e.g. o=abc and o=xyz,o=abc) can
          * not return on the first match, but need to go through all suffixes
          * and return the longest match. For instance, if entryDN
          * is cn=user,o=xyz,o=abc the match should be o=xyz,o=abc, not o=abc.
-         *  
-         */        
+         *
+         */
         DN dn = new DN(entryDN), sDN=null;
         String backendName = null;
         String[] values = attr.getStringValueArray();
@@ -735,7 +753,7 @@ public class LDAPUtil {
                 }
             }
         }
-        
+
         if (backendName == null) {
             Debug.println("LDAPUtil.getBackendForDN: no matching backend for \"" + entryDN + "\"");
             return null;
@@ -744,7 +762,7 @@ public class LDAPUtil {
             return "cn=" + backendName + "," + LDBM_PLUGIN_ROOT;
         }
     }
-    
+
     /**
      * A helper method used for filter comparison.
      * Removes all spaces from a string.
@@ -772,7 +790,7 @@ public class LDAPUtil {
     final static String LDBM_PLUGIN_ROOT = "cn=ldbm database, cn=plugins, cn=config";
 
     /**
-     * Check if the string is a valid dn 
+     * Check if the string is a valid dn
      *
      */
     static public boolean isValidDN (String dn){
@@ -842,7 +860,7 @@ public class LDAPUtil {
      */
     public static String unEscapeRDNVal(String rdnval) {
     	StringBuffer copy = new StringBuffer();
-    	CharacterIterator it = new StringCharacterIterator(rdnval); 
+    	CharacterIterator it = new StringCharacterIterator(rdnval);
     	for (char ch = it.first(); ch != CharacterIterator.DONE; ch = it.next()) {
     		if (ch == '\\') {
     			ch = it.next();
@@ -959,7 +977,7 @@ public class LDAPUtil {
     	// for all values up to maxval
     	DN_ESCAPE_CHARS = new boolean[maxval+1];
     	// set default value to false
-    	for (char ii = 0; ii < (int)maxval; ++ii) {
+    	for (char ii = 0; ii < maxval; ++ii) {
     		DN_ESCAPE_CHARS[ii] = false;
     	}
     	// set escape char vals to true
@@ -977,11 +995,11 @@ public class LDAPUtil {
      */
     public static String escapeDNVal(String dnval) {
     	StringBuffer copy = new StringBuffer();
-    	CharacterIterator it = new StringCharacterIterator(dnval); 
+    	CharacterIterator it = new StringCharacterIterator(dnval);
     	for (char ch = it.first(); ch != CharacterIterator.DONE; ch = it.next()) {
     		if ((ch > 0) && (ch < DN_ESCAPE_CHARS.length) && DN_ESCAPE_CHARS[ch]) {
     			copy.append('\\');
-    			copy.append(Integer.toHexString((int)ch).toUpperCase());
+    			copy.append(Integer.toHexString(ch).toUpperCase());
     		} else {
     			copy.append(ch);
     		}

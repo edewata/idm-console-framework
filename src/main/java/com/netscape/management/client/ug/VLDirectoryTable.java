@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -20,17 +20,41 @@
 
 package com.netscape.management.client.ug;
 
-import java.util.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
 
-import javax.swing.*;
-import javax.swing.event.*;
-import netscape.ldap.*;
+import javax.swing.JFrame;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JViewport;
+import javax.swing.event.ListSelectionListener;
+
 import com.netscape.management.client.console.ConsoleInfo;
-import com.netscape.management.client.util.*;
-import com.netscape.management.client.preferences.*;
-import com.netscape.management.nmclf.*;
+import com.netscape.management.client.preferences.PreferenceManager;
+import com.netscape.management.client.preferences.Preferences;
+import com.netscape.management.client.util.Debug;
+import com.netscape.management.client.util.ResourceSet;
+import com.netscape.management.client.util.TableHeaderEditor;
+import com.netscape.management.client.util.UtilConsoleGlobals;
+import com.netscape.management.nmclf.SuiOptionPane;
+import com.netscape.management.nmclf.SuiTable;
+
+import netscape.ldap.LDAPConnection;
+import netscape.ldap.LDAPEntry;
+import netscape.ldap.LDAPException;
+import netscape.ldap.LDAPObjectClassSchema;
+import netscape.ldap.LDAPSchema;
 
 
 /**
@@ -248,6 +272,7 @@ public class VLDirectoryTable extends JPanel {
       * @deprecated  Replaced by doSearch(LDAPConnection,String,int,String)
       * @see  #doSearch(LDAPConnection,String,int,String)
       */
+    @Deprecated
     public synchronized void doSearch(LDAPConnection ldc,
             String sBaseDN, String filter) {
         doSearch(ldc, sBaseDN, LDAPConnection.SCOPE_SUB, filter);
@@ -401,6 +426,7 @@ public class VLDirectoryTable extends JPanel {
       * @deprecated  Replaced by deleteAllRows()
       * @see  #deleteAllRows()
       */
+    @Deprecated
     public void deleteAllRow() {
         _dataModel.deleteAllRows();
     }
@@ -418,6 +444,7 @@ public class VLDirectoryTable extends JPanel {
       * @deprecated  Replaced by deleteRows(int[])
       * @see  #deleteRows(int[])
       */
+    @Deprecated
     public void deleteRow(int index[]) {
         deleteRows(index);
     }
@@ -576,7 +603,7 @@ public class VLDirectoryTable extends JPanel {
                     objectClassEntry.getOptionalAttributes();
             Object attr = null;
             while (enumReq.hasMoreElements()) {
-                attr = (Object) enumReq.nextElement();
+                attr = enumReq.nextElement();
                 if (((String) attr).indexOf("binary") != -1) {
                     continue; // skip binaries
                 }
@@ -585,7 +612,7 @@ public class VLDirectoryTable extends JPanel {
                 }
             }
             while (enumAllow.hasMoreElements()) {
-                attr = (Object) enumAllow.nextElement();
+                attr = enumAllow.nextElement();
                 if (((String) attr).indexOf("binary") != -1) {
                     continue; // skip binaries
                 }

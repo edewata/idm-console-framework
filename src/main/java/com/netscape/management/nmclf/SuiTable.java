@@ -7,27 +7,37 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.nmclf;
 
-import java.util.*;
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.table.*;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.util.Enumeration;
+import java.util.Vector;
+
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JViewport;
+import javax.swing.UIManager;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 
 /**
  * @deprecated replaced by Table
  * @see #com.netscape.management.client.components.Table
  */
+@Deprecated
 public class SuiTable extends JTable {
 
     public SuiTable(Vector rowData, Vector columnName) {
@@ -41,7 +51,7 @@ public class SuiTable extends JTable {
    /**
      * @overrides JTable@getScrollableTracksViewportWidth
      */
-    public boolean getScrollableTracksViewportWidth() 
+    public boolean getScrollableTracksViewportWidth()
     {
         Component parent =  getParent();
         if (parent != null && parent instanceof JViewport) {
@@ -52,8 +62,8 @@ public class SuiTable extends JTable {
 
     /**
      * @overrides JTable@getScrollableTracksViewportHeight
-     */    
-    public boolean getScrollableTracksViewportHeight() 
+     */
+    public boolean getScrollableTracksViewportHeight()
     {
         Component parent =  getParent();
         if (parent != null && parent instanceof JViewport) {

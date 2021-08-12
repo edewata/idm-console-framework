@@ -7,24 +7,44 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.components;
-import java.util.*;
 import java.io.Serializable;
-import javax.swing.*;
-import javax.swing.tree.*;
-import netscape.ldap.*;
-import netscape.ldap.controls.*;
-import com.netscape.management.client.util.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
+
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
+
+import com.netscape.management.client.util.Debug;
+import com.netscape.management.client.util.RemoteImage;
+import com.netscape.management.client.util.ResourceSet;
+
+import netscape.ldap.LDAPAttribute;
+import netscape.ldap.LDAPConnection;
+import netscape.ldap.LDAPControl;
+import netscape.ldap.LDAPDN;
+import netscape.ldap.LDAPEntry;
+import netscape.ldap.LDAPException;
+import netscape.ldap.LDAPReferralException;
+import netscape.ldap.LDAPSearchConstraints;
+import netscape.ldap.LDAPSearchResults;
+import netscape.ldap.LDAPSortKey;
+import netscape.ldap.LDAPUrl;
+import netscape.ldap.LDAPv2;
+import netscape.ldap.controls.LDAPSortControl;
 
 /**
  * DirNode is the node of each entry in a Directory tree.
@@ -35,25 +55,25 @@ import com.netscape.management.client.util.*;
 public class DirNode extends DefaultMutableTreeNode
                      implements IDirNode,
                                 Serializable {
-   
-    
+
+
     /**
      * (526635) Constant used to set a large enough backlog in LDAPConnection
      * (ldc), to override the default one of 100 search results. ldc will
      * block if backlog limit is reached and results are not read. Because of
-     * nested search calls in DirNode (make another search while processing 
+     * nested search calls in DirNode (make another search while processing
      * search results) the class depends on the backlog setting.
      * Due to bugs is ldapjdk 530426 the backlog needs to be set for each time
      * ldc.getSearchContraints() is called. Also, because of ldapjdk bug
      * 530427 need to clone the connection (see DirModel.setLdapConnection())
      * in order to cleanup cached objects.
-     * 
+     *
      * TODO: This is ,however, just a workaround. The real fix would be to make
      * DirNode use VLV Lists.
      */
     private static final int NOLIMIT_BACKLOG = 999999;
-    
-    
+
+
     /**
      * Default constructor
      */
@@ -242,7 +262,7 @@ public class DirNode extends DefaultMutableTreeNode
         }
         return _entry;
     }
- 
+
     /**
      * Set the entry for this node
      *
@@ -562,10 +582,11 @@ public class DirNode extends DefaultMutableTreeNode
      * @return -1
      * @deprecated use countChildren instead
      */
+    @Deprecated
     static int getCountFromEntry( LDAPEntry entry ) {
         int count = -1;
-        
-        // This method was deprecated in response to 
+
+        // This method was deprecated in response to
         // bugsplat #398002.  Don't include in child
         // counts any children for which we don't have
         // access
@@ -674,7 +695,7 @@ public class DirNode extends DefaultMutableTreeNode
         }
         return false;
     }
-     
+
     /**
      * Utility method to get the first String value of an
      * attribute from an entry
@@ -757,7 +778,7 @@ public class DirNode extends DefaultMutableTreeNode
     public int getChildCount() {
         if(_isBogus)
             return 0;
-        
+
         // If we haven't checked for children yet...
         if ( !hasCheckedForChildren() ) {
             Debug.println( 9, "DirNode.getChildCount: <" +

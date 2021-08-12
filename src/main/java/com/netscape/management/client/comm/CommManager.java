@@ -7,26 +7,28 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.comm;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Hashtable;
-import java.util.Vector;
 import java.util.Locale;
+import java.util.Vector;
+
+import com.netscape.management.client.preferences.Preferences;
 import com.netscape.management.client.util.Debug;
 import com.netscape.management.client.util.LinkedList;
 import com.netscape.management.client.util.LinkedListElement;
-import com.netscape.management.client.preferences.Preferences;
 
 /**
  * This abstract class is the superclass of all classes which
@@ -59,7 +61,7 @@ public abstract class CommManager {
 
     protected static String language = "en";
     protected static boolean sendUTF8 = true;
-    
+
     private IOException channelException;
 
     /**
@@ -226,6 +228,7 @@ public abstract class CommManager {
       * @deprecated Use setIdleTimeout(int)
       * @param ms the idle timeout period in milliseconds.
       */
+    @Deprecated
     public void setTimeout(int ms) {
         setIdleTimeout(ms);
     }
@@ -233,7 +236,7 @@ public abstract class CommManager {
     /**
       * Sets the channel idle timeout period. Any managed communication
       * channel that remains idle for this period will be closed and released
-      * from management. The special value NO_TIMEOUT can be used to specify 
+      * from management. The special value NO_TIMEOUT can be used to specify
       * that there should be no timeout.
       *
       * @param ms the idle timeout period in milliseconds.
@@ -366,7 +369,7 @@ public abstract class CommManager {
         notifyAll();
     }
 
-      
+
     /**
       * Forcibly removes a communication channel from the management set.
       *

@@ -665,6 +665,7 @@ SuiConstants {
      * 'meat' of the dialog.
      * @deprecated use setComponent
       */
+    @Deprecated
     public void setPanel(JPanel panel) {
         setComponent(panel);
     }
@@ -723,6 +724,7 @@ SuiConstants {
       * Make the OK button visible or invisible.
      * @deprecated no longer needed because button panel can be customized
       */
+    @Deprecated
     public void setOKButtonVisible(boolean value) {
         _okButton.setVisible(value);
     }
@@ -743,6 +745,7 @@ SuiConstants {
       * Enable or disable Cancel button.
      * @deprecated should ALWAYS be able to cancel!
       */
+    @Deprecated
     public void setCancelButtonEnabled(boolean value) {
         _cancelButton.setEnabled(value);
     }
@@ -752,6 +755,7 @@ SuiConstants {
       * Make the Cancel button visible or invisible.
      * @deprecated no longer needed because button panel can be customized
       */
+    @Deprecated
     public void setCancelButtonVisible(boolean value) {
         _cancelButton.setVisible(value);
     }
@@ -809,6 +813,7 @@ SuiConstants {
       * Enable or disable Close button.
      * @deprecated help should always be available, else don't use HELP button
       */
+    @Deprecated
     public void setCloseButtonEnabled(boolean value) {
         _closeButton.setEnabled(value);
     }
@@ -818,6 +823,7 @@ SuiConstants {
       * Make the Close button visible or invisible.
      * @deprecated no longer needed because button panel can be customized
       */
+    @Deprecated
     public void setCloseButtonVisible(boolean value) {
         _closeButton.setVisible(value);
     }
@@ -827,6 +833,7 @@ SuiConstants {
       * Set Help button label.
      * @deprecated help should always be available, else don't use HELP button
       */
+    @Deprecated
     public void setHelpButtonText(String text) {
         _helpButton.setText(text);
         JButtonFactory.resizeGroup(_okButton, _closeButton,
@@ -847,6 +854,7 @@ SuiConstants {
       * Make the Help button visible or invisible.
      * @deprecated no longer needed because button panel can be customized
       */
+    @Deprecated
     public void setHelpButtonVisible(boolean value) {
         _helpButton.setVisible(value);
     }

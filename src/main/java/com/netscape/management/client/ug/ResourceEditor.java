@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -20,18 +20,48 @@
 
 package com.netscape.management.client.ug;
 
-import java.util.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.Vector;
 
-import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
-import netscape.ldap.*;
 import com.netscape.management.client.console.ConsoleInfo;
-import com.netscape.management.client.util.*;
+import com.netscape.management.client.util.AbstractDialog;
+import com.netscape.management.client.util.Debug;
+import com.netscape.management.client.util.GridBagUtil;
+import com.netscape.management.client.util.ModalDialogUtil;
+import com.netscape.management.client.util.ResourceSet;
+import com.netscape.management.nmclf.SuiListCellRenderer;
+import com.netscape.management.nmclf.SuiLookAndFeel;
+import com.netscape.management.nmclf.SuiOptionPane;
 
-import com.netscape.management.nmclf.*;
+import netscape.ldap.LDAPAttribute;
+import netscape.ldap.LDAPDN;
+import netscape.ldap.LDAPEntry;
+import netscape.ldap.LDAPException;
 
 class TabListCellRender extends SuiListCellRenderer
 {
@@ -61,7 +91,7 @@ class TabListCellRender extends SuiListCellRenderer
  *
  * @see IResourceEditorPage
  */
-public class ResourceEditor extends AbstractDialog implements ActionListener, ListSelectionListener, 
+public class ResourceEditor extends AbstractDialog implements ActionListener, ListSelectionListener,
 Observer {
     static Hashtable _ResourceEditorExtension;
     static Hashtable _DeleteResourceEditorExtension;
@@ -71,36 +101,36 @@ Observer {
     static String _sUserRDNComponent = "uid";
     static String _sGroupRDNComponent = "cn";
     static Hashtable _hNewObjectClasses = new Hashtable();
-    
+
     public static final String KEY_NEW_OU_OBJECTCLASSES = "newOUObjectClasses";
     public static final String KEY_NEW_GROUP_OBJECTCLASSES = "newGroupObjectClasses";
     public static final String KEY_NEW_USER_OBJECTCLASSES = "newUserObjectClasses";
-    
+
     ResourceEditorActionPane _actionPane;
     JPanel _titlePane;
     JPanel _plugin;
     JSplitPane _splitPane;
-    
+
     CardLayout _cardLayout;
     JPanel _pagePanel;
     DefaultListModel _tabListModel;
     JList _tabListbox;
     JScrollPane _tabListScrollPane;
-    
+
     ResourcePageObservable _observableLDAPEntry;
     LDAPEntry _ldapEntry;
     Object _advancedOpt;
-    
+
     boolean _newUser;
     JFrame _parent;
     ConsoleInfo _info;
     ResourceSet _resource = new ResourceSet("com.netscape.management.client.ug.PickerEditorResource");
     boolean _fSaveOK = false;
-    
+
     Hashtable _oldClassHashtable;
     SearchResultPanel _resultPanel = null;
-    
-    
+
+
     /**
      * Constructor for creating a new object.
      *
@@ -114,10 +144,10 @@ Observer {
         super(parent);
         _parent = parent;
         _newUser = true;
-        
+
         init(info, true, objectClassList, sCreatedLocDN);
     }
-    
+
     /**
      * Constructor for creating a new object which takes an additional
      * parameter used to display the new object after it has been saved.
@@ -135,10 +165,10 @@ Observer {
         _parent = parent;
         _newUser = true;
         _resultPanel = resultPanel;
-        
+
         init(info, true, objectClassList, sCreatedLocDN);
     }
-    
+
     /**
      * Constructor for editing an existing object.
      *
@@ -152,10 +182,10 @@ Observer {
         _parent = parent;
         _ldapEntry = entry;
         _newUser = false;
-        
+
         init(info, false, entry, null);
     }
-    
+
     /**
      * Constructor for editing an existing object which takes an additional
      * parameter used to display the edited object after it has been saved.
@@ -172,11 +202,11 @@ Observer {
         _ldapEntry = entry;
         _newUser = false;
         _resultPanel = resultPanel;
-        
+
         init(info, false, entry, null);
     }
-    
-    
+
+
     /**
      * Initializes the dialog.
      *
@@ -187,7 +217,7 @@ Observer {
      */
     void init(ConsoleInfo info, boolean isNew, Object obj, String baseDN) {
         _info = info;
-        
+
         if (isNew) {
             _observableLDAPEntry =
                       new ResourcePageObservable(info, null, isNew);
@@ -203,14 +233,14 @@ Observer {
             _observableLDAPEntry.setCreateBaseDN(baseDN);
         }
         _observableLDAPEntry.addObserver(this);
-        
+
         _titlePane = new JPanel(new BorderLayout());
         _actionPane = new ResourceEditorActionPane(this);
-        
+
         _cardLayout = new CardLayout();
         _pagePanel = new JPanel(_cardLayout);
         _pagePanel.setBorder(BorderFactory.createEtchedBorder());
-		
+
         _tabListModel = new DefaultListModel();
         _tabListbox = new JList(_tabListModel);
         _tabListbox.getAccessibleContext().setAccessibleDescription(_resource.getString("resourceEditor","navigator_tt"));
@@ -223,19 +253,19 @@ Observer {
         _splitPane.setDividerLocation((int)_tabListScrollPane.getPreferredSize().getWidth());
         _splitPane.setBorder(BorderFactory.createEmptyBorder());
         setMinimumSize(640, 480);
-        
+
         // get the object class to java class association
         // setup plugin
         setupPlugin(obj);
-        
+
         if (_tabListModel.getSize()==0)
         {
             addPage(new DefaultResEditorPage());
         }
-        
+
         setDisplay();
     }
-    
+
     /**
      * Determines the IResourceEditorPage plugins to load
      *
@@ -251,7 +281,7 @@ Observer {
         } else {
             eObjectClass = ((Vector) obj).elements();
         }
-        
+
         // clear up the old class hashtable
         if (_oldClassHashtable != null) {
             Enumeration eOldPage = _oldClassHashtable.elements();
@@ -262,18 +292,18 @@ Observer {
                 }
             }
         }
-        
+
         String sSelectedTitle = (_tabListbox.getSelectedIndex()!=(-1))?
                   ((IResourceEditorPage)_tabListbox.getSelectedValue()).getID():"";
         _tabListModel.removeAllElements();
-        
+
         Hashtable hAddedClass = new Hashtable();
-        
+
         boolean fIsUserObject = false;
         boolean fIsGroupObject = false;
         int index = 0;
         int selectedPos = 0;
-        
+
         while (eObjectClass.hasMoreElements()) {
             String sObjectClassName =
                       ((String) eObjectClass.nextElement()).toLowerCase();
@@ -333,10 +363,10 @@ Observer {
             }
         }
         _tabListbox.setSelectedIndex(selectedPos);
-        
+
         _oldClassHashtable = hAddedClass;
-        
-        
+
+
         // only add title page if needed
         if (fIsUserObject) {
             ResEditorUserTitlePage titlePage =
@@ -352,31 +382,31 @@ Observer {
             setTitlePanel(titlePage);
         }
     }
-    
-    
+
+
     /**
      * Performs layout of components for the dialog
      */
     void setDisplay() {
         Container c = getContentPane();
         c.setLayout(new GridBagLayout());
-        GridBagUtil.constrain(c, _titlePane, 0, 0, 
+        GridBagUtil.constrain(c, _titlePane, 0, 0,
                               GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
                               GridBagConstraints.NORTHWEST,
                               GridBagConstraints.HORIZONTAL, 0, 0, 0, 0);
-        
+
         GridBagUtil.constrain(c, _splitPane, 0, 1,
                               GridBagConstraints.REMAINDER, 1, 1.0, 1.0,
                               GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                               SuiLookAndFeel.SEPARATED_COMPONENT_SPACE, 0, 0, 0);
-        
+
         GridBagUtil.constrain(c, _actionPane, 0, 2,
                               GridBagConstraints.REMAINDER,
                               GridBagConstraints.REMAINDER, 1.0, 0.0,
                               GridBagConstraints.SOUTHWEST, GridBagConstraints.HORIZONTAL,
                               SuiLookAndFeel.SEPARATED_COMPONENT_SPACE, 0, 0, 0);
     }
-    
+
     /**
      * Sets the index attribute
      *
@@ -385,7 +415,7 @@ Observer {
     public void setIndexAttribute(String attr) {
         _observableLDAPEntry.setIndexAttribute(attr);
     }
-    
+
     /**
      * Gets the LDAPEntry object. This method is called to get the updated
      * LDAPEntry object after all plugins have been saved.
@@ -395,7 +425,7 @@ Observer {
     public LDAPEntry getLDAPEntry() {
         return _ldapEntry;
     }
-    
+
     /**
      * Gets the observable object
      *
@@ -404,7 +434,7 @@ Observer {
     public ResourcePageObservable getLDAPObservable() {
         return _observableLDAPEntry;
     }
-    
+
     /**
      * Array of the characters that may be escaped in a DN.
      */
@@ -412,7 +442,7 @@ Observer {
     boolean isMultiValuedRDN(String rdn) {
         if (rdn == null)
             return false;
-        
+
         StringBuffer buffer = new StringBuffer(rdn);
         int i = 0;
         boolean openQuotes = false;
@@ -443,7 +473,7 @@ Observer {
         }
         return false;
     }
-    
+
     public void valueChanged(ListSelectionEvent e)
     {
         if (_tabListModel.size() != 0) {
@@ -461,7 +491,7 @@ Observer {
             Debug.println("ResourceEditor.valueChanged: empty tab list");
         }
     }
-    
+
     /**
      * Implements the ActionListener interface. Handles the button events from
      * the ResourceEditorActionPane.
@@ -482,11 +512,11 @@ Observer {
             }
         }
     }
-        
+
     void processEvent(ActionEvent e) {
         if (e.getActionCommand().equals("Ok")) {
             //check if all page is complete
-            
+
             for (int i = 0; i < _tabListModel.getSize(); i++) {
                 if (!(((IResourceEditorPage)(_tabListModel.elementAt(i))).
                       isComplete())) {
@@ -494,10 +524,10 @@ Observer {
                     return;
                 }
             }
-            
+
             try {
-                String[] rdns = LDAPDN.explodeDN( _observableLDAPEntry.getDN(), false ); 
-                if ((rdns != null) && isMultiValuedRDN(rdns[0])) { 
+                String[] rdns = LDAPDN.explodeDN( _observableLDAPEntry.getDN(), false );
+                if ((rdns != null) && isMultiValuedRDN(rdns[0])) {
                     //pop up dialog, dn contain multi value rdn, so won't be able to modify.
                     SuiOptionPane.showMessageDialog(getFrame(),
                                                     _resource.getString("resourceEditor",
@@ -586,8 +616,8 @@ Observer {
             }
         }
     }
-    
-    
+
+
     /**
      * Gets the plugin for the specified index. The index starts from 1.
      *
@@ -605,8 +635,8 @@ Observer {
         }
         return page;
     }
-    
-    
+
+
     /**
      * Gets the count of all plugins loaded.
      *
@@ -615,8 +645,8 @@ Observer {
     public int getPageCount() {
         return _tabListModel.getSize();
     }
-    
-    
+
+
     /**
      * Adds a new plugin to the dialog.
      *
@@ -624,9 +654,9 @@ Observer {
      */
     public boolean addPage(IResourceEditorPage pageEditor) {
         boolean fAdd = false;
-        
+
         pageEditor.initialize(_observableLDAPEntry, this);
-        
+
         if (pageEditor instanceof Component) {
             if (pageEditor.getID() != null) {
                 _tabListModel.addElement(pageEditor);
@@ -640,8 +670,8 @@ Observer {
         }
         return fAdd;
     }
-    
-    
+
+
     /**
      * Delete the plugin at the specified index. The index starts from 1.
      *
@@ -654,8 +684,8 @@ Observer {
             _cardLayout.removeLayoutComponent(c);
         }
     }
-    
-    
+
+
     /**
      * Enables or disables the plugin at the specified index. The index
      * starts from 1.
@@ -679,8 +709,8 @@ Observer {
             Debug.println(0, "ResourceEditor.java : setPageEnable : Array out of bound.");
         }
     }
-    
-    
+
+
     /**
      * Changes all plugins to be editable or not
      *
@@ -698,8 +728,8 @@ Observer {
             Debug.println(0, "ResourceEditor.java : setReadOnly : Array out of bound...");
         }
     }
-    
-    
+
+
     /**
      * Sets the title panel
      *
@@ -720,7 +750,7 @@ Observer {
             }
         }
     }
-    
+
     /**
      * Gets the title panel
      *
@@ -732,17 +762,18 @@ Observer {
         }
         return null;
     }
-    
+
     /**
      * @deprecated  Use AbstractDialog.showModal().
      * @see AbstractDialog#showModal()
      */
+    @Deprecated
     public boolean showModally() {
         super.showModal();
         return _fSaveOK;
     }
-    
-    
+
+
     /**
      * Gets the status of the save operation
      *
@@ -751,8 +782,8 @@ Observer {
     public boolean getSaveStatus() {
         return _fSaveOK;
     }
-    
-    
+
+
     /**
      * Gets the parent component of this dialog
      *
@@ -761,8 +792,8 @@ Observer {
     public JFrame getFrame() {
         return _parent;
     }
-    
-    
+
+
     /**
      * Gets the session info for this dialog
      *
@@ -771,8 +802,8 @@ Observer {
     public ConsoleInfo getConsoleInfo() {
         return _info;
     }
-    
-    
+
+
     /**
      * Registers the handler for the advanced option. The advanced button
      * becomes available in the button panel.
@@ -787,7 +818,7 @@ Observer {
         }
         _actionPane.enableAdvanced(true);
     }
-    
+
     /**
      * Implements the Observer interface
      */
@@ -807,18 +838,19 @@ Observer {
             }
         }
     }
-    
+
     /**
      * @deprecated  helpInvoked is no longer an abstract method. Morever, it is handled
      *              in the actionPerformed method.
      * @see AbstractDialog#helpInvoked()
      * @see #actionPerformed(ActionEvent)
      */
+    @Deprecated
     public void helpInvoked() {
         System.out.println("ResourceEditor: Help Not Implemented");
     }
-    
-    
+
+
     /**
      * Sets the unique attribute.
      *
@@ -827,7 +859,7 @@ Observer {
     static public void setUniqueAttribute(String s) {
         _sUniqueAttribute = s;
     }
-    
+
     /**
      * Returns the unique attribute.
      *
@@ -836,7 +868,7 @@ Observer {
     static public String getUniqueAttribute() {
         return _sUniqueAttribute;
     }
-    
+
     /**
      * Sets the user ID format.
      *
@@ -845,7 +877,7 @@ Observer {
     static public void setUserIDFormat(String s) {
         _sUserIDFormat = s;
     }
-    
+
     /**
      * Returns the user ID format.
      *
@@ -854,7 +886,7 @@ Observer {
     static public String getUserIDFormat() {
         return _sUserIDFormat;
     }
-    
+
     /**
      * Sets the user RDN component.
      *
@@ -863,7 +895,7 @@ Observer {
     static public void setUserRDNComponent(String s) {
         _sUserRDNComponent = s;
     }
-    
+
     /**
      * Returns the user RDN component.
      *
@@ -872,7 +904,7 @@ Observer {
     static public String getUserRDNComponent() {
         return _sUserRDNComponent;
     }
-    
+
     /**
      * Sets the group RDN component.
      *
@@ -881,7 +913,7 @@ Observer {
     static public void setGroupRDNComponent(String s) {
         _sGroupRDNComponent = s;
     }
-    
+
     /**
      * Returns the group RDN component.
      *
@@ -890,7 +922,7 @@ Observer {
     static public String getGroupRDNComponent() {
         return _sGroupRDNComponent;
     }
-    
+
     /**
      * Sets the account plugin.
      *
@@ -899,7 +931,7 @@ Observer {
     static public void setAccountPlugin(Hashtable h) {
         _AccountPlugin = h;
     }
-    
+
     /**
      * Returns the account plugin.
      *
@@ -908,7 +940,7 @@ Observer {
     static public Hashtable getAccountPlugin() {
         return _AccountPlugin;
     }
-    
+
     /**
      * Sets the new object classes.
      *
@@ -917,7 +949,7 @@ Observer {
     static public void setNewObjectClasses(Hashtable h) {
         _hNewObjectClasses = h;
     }
-    
+
     /**
      * Returns the new object classes.
      *
@@ -926,7 +958,7 @@ Observer {
     static public Hashtable getNewObjectClasses() {
         return _hNewObjectClasses;
     }
-    
+
     /**
      * Sets the resource editor extension.
      *
@@ -935,7 +967,7 @@ Observer {
     static public void setResourceEditorExtension(Hashtable h) {
         _ResourceEditorExtension = h;
     }
-    
+
     /**
      * Returns the resource editor extension.
      *
@@ -944,7 +976,7 @@ Observer {
     static public Hashtable getResourceEditorExtension() {
         return _ResourceEditorExtension;
     }
-    
+
     /**
      * Sets the delete resource editor extension.
      *
@@ -953,7 +985,7 @@ Observer {
     static public void setDeleteResourceEditorExtension(Hashtable h) {
         _DeleteResourceEditorExtension = h;
     }
-    
+
     /**
      * Returns the delete resource editor extension.
      *

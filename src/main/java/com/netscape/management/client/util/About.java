@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -20,13 +20,22 @@
 
 package com.netscape.management.client.util;
 
-import javax.swing.*;
-import javax.swing.border.*;
+import java.awt.Dimension;
+import java.io.File;
+import java.net.URL;
+import java.util.StringTokenizer;
 
-import java.awt.*;
-import java.util.*;
-import java.io.*;
-import java.net.*;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JEditorPane;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JViewport;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.SoftBevelBorder;
 
 /**
  * A dialog that displays an About screen.
@@ -48,6 +57,7 @@ public class About extends AbstractDialog {
      * @param resourceSet    about dialog parameters
      * @deprecated           replaced by com.netscape.management.client.AboutDialog
      */
+    @Deprecated
     public About(JFrame parent, ResourceSet resourceSet) {
         //create a modal dialog with ok button
         super(parent, "", true, OK);

@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -20,18 +20,37 @@
 
 package com.netscape.management.client.ug;
 
-import java.awt.Cursor;
-import java.util.*;
-import java.text.*;
-
 import java.awt.Component;
-import javax.swing.*;
-import javax.swing.table.*;
-import com.netscape.management.client.util.*;
+import java.awt.Cursor;
+import java.text.MessageFormat;
+import java.util.Enumeration;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
-import com.netscape.management.nmclf.*;
-import netscape.ldap.*;
-import netscape.ldap.controls.*;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.table.AbstractTableModel;
+
+import com.netscape.management.client.util.Debug;
+import com.netscape.management.client.util.LDAPUtil;
+import com.netscape.management.client.util.ModalDialogUtil;
+import com.netscape.management.client.util.RemoteImage;
+import com.netscape.management.client.util.ResourceSet;
+import com.netscape.management.client.util.UtilConsoleGlobals;
+import com.netscape.management.nmclf.SuiOptionPane;
+
+import netscape.ldap.LDAPConnection;
+import netscape.ldap.LDAPControl;
+import netscape.ldap.LDAPEntry;
+import netscape.ldap.LDAPException;
+import netscape.ldap.LDAPSearchConstraints;
+import netscape.ldap.LDAPSearchResults;
+import netscape.ldap.LDAPSortKey;
+import netscape.ldap.controls.LDAPSortControl;
+import netscape.ldap.controls.LDAPVirtualListControl;
+import netscape.ldap.controls.LDAPVirtualListResponse;
 
 
 /**
@@ -168,7 +187,7 @@ public class VLDirectoryTableModel extends AbstractTableModel {
       */
     public void cancelSearch() {
         _useVirtualList = false;
-        
+
         Debug.println("CancelSearch ldc=" +_ldc + " res=" + _currentSearch);
         if (_ldc != null) {
             try {
@@ -343,7 +362,7 @@ public class VLDirectoryTableModel extends AbstractTableModel {
                         _resource.getString("SearchError", "WrongLang"),
                         _resource.getString("SearchError", "Title"),
                         JOptionPane.ERROR_MESSAGE);
-                
+
             } else if (e.getLDAPResultCode() == LDAPException.ADMIN_LIMIT_EXCEEDED) {
                 showMessageDialog(_activeFrame,
                         _resource.getString("SearchError", "AdminLimitExceeded"),
@@ -504,18 +523,18 @@ public class VLDirectoryTableModel extends AbstractTableModel {
      * This method is used for listing static group members. The list of user DNs
      * id already known, but each entry needs to be read individually in order
      * to get required attributes.
-     * 
+     *
      * Initialize _LDAPEntries Vector with LDAPEntries containing only DNs.
      * Later, when getValueAt() is called, read the actual entry.
      */
     void browseDNList(LDAPConnection ldc, Vector dnList) {
         _useVirtualList = false;
         _ldc = ldc;
-         _LDAPEntries.setSize(dnList.size());         
+         _LDAPEntries.setSize(dnList.size());
         _entries.setSize(dnList.size());
 
         _readEntryControls = new LDAPControl[1];
-        _readEntryControls[0] = new LDAPControl( LDAPControl.MANAGEDSAIT, true, null );        
+        _readEntryControls[0] = new LDAPControl( LDAPControl.MANAGEDSAIT, true, null );
 
         for (int i=0; i < dnList.size(); i++) {
             String dn = (String)dnList.elementAt(i);
@@ -625,8 +644,8 @@ public class VLDirectoryTableModel extends AbstractTableModel {
             LDAPEntry entry = null;
             // if the size of _entries and _LDAPEntries is less than the row #
             // to display, no values need to be retrieved.
-            // [blackflag 624252] if search returned 0 entries, 
-            // _LDAPEntries.elementAt(rowIndex) issues 
+            // [blackflag 624252] if search returned 0 entries,
+            // _LDAPEntries.elementAt(rowIndex) issues
             // ArrayIndexOutOfBoundsException.
             if (_entries.size() > rowIndex) {
                 row = (Object[])_entries.elementAt(rowIndex);
@@ -636,7 +655,7 @@ public class VLDirectoryTableModel extends AbstractTableModel {
             }
             if (row  == null && entry != null) {
                 //  Entry not yet loaded, _LDAPEntries was set from browseDNList().
-                String dn = entry.getDN();                
+                String dn = entry.getDN();
                 entry = readEntry(dn);
                 if (entry == null) {
                     entry = new LDAPEntry(dn);
@@ -742,6 +761,7 @@ public class VLDirectoryTableModel extends AbstractTableModel {
       * @deprecated  Replaced by doSearch(LDAPConnection,String,int,String)
       * @see  #doSearch(LDAPConnection,String,int,String)
       */
+    @Deprecated
     public void doSearch(LDAPConnection ldc, String baseDN, String filter) {
         doSearch(ldc, baseDN, LDAPConnection.SCOPE_SUB, filter);
     }
@@ -792,18 +812,18 @@ public class VLDirectoryTableModel extends AbstractTableModel {
         vlvSort = LDAPUtil.getVLVIndex(_ldc, _baseDN, _scope,
                                        _filter, vlvSort);
         Debug.println("VLDirectoryTableModel: getVlVIndex="+vlvSort);
-        
+
         if (vlvSort != null) {
             _beforeCount = _pageSize * 2;
             _afterCount = _pageSize * 2;
             _pageControls = new LDAPControl[2];
-            
+
             StringTokenizer st = new StringTokenizer(vlvSort, " ");
             LDAPSortKey[] keys = new LDAPSortKey[st.countTokens()];
             for (int i=0; st.hasMoreTokens(); i++) {
                 keys[i] = new LDAPSortKey(st.nextToken());
-            }        
-            
+            }
+
             _pageControls[0] = new LDAPSortControl(keys, true);
             _vlc = new LDAPVirtualListControl("A", _beforeCount,
                     _afterCount);
@@ -818,7 +838,7 @@ public class VLDirectoryTableModel extends AbstractTableModel {
 
             try {
                 result = _currentSearch = _ldc.search(_baseDN, _scope, _filter, null,
-                        false, constraints);                
+                        false, constraints);
                 while (result.hasMoreElements() && count < _maxResults) {
                     element = result.next();
                     if (element instanceof LDAPEntry) {
@@ -901,6 +921,7 @@ public class VLDirectoryTableModel extends AbstractTableModel {
       * @deprecated  Replaced by deleteAllRows()
       * @see  #deleteAllRows()
       */
+    @Deprecated
     public void deleteAllRow() {
         deleteAllRows();
     }
@@ -915,10 +936,10 @@ public class VLDirectoryTableModel extends AbstractTableModel {
         _LDAPEntries.removeAllElements();
         fireTableDataChanged();
     }
-    
+
     void showMessageDialog(Component parent, final Object msg,
                            final String title, final int msgType) {
-        
+
         final Component fParent = (parent != null) ?
               parent : UtilConsoleGlobals.getActivatedFrame();
 
@@ -927,7 +948,7 @@ public class VLDirectoryTableModel extends AbstractTableModel {
         }
         else {
             try {
-                 SwingUtilities.invokeLater(new Runnable() {                     
+                 SwingUtilities.invokeLater(new Runnable() {
                      public void run() {
                          JOptionPane.showMessageDialog(fParent, msg, title, msgType);
                      }

@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -20,17 +20,30 @@
 
 package com.netscape.management.client.ug;
 
-import java.awt.event.*;
-import java.awt.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Frame;
+import java.awt.Point;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
+import java.util.Hashtable;
+import java.util.Vector;
 
-import javax.swing.*;
-import javax.swing.event.*;
-import netscape.ldap.*;
-import com.netscape.management.client.*;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionListener;
+
+import com.netscape.management.client.Framework;
+import com.netscape.management.client.ResourcePage;
+import com.netscape.management.client.StatusItemProgress;
 import com.netscape.management.client.console.ConsoleInfo;
-import com.netscape.management.client.util.*;
-import com.netscape.management.client.preferences.*;
+import com.netscape.management.client.preferences.PreferenceManager;
+import com.netscape.management.client.preferences.Preferences;
+import com.netscape.management.client.util.Debug;
+import com.netscape.management.client.util.ResourceSet;
+
+import netscape.ldap.LDAPConnection;
+import netscape.ldap.LDAPEntry;
+import netscape.ldap.LDAPUrl;
 
 
 /**
@@ -321,6 +334,7 @@ public class SearchResultPanel extends JPanel {
       * @deprecated  Replaced by removeAllElements()
       * @see  #removeAllElements()
       */
+    @Deprecated
     public void removeAllElement() {
         _resultList.deleteAllRows();
     }

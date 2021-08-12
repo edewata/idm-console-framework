@@ -7,25 +7,37 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client;
 
-import java.util.*;
-import java.awt.*;
-import javax.swing.*;
-import com.netscape.management.client.util.*;
-import com.netscape.management.client.preferences.*;
+import java.awt.Cursor;
+import java.awt.Image;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
-import netscape.ldap.*;
+import javax.swing.JFrame;
+
+import com.netscape.management.client.preferences.IPreferencesTab;
+import com.netscape.management.client.util.About;
+import com.netscape.management.client.util.Debug;
+import com.netscape.management.client.util.LDAPUtil;
+import com.netscape.management.client.util.RemoteImage;
+import com.netscape.management.client.util.ResourceSet;
+import com.netscape.management.client.util.UtilConsoleGlobals;
+
+import netscape.ldap.LDAPAttribute;
+import netscape.ldap.LDAPConnection;
+import netscape.ldap.LDAPEntry;
+import netscape.ldap.LDAPException;
 
 /**
   * An implemenation of the IFrameworkInitializer interface that
@@ -208,28 +220,28 @@ public abstract class FrameworkInitializer implements IFrameworkInitializer {
         }
         return bannerText;
     }
-    
+
     public void setUIPermissions(UIPermissions uip)
     {
         uiPermissions = uip;
         addPreferencesTab(new UIPermissionsPreferencesTab());
     }
-    
+
     public UIPermissions getUIPermissions()
     {
         return uiPermissions;
     }
-    
+
     public void addPreferencesTab(IPreferencesTab tab)
     {
         tabList.addElement(tab);
     }
-    
+
     public void removePreferencesTab(IPreferencesTab tab)
     {
         tabList.removeElement(tab);
     }
-    
+
     public IPreferencesTab getPreferencesTab(int index)
     {
         return (IPreferencesTab)tabList.elementAt(index);
@@ -245,6 +257,7 @@ public abstract class FrameworkInitializer implements IFrameworkInitializer {
      *
      * @deprecated overload aboutInvoked() instead
      */
+    @Deprecated
     public ResourceSet getAboutDialogResourceBoundle() {
         return null;
     }

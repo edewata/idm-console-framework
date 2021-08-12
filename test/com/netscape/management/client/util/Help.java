@@ -81,6 +81,7 @@ public class Help {
      * @deprecated replaced by Help.showHelp
 	 * @see #showHelp
      */
+    @Deprecated
     public Help(String propertiesFile) {
         tokens = new ResourceSet(propertiesFile);
     }
@@ -92,6 +93,7 @@ public class Help {
       * @deprecated replaced by Help.showHelp
       * @see #showHelp
       */
+    @Deprecated
     public Help(ResourceSet resourceset) {
         tokens = resourceset;
     }
@@ -107,6 +109,7 @@ public class Help {
       * @deprecated replaced by Help.showHelp
       * @see #showHelp
       */
+    @Deprecated
     public void help(String token) {
         help(null, token, UtilConsoleGlobals.getAdminURL());
     }
@@ -125,6 +128,7 @@ public class Help {
       * @deprecated replaced by Help.showHelp
       * @see #showHelp
       */
+    @Deprecated
     public void help(String token, URL adminURL) {
         help(null, token, adminURL);
     }
@@ -141,6 +145,7 @@ public class Help {
       * @deprecated replaced by Help.showHelp
       * @see #showHelp
       */
+    @Deprecated
     public void help(String prefix, String name) {
         help(prefix, name, UtilConsoleGlobals.getAdminURL());
     }
@@ -161,6 +166,7 @@ public class Help {
       * @deprecated replaced by Help.showHelp
       * @see #showHelp
       */
+    @Deprecated
     protected void help(String prefix, String name, URL adminURL,
 						boolean contextHelp) 
 	{
@@ -278,6 +284,7 @@ public class Help {
       * @deprecated replaced by Help.showHelp
       * @see #showHelp
       */
+    @Deprecated
     public void help(String prefix, String name, URL adminURL) {
 		help( prefix, name, adminURL, false );
 	}
@@ -296,6 +303,7 @@ public class Help {
       * @deprecated replaced by Help.showContextHelp
       * @see #showContextHelp
       */
+    @Deprecated
     public void contextHelp(String prefix, String name, URL adminURL) {
 		// Use context help if it is supported by the Admin Server
 		help( prefix, name, adminURL,
@@ -314,6 +322,7 @@ public class Help {
       * @deprecated replaced by Help.showContextHelp
       * @see #showContextHelp
       */
+    @Deprecated
     public void contextHelp(String prefix, String name) {
 		// Use context help if it is supported by the Admin Server
         contextHelp(prefix, name, UtilConsoleGlobals.getAdminHelpURL());
@@ -330,6 +339,7 @@ public class Help {
       * @deprecated replaced by Help.showContextHelp
       * @see #showContextHelp
       */
+    @Deprecated
     public void contextHelp(String name) {
 		// Use context help if it is supported by the Admin Server
         contextHelp(null, name);
@@ -345,6 +355,7 @@ public class Help {
 	  * 
       * @deprecated not needed
       */
+    @Deprecated
     public String getProduct( String prefix, String name ) {
         if ( tokens == null ) {
             Debug.println("Help.getProduct: ResourceSet not initialized");
@@ -363,6 +374,7 @@ public class Help {
       * 
       * @deprecated not needed
       */
+    @Deprecated
     public URL getHelpUrl(String prefix, String token, String filename) {
         String dir = getProduct( prefix, token );
 	return Help.getHelpUrl(dir, prefix, token, filename);

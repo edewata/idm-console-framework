@@ -7,25 +7,44 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.topology;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import com.netscape.management.client.*;
-import com.netscape.management.client.console.*;
-import com.netscape.management.client.util.*;
-import com.netscape.management.client.topology.customview.*;
+import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
+import javax.swing.SwingConstants;
+
+import com.netscape.management.client.Framework;
+import com.netscape.management.client.IFramework;
+import com.netscape.management.client.IResourceModel;
+import com.netscape.management.client.IStatusItem;
+import com.netscape.management.client.MenuItemText;
+import com.netscape.management.client.ResourceModel;
+import com.netscape.management.client.ResourceObject;
+import com.netscape.management.client.ResourcePage;
+import com.netscape.management.client.StatusItemSecureMode;
+import com.netscape.management.client.StatusItemSpacer;
+import com.netscape.management.client.console.ConsoleInfo;
+import com.netscape.management.client.topology.customview.ViewSelectorComponent;
+import com.netscape.management.client.util.Browser;
+import com.netscape.management.client.util.ResourceSet;
 
 /**
  * Setup the topology page with topology information
@@ -73,13 +92,13 @@ class TopologyResourcePage extends ResourcePage implements SwingConstants {
 
         boolean secure = _info.get("ldapSecurity").equals("on");
         _statusSecureMode.setSecureMode(secure);
-        _statusSecureMode.setToolTipText((secure ? 
-                                          _resource.getString(_sTopologyResourcePage,"secure") + " ldaps" : 
+        _statusSecureMode.setToolTipText((secure ?
+                                          _resource.getString(_sTopologyResourcePage,"secure") + " ldaps" :
                                           _resource.getString(_sTopologyResourcePage,"unsecure") + " ldap") +
                                          "://" + _info.getHost() + ":" + _info.getPort());
     }
 
-    
+
     /**
       * inner class which listens to the custom view information
       */
@@ -96,6 +115,7 @@ class TopologyResourcePage extends ResourcePage implements SwingConstants {
     /**
      * @deprecated not used by Framework
      */
+    @Deprecated
     public Object clone() {
         return null;
     }
@@ -182,7 +202,7 @@ class TopologyResourcePage extends ResourcePage implements SwingConstants {
                     (ResourceObject) newModel.getRoot();
             TopologyModel model = (TopologyModel) getTreeModel();
             model.setRoot(newRoot);
-            setRootVisible(newModel.isRootVisible());            
+            setRootVisible(newModel.isRootVisible());
             model.refreshTree(TopologyResourcePage.this);
             selectTreeRow(0);
         }

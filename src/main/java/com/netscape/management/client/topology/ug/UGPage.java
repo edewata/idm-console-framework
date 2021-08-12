@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -20,14 +20,36 @@
 
 package com.netscape.management.client.topology.ug;
 
-import java.util.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import com.netscape.management.client.*;
-import com.netscape.management.client.console.*;
-import com.netscape.management.client.util.*;
-import netscape.ldap.*;
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Enumeration;
+
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+
+import com.netscape.management.client.CloseVetoException;
+import com.netscape.management.client.Framework;
+import com.netscape.management.client.IFramework;
+import com.netscape.management.client.IPage;
+import com.netscape.management.client.IStatusItem;
+import com.netscape.management.client.MenuItemCategory;
+import com.netscape.management.client.MenuItemSeparator;
+import com.netscape.management.client.MenuItemText;
+import com.netscape.management.client.ResourcePage;
+import com.netscape.management.client.StatusItemProgress;
+import com.netscape.management.client.console.Console;
+import com.netscape.management.client.console.ConsoleInfo;
+import com.netscape.management.client.topology.TopologyInitializer;
+import com.netscape.management.client.util.ClassLoaderUtil;
+import com.netscape.management.client.util.Debug;
+import com.netscape.management.client.util.LDAPUtil;
+import com.netscape.management.client.util.ResourceSet;
+
+import netscape.ldap.LDAPAttribute;
+import netscape.ldap.LDAPConnection;
+import netscape.ldap.LDAPEntry;
+import netscape.ldap.LDAPException;
 
 
 /**
@@ -43,7 +65,7 @@ public class UGPage extends JPanel implements IPage {
     ResourceSet _resource = new ResourceSet("com.netscape.management.client.topology.topology");
     public static final String MENU_TOOLS = "TOOLS";
     public static final String MENU_USER = "USER";
-    
+
     private boolean canEditUG = true;
 
     ConsoleInfo _info;
@@ -125,6 +147,7 @@ public class UGPage extends JPanel implements IPage {
     /**
      * @deprecated not used by Framework
      */
+    @Deprecated
     public Object clone() {
         return null;
     }
@@ -227,7 +250,7 @@ public class UGPage extends JPanel implements IPage {
                         String className = (String) e.nextElement();
 
                                 Class c = ClassLoaderUtil.getClass(
-                                        (ConsoleInfo) ci, className);
+                                        ci, className);
                         if (c == null) {
                             Debug.println("Could not load tool: " +
                                     className);
@@ -235,7 +258,7 @@ public class UGPage extends JPanel implements IPage {
                             try {
                                 IUGToolPlugin p = null;
                                 p = (IUGToolPlugin) c.newInstance();
-                                p.initialize((IPage) this, ldc);
+                                p.initialize(this, ldc);
                                 toolsMenu.add(new toolsMenuItem(p));
                             } catch (Exception exc) {
                                 Debug.println(

@@ -7,21 +7,23 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.Component;
+import java.awt.event.ActionListener;
+
+import javax.swing.JMenuItem;
+
 import com.netscape.management.client.util.UITools;
 
 /**
@@ -41,6 +43,7 @@ public class MenuItemText extends JMenuItem implements IMenuItemText {
         * @param description   string to display on status bar as menu is being selected
         * @deprecated	use #MenuItemText(String, String, String)
      */
+    @Deprecated
     public MenuItemText(String label, String description) {
         this("<noID>", label, description);
     }
@@ -56,6 +59,7 @@ public class MenuItemText extends JMenuItem implements IMenuItemText {
          * @param enabled		boolean specifying initial enabled state
          * @deprecated	use #MenuItemText(String, String, String, boolean)
       */
+    @Deprecated
     public MenuItemText(String label, String description, boolean enabled) {
         this("<noID>", label, description, enabled);
     }
@@ -71,6 +75,7 @@ public class MenuItemText extends JMenuItem implements IMenuItemText {
          * @param actionListener ActionListener that receives notifications after menu is selected
          * @deprecated	use #MenuItemText(String, String, String, ActionListener)
       */
+    @Deprecated
     public MenuItemText(String label, String description,
             ActionListener actionListener) {
         this(label, description);

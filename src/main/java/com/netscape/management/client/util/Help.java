@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -20,34 +20,34 @@
 package com.netscape.management.client.util;
 
 import java.applet.Applet;
-import java.util.Locale;
 import java.net.URL;
+import java.util.Locale;
 
 /**
- * Displays help content.  
- * 
+ * Displays help content.
+ *
  * Two static methods can be used to invoke help:
  * <code>showHelp</code> and <code>showContextHelp</code>.
  * Each method takes a product id and a help topic as parameters.
- * That information is used to construct an URL, and 
+ * That information is used to construct an URL, and
  * launch a help viewer (browser or java window) to that URL.
  * See methods for details on when to use each method.
- * 
+ *
  * Typical usage example:
  * Help.showContextHelp("admin", "preferences-fonts");
- * 
+ *
  * The usage of this class has changed since Console 4.x.
- * 
+ *
  * It is no longer necessary to use local property files
  * to specify the 'manual' directory for each product.
  * This has now become a method parameter.
- * 
+ *
  * It is no longer necessary to specify topics as prefix and name
  * combinations, which were formatted to "prefix-name".
  * Help topic names can now be in any format, however
- * it is recommended that you adopt a consistant 
+ * it is recommended that you adopt a consistant
  * format across your product. Suggested format:
- * 
+ *
  * dialog                      example: login
  * tabbeddialog-tab            example: preferences-fonts
  * wizard-step                 example: certrequest-summary
@@ -76,10 +76,11 @@ public class Help {
      *
      * @param propertiesFile a fully-qualified reference to the
      *  properties file for this session of help.
-     * 
+     *
      * @deprecated replaced by Help.showHelp
 	 * @see #showHelp
      */
+    @Deprecated
     public Help(String propertiesFile) {
         tokens = new ResourceSet(propertiesFile);
     }
@@ -91,6 +92,7 @@ public class Help {
       * @deprecated replaced by Help.showHelp
       * @see #showHelp
       */
+    @Deprecated
     public Help(ResourceSet resourceset) {
         tokens = resourceset;
     }
@@ -102,10 +104,11 @@ public class Help {
       * in the constructor.
       *
       * @param token the unique token for this help topic
-      * 
+      *
       * @deprecated replaced by Help.showHelp
       * @see #showHelp
       */
+    @Deprecated
     public void help(String token) {
         help(null, token, UtilConsoleGlobals.getAdminURL());
     }
@@ -120,10 +123,11 @@ public class Help {
       * @param token the unique token for this help topic
       * @param adminURL the URL for the admin server from where the help
       * documents will be served.
-      * 
+      *
       * @deprecated replaced by Help.showHelp
       * @see #showHelp
       */
+    @Deprecated
     public void help(String token, URL adminURL) {
         help(null, token, adminURL);
     }
@@ -136,18 +140,19 @@ public class Help {
       *
       * @param token the unique token for this help topic
       * @param name the name of the help token
-      * 
+      *
       * @deprecated replaced by Help.showHelp
       * @see #showHelp
       */
+    @Deprecated
     public void help(String prefix, String name) {
         help(prefix, name, UtilConsoleGlobals.getAdminURL());
     }
 
     /**
-      * The help invocation function. 
+      * The help invocation function.
       * The token (prefix-name) should be unique for each help launch point.
-      * The manual directory for the token will be resolved from the 
+      * The manual directory for the token will be resolved from the
       * ResourceSet referenced in the constructor.
       *
       * @param prefix the prefix of the help token
@@ -156,12 +161,13 @@ public class Help {
       * documents will be served.
 	  * @param contextHelp <CODE>true</CODE> to display help in a
 	  * Java window, <CODE>false</CODE> to launch a browser
-	  * 
+	  *
       * @deprecated replaced by Help.showHelp
       * @see #showHelp
       */
+    @Deprecated
     protected void help(String prefix, String name, URL adminURL,
-						boolean contextHelp) 
+						boolean contextHelp)
 	{
 		showHelp(getProduct( prefix, name ), prefix, name, adminURL, contextHelp);
 	}
@@ -233,7 +239,7 @@ public class Help {
 						// on UNIX, the only way to allow clicking on a
 						// URL or scrolling is to make the help dialog modal
 						dlg.showModal();
-					} 
+					}
 				} else {
 					// Wrap the URL in JavaScript to cause a chromeless
 					// browser window. Doesn't work in Windows, because that
@@ -273,10 +279,11 @@ public class Help {
       * @param name the name of the help token
       * @param adminURL the URL for the admin server from where the help
       * documents will be served.
-      * 
+      *
       * @deprecated replaced by Help.showHelp
       * @see #showHelp
       */
+    @Deprecated
     public void help(String prefix, String name, URL adminURL) {
 		help( prefix, name, adminURL, false );
 	}
@@ -291,10 +298,11 @@ public class Help {
       * @param name the name of the help token
       * @param adminURL the URL for the admin server from where the help
       * documents will be served.
-      * 
+      *
       * @deprecated replaced by Help.showContextHelp
       * @see #showContextHelp
       */
+    @Deprecated
     public void contextHelp(String prefix, String name, URL adminURL) {
 		// Use context help if it is supported by the Admin Server
 		help( prefix, name, adminURL,
@@ -309,10 +317,11 @@ public class Help {
       *
       * @param prefix the prefix of the help token
       * @param name the name of the help token
-      * 
+      *
       * @deprecated replaced by Help.showContextHelp
       * @see #showContextHelp
       */
+    @Deprecated
     public void contextHelp(String prefix, String name) {
 		// Use context help if it is supported by the Admin Server
         contextHelp(prefix, name, UtilConsoleGlobals.getAdminHelpURL());
@@ -325,10 +334,11 @@ public class Help {
       * in the constructor.
       *
       * @param name the name of the help token
-      * 
+      *
       * @deprecated replaced by Help.showContextHelp
       * @see #showContextHelp
       */
+    @Deprecated
     public void contextHelp(String name) {
 		// Use context help if it is supported by the Admin Server
         contextHelp(null, name);
@@ -341,9 +351,10 @@ public class Help {
       * @param prefix the prefix of the help token
       * @param name the name of the help token
 	  * @return the product name, or <CODE>null</CODE> if not registered
-	  * 
+	  *
       * @deprecated not needed
       */
+    @Deprecated
     public String getProduct( String prefix, String name ) {
         if ( tokens == null ) {
             Debug.println("Help.getProduct: ResourceSet not initialized");
@@ -359,9 +370,10 @@ public class Help {
       * @param prefix the prefix of the help token
       * @param token the name of the help token
       * @param filename the base name of an HTML file
-      * 
+      *
       * @deprecated not needed
       */
+    @Deprecated
     public URL getHelpUrl(String prefix, String token, String filename) {
         String dir = getProduct( prefix, token );
 	return Help.getHelpUrl(dir, prefix, token, filename);
@@ -397,12 +409,12 @@ public class Help {
 			return null;
 		}
     }
-	
+
 	/**
-	 * This method brings up the entire online book, but scrolled to 
-	 * the specified topic of interest.  The help viewer is a 
+	 * This method brings up the entire online book, but scrolled to
+	 * the specified topic of interest.  The help viewer is a
 	 * full browser window with navigation capabilities.
-	 * 
+	 *
 	 * Example usage: help.showHelp("admin", "menubar-contents");
 	 * The example shown results in an URL similar to:
 	 * <code>http://hostname:port/manual/help/help?helpdir=admin&token=menubar-contents</code>
@@ -411,7 +423,7 @@ public class Help {
 	 * In that directory, there is a file called tokens.map which contains
 	 * an entry for fontPreferences, such as this:
 	 * <code>menubar-contents  =  help/contents.htm</code>
-	 * 
+	 *
 	 * @param productID the product identifier, which corresponds to the manual directory on the back-end
 	 * @param topic		the help topic contained in tokens.map
 	 * @see #showContextHelp
@@ -423,13 +435,13 @@ public class Help {
 
 	/**
 	 * This method displays a short document relating to a particular topic.
-	 * Call this method from dialogs, panels, wizards and other UI areas 
+	 * Call this method from dialogs, panels, wizards and other UI areas
 	 * where context sensitive help is required.  The help viewer may be
 	 * either a chromeless browser window or a java-based html window.
-	 * 
+	 *
 	 * If the Admin Server does not support context help (because it is pre-5.0),
 	 * showContextHelp falls back to showHelp.
-	 * 
+	 *
 	 * Example usage: help.showContextHelp("admin", "preferences-fonts");
 	 * The example shown results in an URL similar to:
 	 * <code>http://hostname:port/manual/help/help?helpdir=admin&token=preferences-fonts&mapfile=tokens.map</code>
@@ -438,7 +450,7 @@ public class Help {
 	 * in which there is a file called tokens.map which contains
 	 * an entry for preferences-fonts, like this:
 	 * <code>preferences-fonts = newhelp/preferences_fonts.htm</code>
-	 * 
+	 *
 	 * @param productID the product identifier, which corresponds to the manual directory on the back-end
 	 * @param topic		the help topic contained in tokens.map
 	 * @see #showHelp
@@ -450,13 +462,13 @@ public class Help {
 
 	/**
 	 * This method displays a short document relating to a particular topic.
-	 * Call this method from dialogs, panels, wizards and other UI areas 
+	 * Call this method from dialogs, panels, wizards and other UI areas
 	 * where context sensitive help is required.  The help viewer may be
 	 * either a chromeless browser window or a java-based html window.
-	 * 
+	 *
 	 * If the Admin Server does not support context help (because it is pre-5.0),
 	 * showContextHelp falls back to showHelp.
-	 * 
+	 *
 	 * Example usage: help.showContextHelp("admin", "preferences-fonts",
      *                                     new URL("http://adminserver:80"));
 	 * The example shown results in an URL similar to:
@@ -466,7 +478,7 @@ public class Help {
 	 * in which there is a file called tokens.map which contains
 	 * an entry for preferences-fonts, like this:
 	 * <code>preferences-fonts = newhelp/preferences_fonts.htm</code>
-	 * 
+	 *
 	 * @param productID the product identifier, which corresponds to the manual directory on the back-end
 	 * @param topic the help topic contained in tokens.map
      * @param adminURL the URL for the admin server where the help file resides
