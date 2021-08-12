@@ -180,9 +180,7 @@ END COPYRIGHT BLOCK
              optimize="${compile.optimize}"
              verbose="no"
              fork="true"
-             excludes="**/CVS/**"
-             source="1.8"
-             target="1.8">
+             excludes="**/CVS/**">
              <classpath refid="console.classpath" />
     </javac>
   </target>
