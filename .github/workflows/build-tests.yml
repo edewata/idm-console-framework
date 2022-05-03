@@ -1,0 +1,27 @@
+name: Build Tests
+
+on: [push, pull_request]
+
+jobs:
+  build-test:
+    name: Build Test
+    runs-on: ubuntu-latest
+    env:
+      COPR_REPO: "@pki/master"
+    strategy:
+      matrix:
+        os:
+          - 'fedora:latest'
+    container: ${{ matrix.os }}
+    steps:
+    - name: Clone repository
+      uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: |
+        dnf install -y dnf-plugins-core rpm-build
+        dnf copr enable -y $COPR_REPO
+        dnf builddep -y --spec idm-console-framework.spec
+
+    - name: Build IDM Console Framework
+      run: ./build.sh
