@@ -33,9 +33,9 @@ Source: https://github.com/dogtagpki/idm-console-framework/archive/v%{version}%{
 # Java
 ################################################################################
 
-%define java_devel java-11-openjdk-devel
-%define java_headless java-11-openjdk-headless
-%define java_home /usr/lib/jvm/jre-11-openjdk
+%define java_devel java-17-openjdk-devel
+%define java_headless java-17-openjdk-headless
+%define java_home %{_jvmdir}/jre-17-openjdk
 
 ################################################################################
 # Build Dependencies
