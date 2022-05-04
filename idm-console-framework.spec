@@ -5,7 +5,7 @@ Name:             idm-console-framework
 %global           product_id dogtag-console-framework
 
 Summary:          Identity Management Console Framework
-URL:              http://www.dogtagpki.org/
+URL:              https://github.com/dogtagpki/idm-console-framework
 License:          LGPLv2
 
 BuildArch:        noarch
