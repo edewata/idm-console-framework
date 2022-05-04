@@ -2,6 +2,8 @@
 Name:             idm-console-framework
 ################################################################################
 
+%global           product_id dogtag-console-framework
+
 Summary:          Identity Management Console Framework
 URL:              http://www.dogtagpki.org/
 License:          LGPLv2
@@ -52,15 +54,25 @@ BuildRequires:    ant >= 1.6.2
 BuildRequires:    jss >= 4.9.0, jss < 5.0.0
 BuildRequires:    ldapjdk >= 4.23.0, ldapjdk < 5.0.0
 
+%description
+A Java Management Console framework used for remote server management.
+
 ################################################################################
-# Runtime Dependencies
+%package -n %{product_id}
 ################################################################################
+
+Summary:          Identity Management Console Framework
 
 Requires:         %{java_headless}
 Requires:         jss >= 4.9.0, jss < 5.0.0
 Requires:         ldapjdk >= 4.23.0, ldapjdk < 5.0.0
 
-%description
+%if "%{product_id}" != "idm-console-framework"
+Obsoletes:        idm-console-framework < %{version}-%{release}
+Provides:         idm-console-framework = %{version}-%{release}
+%endif
+
+%description -n %{product_id}
 A Java Management Console framework used for remote server management.
 
 ################################################################################
@@ -86,7 +98,7 @@ install -d $RPM_BUILD_ROOT%{_javadir}
 install -m644 built/release/jars/idm-console-* $RPM_BUILD_ROOT%{_javadir}
 
 ################################################################################
-%files
+%files -n %{product_id}
 ################################################################################
 
 %doc LICENSE
