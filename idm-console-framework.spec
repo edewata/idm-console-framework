@@ -51,8 +51,8 @@ Source: https://github.com/dogtagpki/idm-console-framework/archive/v%{version}%{
 
 BuildRequires:    %{java_devel}
 BuildRequires:    ant >= 1.6.2
-BuildRequires:    jss >= 4.9.0, jss < 5.0.0
-BuildRequires:    ldapjdk >= 4.23.0, ldapjdk < 5.0.0
+BuildRequires:    jss = 4.10
+BuildRequires:    ldapjdk = 4.24
 
 %description
 A Java Management Console framework used for remote server management.
@@ -64,8 +64,8 @@ A Java Management Console framework used for remote server management.
 Summary:          Identity Management Console Framework
 
 Requires:         %{java_headless}
-Requires:         jss >= 4.9.0, jss < 5.0.0
-Requires:         ldapjdk >= 4.23.0, ldapjdk < 5.0.0
+Requires:         jss = 4.10
+Requires:         ldapjdk = 4.24
 
 %if "%{product_id}" != "idm-console-framework"
 Obsoletes:        idm-console-framework < %{version}-%{release}
