@@ -4,6 +4,11 @@ Name:             idm-console-framework
 
 %global           product_id dogtag-console-framework
 
+# Upstream version number:
+%global           major_version 2
+%global           minor_version 0
+%global           update_version 0
+
 Summary:          Identity Management Console Framework
 URL:              https://github.com/dogtagpki/idm-console-framework
 License:          LGPLv2
@@ -12,7 +17,7 @@ BuildArch:        noarch
 
 # For development (i.e. unsupported) releases, use x.y.z-0.n.<phase>.
 # For official (i.e. supported) releases, use x.y.z-r where r >=1.
-Version:          2.0.0
+Version:          %{major_version}.%{minor_version}.%{update_version}
 Release:          1%{?_timestamp}%{?_commit_id}%{?dist}
 #global           _phase -alpha1
 
@@ -64,7 +69,9 @@ Requires:         ldapjdk >= 5.0
 %if "%{product_id}" != "idm-console-framework"
 Obsoletes:        idm-console-framework < %{version}-%{release}
 Provides:         idm-console-framework = %{version}-%{release}
+Provides:         idm-console-framework = %{major_version}.%{minor_version}
 %endif
+Provides:         %{product_id} = %{major_version}.%{minor_version}
 
 %description -n %{product_id}
 A Java Management Console framework used for remote server management.
