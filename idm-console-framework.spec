@@ -87,6 +87,7 @@ A Java Management Console framework used for remote server management.
 ################################################################################
 
 %{ant} \
+    %{?_verbose:-v} \
     -Dlib.dir=%{_libdir} \
     -Dbuilt.dir=`pwd`/built \
     -Dclassdest=%{_javadir}
