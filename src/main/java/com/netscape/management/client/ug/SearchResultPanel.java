@@ -287,7 +287,7 @@ public class SearchResultPanel extends JPanel {
                 f.setBusyCursor(false);
                 f.changeStatusItemState(Framework.STATUS_TEXT, "");
                 f.changeStatusItemState(ResourcePage.STATUS_PROGRESS,
-                        new Integer(0));
+                        Integer.valueOf(0));
             }
 
             /**

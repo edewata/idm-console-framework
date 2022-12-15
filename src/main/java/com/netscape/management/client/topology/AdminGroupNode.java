@@ -7,29 +7,56 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.topology;
 
-import java.util.*;
-import java.awt.*;
-import java.text.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import com.netscape.management.client.*;
-import com.netscape.management.client.util.*;
-import com.netscape.management.client.console.*;
-import netscape.ldap.*;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.event.KeyAdapter;
+import java.awt.event.MouseAdapter;
+import java.text.MessageFormat;
+import java.util.Enumeration;
+import java.util.Vector;
+
+import javax.swing.JFrame;
+import javax.swing.event.ChangeListener;
+
+import com.netscape.management.client.Framework;
+import com.netscape.management.client.IMenuInfo;
+import com.netscape.management.client.IMenuItem;
+import com.netscape.management.client.IPage;
+import com.netscape.management.client.IResourceModel;
+import com.netscape.management.client.IResourceObject;
+import com.netscape.management.client.MenuItemCategory;
+import com.netscape.management.client.MenuItemText;
+import com.netscape.management.client.ResourceModel;
+import com.netscape.management.client.ResourcePage;
+import com.netscape.management.client.StatusItemProgress;
+import com.netscape.management.client.console.ConsoleInfo;
+import com.netscape.management.client.util.ClassLoaderUtil;
+import com.netscape.management.client.util.Debug;
+import com.netscape.management.client.util.LDAPUtil;
+import com.netscape.management.client.util.ModalDialogUtil;
+import com.netscape.management.client.util.RemoteImage;
+import com.netscape.management.client.util.ResourceSet;
 import com.netscape.management.nmclf.SuiOptionPane;
+
+import netscape.ldap.LDAPAttribute;
+import netscape.ldap.LDAPAttributeSet;
+import netscape.ldap.LDAPConnection;
+import netscape.ldap.LDAPEntry;
+import netscape.ldap.LDAPException;
+import netscape.ldap.LDAPModification;
+import netscape.ldap.LDAPSearchResults;
 
 
 /**
@@ -179,7 +206,7 @@ INodeInfo {
         Vector products = new Vector();
         try {
             while (apps.hasMoreElements()) {
-                entry = (LDAPEntry) apps.next();
+                entry = apps.next();
 
                 name = LDAPUtil.flatting(
                         entry.getAttribute("nsproductname",
@@ -239,11 +266,11 @@ INodeInfo {
                 (LDAPSearchResults) sl.getProductType(getDN());
         try {
             while (result.hasMoreElements()) {
-                LDAPEntry ldapEntry = (LDAPEntry) result.next();
+                LDAPEntry ldapEntry = result.next();
                 LDAPSearchResults eResult = sl.getSIE(ldapEntry.getDN());
                 while (eResult.hasMoreElements()) {
                     LDAPEntry serverInstanceEntry =
-                            (LDAPEntry) eResult.next();
+                            eResult.next();
                     id = LDAPUtil.flatting(
                             serverInstanceEntry.getAttribute("nsserverid",
                             LDAPUtil.getLDAPAttributeLocale()));
@@ -323,12 +350,12 @@ INodeInfo {
                 (LDAPSearchResults) sl.getProductType(getDN());
         try {
             while (result.hasMoreElements()) {
-                LDAPEntry ldapEntry = (LDAPEntry) result.next();
+                LDAPEntry ldapEntry = result.next();
 
                 LDAPSearchResults eResult = sl.getSIE(ldapEntry.getDN());
                 while (eResult.hasMoreElements()) {
                     LDAPEntry serverInstanceEntry =
-                            (LDAPEntry) eResult.next();
+                            eResult.next();
                     ServerNode sn = new ServerNode(_consoleInfo, sl,
                             serverInstanceEntry);
 
@@ -408,7 +435,7 @@ INodeInfo {
                         }
                     }
                 }
-                
+
                 /*
                  * nsserveraddress might not be defined, which means that the
                  * admin server should listen on all interfaces rather than on
@@ -418,7 +445,7 @@ INodeInfo {
                 if ((host == null) || (host.trim().length() == 0) || host.equals("0.0.0.0")) {
                     LDAPEntry sieEntry = ldc.read(dn=ldapDN, new String[] {"serverhostname"});
                     if (sieEntry == null) {
-                        Debug.println(0, "AdminGroupNode.findAdminURL: " + 
+                        Debug.println(0, "AdminGroupNode.findAdminURL: " +
                          "could not get serverhostname from " + ldapDN);
                         return null;
 
@@ -635,7 +662,7 @@ INodeInfo {
         replaceNodeDataValue(data);
 
         String dn = getDN();
-        LDAPAttribute attr = new LDAPAttribute((String) data.getID(),
+        LDAPAttribute attr = new LDAPAttribute(data.getID(),
                 (String) data.getValue());
         LDAPModification modification =
                 new LDAPModification(LDAPModification.REPLACE, attr);
@@ -774,7 +801,7 @@ INodeInfo {
             rpm.fireChangeStatusItemState(null, Framework.STATUS_TEXT,
                     status);
             rpm.fireChangeStatusItemState(null,
-                    ResourcePage.STATUS_PROGRESS, new Integer(0));
+                    ResourcePage.STATUS_PROGRESS, Integer.valueOf(0));
         }
     }
 

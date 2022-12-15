@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -20,19 +20,73 @@
 
 package com.netscape.management.client.topology;
 
-import java.util.*;
-import java.awt.*;
-import java.io.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.border.*;
-import com.netscape.management.client.*;
-import com.netscape.management.client.console.*;
-import com.netscape.management.client.components.*;
-import com.netscape.management.client.ug.*;
-import com.netscape.management.client.util.*;
-import netscape.ldap.*;
-import netscape.ldap.controls.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.MouseAdapter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Locale;
+import java.util.StringTokenizer;
+import java.util.Vector;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.JTextArea;
+import javax.swing.UIManager;
+import javax.swing.border.Border;
+
+import com.netscape.management.client.Framework;
+import com.netscape.management.client.IMenuInfo;
+import com.netscape.management.client.IMenuItem;
+import com.netscape.management.client.IPage;
+import com.netscape.management.client.IResourceModel;
+import com.netscape.management.client.IResourceObject;
+import com.netscape.management.client.MenuItemSeparator;
+import com.netscape.management.client.MenuItemText;
+import com.netscape.management.client.ResourceModel;
+import com.netscape.management.client.ResourceModelEvent;
+import com.netscape.management.client.ResourceObject;
+import com.netscape.management.client.ResourcePage;
+import com.netscape.management.client.StatusItemProgress;
+import com.netscape.management.client.components.StatusDialog;
+import com.netscape.management.client.components.UIConstants;
+import com.netscape.management.client.console.ConsoleInfo;
+import com.netscape.management.client.ug.ResourceEditor;
+import com.netscape.management.client.util.ClassLoaderUtil;
+import com.netscape.management.client.util.Debug;
+import com.netscape.management.client.util.IProgressListener;
+import com.netscape.management.client.util.JButtonFactory;
+import com.netscape.management.client.util.LDAPUtil;
+import com.netscape.management.client.util.LocalJarClassLoader;
+import com.netscape.management.client.util.ModalDialogUtil;
+import com.netscape.management.client.util.RemoteImage;
+import com.netscape.management.client.util.ResourceSet;
+import com.netscape.management.client.util.UtilConsoleGlobals;
+
+import netscape.ldap.LDAPAttribute;
+import netscape.ldap.LDAPConnection;
+import netscape.ldap.LDAPEntry;
+import netscape.ldap.LDAPException;
+import netscape.ldap.LDAPSearchConstraints;
+import netscape.ldap.LDAPSearchResults;
+import netscape.ldap.LDAPSortKey;
+import netscape.ldap.controls.LDAPSortControl;
 
 
 /**
@@ -42,7 +96,7 @@ import netscape.ldap.controls.*;
   * @author Miodrag Keckic
   * @author Terence Kwan
   */
-public class ServerNode extends ServerLocNode implements IMenuInfo 
+public class ServerNode extends ServerLocNode implements IMenuInfo
 {
     private static final String ERROR_PREFIX = "error"; // prefix used for retrieving values in ResourceSet
 
@@ -68,7 +122,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
     private LDAPConnection ldc;
     private LDAPEntry ldapEntry;
     private String topologyDN;
-    
+
     // Server related
     private IServerObject serverObject;
     private static Hashtable serverObjectsCache = new Hashtable(); // used to cache IServerObject for cloning
@@ -80,20 +134,20 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
     private static RemoteImage noJarIcon = new RemoteImage(resource.getString("tree", "noJarIcon"));
     // An icon that denotes that server jar download failed, or the instance could not be created
     private static RemoteImage failedLoadIcon = new RemoteImage(resource.getString("tree", "failedLoadIcon"));
-    
+
     // Server Cloning
     private static ProductSelectionDialog cloneSelection = null;
     private static String[]nicknameList = null; // used to cache nicknames used to filter IServerObjects for cloning
 
     //private boolean testJarLoadFailure = true;
-    
+
     /**
      * constructor
      *
      * @param sl service locator object which use to find other servers
      * @param ldapEntry LDAP Entry for the server
      */
-    public ServerNode(ServiceLocator sl, LDAPEntry ldapEntry) 
+    public ServerNode(ServiceLocator sl, LDAPEntry ldapEntry)
     {
         this(sl.getConsoleInfo(), sl, ldapEntry);
     }
@@ -106,7 +160,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
      * @param sl service locator object which use to find other servers
      * @param ldapEntry LDAP Entry for the server
      */
-    public ServerNode(ConsoleInfo ci, ServiceLocator sl, LDAPEntry ldapEntry) 
+    public ServerNode(ConsoleInfo ci, ServiceLocator sl, LDAPEntry ldapEntry)
     {
         super(sl);
         this.ldapEntry = ldapEntry;
@@ -121,12 +175,12 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
      *
      * @param ldapEntry the server's ldap entry
      */
-    public void initialize(LDAPEntry ldapEntry) 
+    public void initialize(LDAPEntry ldapEntry)
     {
         String serverName = LDAPUtil.flatting(ldapEntry.getAttribute("serverProductName", LDAPUtil.getLDAPAttributeLocale()));
         if (serverName == null)
             serverName = LDAPUtil.flatting( ldapEntry.getAttribute("cn", LDAPUtil.getLDAPAttributeLocale()));
-        
+
         String serverDN = ldapEntry.getDN();
         topologyDN = serverDN;
 
@@ -137,7 +191,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
         // Lookup the server object in the cache.
         Object obj = serverObjectsCache.get(serverDN);
 
-        if (obj != null) 
+        if (obj != null)
             {
                 _fLoaded = true;
                 serverObject = (IServerObject) obj;
@@ -150,7 +204,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
 
                 setIcon(serverObject.getIcon());
             }
-        else 
+        else
             {
                 // Try to present server object in the topology without creating the
                 // object instance. Look for the cached server icon in <jarName>.icon file.
@@ -160,27 +214,27 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
                  * instead.
                  *
                 String jarBaseName  = jarName; // jar name without extension
-                if (jarName.indexOf('.') > 0) 
+                if (jarName.indexOf('.') > 0)
                     {
                         jarBaseName = jarName.substring(0, jarName.indexOf('.'));
                     }
                 cacheIconPath = LocalJarClassLoader.jarsDir + jarBaseName + ".icon";
                 ImageIcon icon = (ImageIcon)getIconFromCache(cacheIconPath);
-                if (icon != null) 
+                if (icon != null)
                     {
                         setIcon(icon);
                     }
-                else 
+                else
                     { */
                         // Instantiate the server object if it's jar is available
-                        if (ClassLoaderUtil.isAlreadyDownload(jarName)) 
+                        if (ClassLoaderUtil.isAlreadyDownload(jarName))
                             {
                                 reload();
                             }
-                        else 
+                        else
                             {
                                 String compatibleJar = LocalJarClassLoader.checkForNewerVersion(jarName);
-                                if (compatibleJar != null && ClassLoaderUtil.isAlreadyDownload(compatibleJar)) 
+                                if (compatibleJar != null && ClassLoaderUtil.isAlreadyDownload(compatibleJar))
                                     {
                                         reload();
                                     }
@@ -192,10 +246,10 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
     /**
      * Creates instance of a server object. If the real instance can not be created,
      * due to a jar download failure or some other reason, a dummy instance is created
-     * in order to provide default server info in the RHP. Otherwise, RHP would 
+     * in order to provide default server info in the RHP. Otherwise, RHP would
      * be empty.
      */
-    public void reload() 
+    public void reload()
     {
         if (!_fLoaded && serverObject == null)
             {
@@ -205,23 +259,23 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
                 {
                     if (((ResourceObject)serverObject).getName() != null)
                         ServerNode.this.setName(((ResourceObject)serverObject).getName());
-                                                                                                            
+
                     if (serverObject instanceof AbstractServerObject)
                         {
                             ((AbstractServerObject)serverObject).setNodeObject(ServerNode.this);
                         }
-                                                                                                            
+
                     setIcon(serverObject.getIcon());
             /*        if (cacheIconPath != null)
                         {
                             ImageIcon icon =(ImageIcon)serverObject.getIcon();
-                                                                                                            
+
                             // Craete a new Icon object. Circumvent RemoteImage as
                             // it might have different version from one jar to another
                             cacheIcon(cacheIconPath, new ImageIcon(icon.getImage()));
                         }
             */
-                                                                                                            
+
                     customPanel = serverObject.getCustomPanel();
                 }
             else // failed
@@ -229,14 +283,14 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
                     setIcon(failedLoadIcon);
                     customPanel = new ServerLoadFailedPanel(getName());
                 }
-                                                                                                            
+
             if(viewInstance != null)
                 {
                     ResourcePage page = (ResourcePage) viewInstance;
                     ResourceModel model = (ResourceModel) page.getModel();
                     page.changeCustomPanel(new ResourceModelEvent(model, page, customPanel));
                 }
-                                                                                                            
+
             if(isSelectPending && viewInstance != null)
                 {
                     isSelectPending = false;
@@ -248,38 +302,38 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
     /**
      * Serialize icon and store in cache
      */
-    private static void cacheIcon(String file, Object obj) 
+    private static void cacheIcon(String file, Object obj)
     {
         FileOutputStream fos = null;
         ObjectOutputStream  objos = null;
 
-        try 
+        try
             {
                 fos = new FileOutputStream(new File(file));
                 objos = new ObjectOutputStream(fos);
                 objos.writeObject(obj);
                 objos.flush();
             }
-        catch(Exception ex) 
+        catch(Exception ex)
             {
                 Debug.println(0, "Failed to serialize " + file + " "  + ex);
             }
-        finally 
+        finally
             {
-                try 
+                try
                     {
-                        if (objos != null) 
+                        if (objos != null)
                             {
                                 objos.close();
                             }
-                        if (fos != null) 
+                        if (fos != null)
                             {
                                 fos.close();
                             }
                     }
                 catch (Exception ex) {}
             }
-    }	
+    }
 
     /**
      * Get Icon from cache
@@ -289,29 +343,29 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
         FileInputStream fis = null;
         ObjectInputStream  objis = null;
 
-        try 
+        try
             {
                 fis = new FileInputStream(new File(file));
                 objis = new ObjectInputStream(fis);
                 return objis.readObject();
             }
-        catch(java.io.FileNotFoundException ex) 
+        catch(java.io.FileNotFoundException ex)
             {
                 ; // Ignore
             }
-        catch(Exception ex) 
+        catch(Exception ex)
             {
                 Debug.println(0, "Failed to deserialize " + file + " "  + ex);
             }
-        finally 
+        finally
             {
-                try 
+                try
                     {
-                        if (objis != null) 
+                        if (objis != null)
                             {
                                 objis.close();
                             }
-                        if (fis != null) 
+                        if (fis != null)
                             {
                                 fis.close();
                             }
@@ -324,7 +378,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
     /**
      * returns true if server node corresponds to MCC Registry DS instance
      */
-    private boolean isMCCRegistryServer() 
+    private boolean isMCCRegistryServer()
     {
         String hostname = LDAPUtil.flatting(ldapEntry.getAttribute("serverhostname", LDAPUtil.getLDAPAttributeLocale()));
         String port = LDAPUtil.flatting(ldapEntry.getAttribute("nsserverport", LDAPUtil.getLDAPAttributeLocale()));
@@ -332,8 +386,8 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
         if ((consoleInfo.getHost().equals(hostname)) &&
             (String.valueOf(consoleInfo.getPort()).equals(port))) {
             return true;
-        } 
-        else 
+        }
+        else
             {
                 return false;
             }
@@ -344,9 +398,9 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
      *
      * @param viewInstance console's instance
      */
-    public void unselect(IPage viewInstance) 
+    public void unselect(IPage viewInstance)
     {
-        if (serverObject != null) 
+        if (serverObject != null)
             {
                 serverObject.unselect(viewInstance);
             }
@@ -357,19 +411,19 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
      *
      * @param viewInstance console's instance
      */
-    public void select(IPage viewInstance) 
+    public void select(IPage viewInstance)
     {
         this.viewInstance = viewInstance;
         this.parentFrame = viewInstance.getFramework().getJFrame();
-                      
+
         if (serverObject == null)
             {
                 reload();
             }
-        
+
         if (serverObject != null)
             {
-                if ((viewInstance instanceof ResourcePage) == false) 
+                if ((viewInstance instanceof ResourcePage) == false)
                     {
                         return;
                     }
@@ -380,11 +434,11 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
                 IResourceObject[] selection = rp.getSelection();
                 ResourceModel rpm = (ResourceModel) rp.getModel();
 
-                if (selection != null && selection.length == 1) 
+                if (selection != null && selection.length == 1)
                     {
                         enableSetACLMenuItem = true;
                         enableCloneMenuItem = false;
-                        if (serverObject instanceof AbstractServerObject) 
+                        if (serverObject instanceof AbstractServerObject)
                             {
                                 AbstractServerObject aso = (AbstractServerObject)serverObject;
                                 enableSetACLMenuItem = aso.isACLEnabled();
@@ -397,8 +451,8 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
                             enableRemoveMenuItem = true;
                         else
                             enableRemoveMenuItem = false;
-                    } 
-                else 
+                    }
+                else
                     {
                         enableSetACLMenuItem = false;
                         enableCloneMenuItem = false;
@@ -434,25 +488,25 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
      * @param selection list of currently selected object
      * @return true if they are removeable. false otherwise
      */
-    private boolean isRemovable(IResourceObject[] selection) 
+    private boolean isRemovable(IResourceObject[] selection)
     {
         ServerNode snode = null;
         IServerObject snodeObject = null;
-        for (int i = 0; i < selection.length; i++) 
+        for (int i = 0; i < selection.length; i++)
             {
                 // If every selected object is not a ServerNode, then we don't really
                 // need to check this since the remove menu item won't even appear.
                 // However, keep the check for completeness.
-                if (selection[i] instanceof ServerNode) 
+                if (selection[i] instanceof ServerNode)
                     {
                         snode = (ServerNode)(selection[i]);
                         snodeObject = snode.getServerObject();
-                        if ((snodeObject == null) || ((snodeObject instanceof IRemovableServerObject) == false) || snode.isMCCRegistryServer()) 
+                        if ((snodeObject == null) || ((snodeObject instanceof IRemovableServerObject) == false) || snode.isMCCRegistryServer())
                             {
                                 return false;
                             }
-                    } 
-                else 
+                    }
+                else
                     {
                         return false;
                     }
@@ -465,9 +519,9 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
      * Overloads ResourceObject.getClassName because we want to compare this object's
      * IServerObject classname, not this ServerNode classname!
      */
-    public String getClassName() 
+    public String getClassName()
     {
-        if (serverObject != null) 
+        if (serverObject != null)
             {
                 return serverObject.getClass().getName();
             }
@@ -481,11 +535,11 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
      * @param viewInstance console instance
      * @param selection array of current selection
      */
-    public boolean run(IPage viewInstance, IResourceObject[] selection) 
+    public boolean run(IPage viewInstance, IResourceObject[] selection)
     {
-        if (serverObject != null) 
+        if (serverObject != null)
             {
-                if (Debug.timeTraceEnabled()) 
+                if (Debug.timeTraceEnabled())
                     {
                         Debug.println(Debug.TYPE_RSPTIME, "Open " + getName() + " ...");
                     }
@@ -506,18 +560,18 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
      *
      * @return right hand panel
      */
-    public Component getCustomPanel() 
+    public Component getCustomPanel()
     {
-        if (serverObject == null) 
+        if (serverObject == null)
             {
                 reload();
             }
-        
-        if (serverObject != null) 
+
+        if (serverObject != null)
             {
                 customPanel = serverObject.getCustomPanel();
             }
-        
+
         return customPanel;
     }
 
@@ -526,7 +580,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
      *
      * @return list of menu categories which is required.
      */
-    public String[] getMenuCategoryIDs() 
+    public String[] getMenuCategoryIDs()
     {
         return new String[]{ ResourcePage.MENU_OBJECT,
                              ResourcePage.MENU_CONTEXT };
@@ -538,7 +592,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
      * @param category category name
      * @return list of the menu items for the given category
      */
-    public IMenuItem[] getMenuItems(String category) 
+    public IMenuItem[] getMenuItems(String category)
     {
         if (category.equals(ResourcePage.MENU_OBJECT) ||
             category.equals(ResourcePage.MENU_CONTEXT)) {
@@ -571,42 +625,42 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
      */
     public void actionMenuSelected(IPage viewInstance, IMenuItem item)
     {
-        if (item.getID().equals(MENU_SET_ACL)) 
+        if (item.getID().equals(MENU_SET_ACL))
             {
                 PermissionDlg dlg = new PermissionDlg(consoleInfo, topologyDN);
                 dlg.show();
                 ModalDialogUtil.disposeAndRaise(dlg, viewInstance.getFramework().getJFrame());
             }
-        else 
-            if (item.getID().equals(MENU_OPEN_SERVER)) 
+        else
+            if (item.getID().equals(MENU_OPEN_SERVER))
                 {
-                    if (serverObject != null) 
+                    if (serverObject != null)
                         {
-                            if (viewInstance instanceof ResourcePage) 
+                            if (viewInstance instanceof ResourcePage)
                                 {
                                     IResourceObject[] selection =
                                         ((ResourcePage) viewInstance).getSelection();
-                                    if (serverObject.canRunSelection(selection)) 
+                                    if (serverObject.canRunSelection(selection))
                                         {
                                             run(viewInstance, selection);
                                         }
                                 }
                         }
-                } 
-            else 
-                if (item.getID().equals(MENU_CLONE_SERVER)) 
+                }
+            else
+                if (item.getID().equals(MENU_CLONE_SERVER))
                     {
                         // Multiple selection not allowed.
-                        if (serverObject != null) 
+                        if (serverObject != null)
                             {
                                 ServerCloneThread thread =
                                     new ServerCloneThread(consoleInfo, resource,
                                                           serverObject, viewInstance);
                                 thread.start();
                             }
-                    } 
-                else 
-                    if (item.getID().equals(MENU_REMOVE_SERVER)) 
+                    }
+                else
+                    if (item.getID().equals(MENU_REMOVE_SERVER))
                         {
                             if (serverObject != null) {
                                 if (serverObject instanceof IRemovableServerObject) {
@@ -634,7 +688,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
      *
      * @return server object
      */
-    public IServerObject getServerObject() 
+    public IServerObject getServerObject()
     {
         return serverObject;
     }
@@ -644,7 +698,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
      *
      * @return true if it is an admin server. false otherwise.
      */
-    public boolean isAdminServer() 
+    public boolean isAdminServer()
     {
         String myName = LDAPUtil.flatting( ldapEntry.getAttribute("cn",
                                                                   LDAPUtil.getLDAPAttributeLocale()));
@@ -667,7 +721,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
      * The "nickname" attribute is available in the LDAPEntry
      * of the "seeAlso" attribute of my LDAPEntry.
      */
-    protected String getServerNickname() 
+    protected String getServerNickname()
     {
         String[] nicknames = getProductNicknames();
         if (nicknames == null || nicknames.length == 0) {
@@ -679,9 +733,9 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
                                                                   LDAPUtil.getLDAPAttributeLocale()));
         myName = myName.toLowerCase();
 
-        for(int i = 0; i < nicknames.length; i++) 
+        for(int i = 0; i < nicknames.length; i++)
             {
-                if (myName.startsWith(nicknames[i])) 
+                if (myName.startsWith(nicknames[i]))
                     {
                         Debug.println(
                                       "TRACE ServerNode.getServerNickname: nickname = " +
@@ -698,26 +752,26 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
      *
      * @return list of product nickname
      */
-    protected String[] getProductNicknames() 
+    protected String[] getProductNicknames()
     {
         // Reuse if possible
-        if (nicknameList != null) 
+        if (nicknameList != null)
             {
                 return nicknameList;
             }
 
         String gpe = "cn=client, ou=admin, ou=Global Preferences,"+
             LDAPUtil.getInstalledSoftwareDN();
-        try 
+        try
             {
                 LDAPEntry entry = ldc.read(gpe);
-                if (entry == null) 
+                if (entry == null)
                     {
                         Debug.println("ERROR ServerNode.getProductNicknames: could not get global parameters entry = " + gpe);
                         return null;
                     }
                 LDAPAttribute attribute = entry.getAttribute("nsNickname", LDAPUtil.getLDAPAttributeLocale());
-                if (attribute == null) 
+                if (attribute == null)
                     {
                         Debug.println("ERROR ServerNode.getProductNicknames: no 'nsNickname' attribute");
                         return null;
@@ -727,11 +781,11 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
                 String productLine = null;
                 String nickname = null;
                 int index = 0;
-                while (e.hasMoreElements()) 
+                while (e.hasMoreElements())
                     {
                         productLine = (String) e.nextElement();
                         index = productLine.indexOf(',');
-                        if (index == -1) 
+                        if (index == -1)
                             {
                                 Debug.println("ERROR ServerNode.getProductNicknames: malformed value (no comma): " + productLine);
                                 continue;
@@ -739,7 +793,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
                         nickname = (productLine.substring(0, index)).toLowerCase();
                         nicknames.addElement(nickname);
                     }
-                if (nicknames.size() == 0) 
+                if (nicknames.size() == 0)
                     {
                         return null;
                     }
@@ -759,10 +813,10 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
      * If the server is not in the cache, instantiate a new IServerObject, passing in
      * the ServiceLocator and ConsoleInfo of this server.
      */
-    private synchronized CloneTarget[] getCloneTargets() 
+    private synchronized CloneTarget[] getCloneTargets()
     {
         String nickname = getServerNickname();
-        if (nickname == null) 
+        if (nickname == null)
             {
                 Debug.println("ERROR ServerNode.getCloneTargets: nickname is null");
                 return null;
@@ -821,7 +875,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
         String serverNickname = "cn=" + nickname.toLowerCase();
         while (results.hasMoreElements()) {
             try {
-                serverEntry = (LDAPEntry) results.next();
+                serverEntry = results.next();
             } catch (Exception e) {
                 // ldap exception
                 continue;
@@ -919,8 +973,8 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
             Debug.println("ERROR ServerNode.createServerInstance: createServerInstance failed");
             Debug.println("    LDAPException: " + e);
             return null;
-        }        
-    }    
+        }
+    }
 
 
 
@@ -932,7 +986,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
      * are created for cloning (because the Topology tree node may
      * not have been "expanded" to cause the creation of these instances).
      */
-    protected void initializeConsoleInfo(ConsoleInfo ci, String serverDN) 
+    protected void initializeConsoleInfo(ConsoleInfo ci, String serverDN)
     {
         String adminURL = getInstanceAdminURL(ldc, serverDN);
         if (adminURL == null) {
@@ -998,7 +1052,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
             if ((host == null) || (host.trim().length() == 0) || host.equals("0.0.0.0")) {
                 LDAPEntry sieEntry = ldc.read(dn=adminServerDN, new String[] {"serverhostname"});
                 if (sieEntry == null) {
-                    Debug.println(0, "ERROR ConsoleInfo.getInstanceAdminURL: " + 
+                    Debug.println(0, "ERROR ConsoleInfo.getInstanceAdminURL: " +
                                   "could not get serverhostname from " + adminServerDN);
                     return null;
                 }
@@ -1081,14 +1135,14 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
      * @param isBusy        boolean flag to indicate busy
      * @param status        status text to be displayed
      */
-    private synchronized void setBusyIndicator(IPage viewInstance, boolean isBusy, String status) 
+    private synchronized void setBusyIndicator(IPage viewInstance, boolean isBusy, String status)
     {
 
-        setBusyIndicator(viewInstance, isBusy, status, 
-                         (isBusy ? StatusItemProgress.STATE_BUSY : new Integer (0)));
+        setBusyIndicator(viewInstance, isBusy, status,
+                         (isBusy ? StatusItemProgress.STATE_BUSY : Integer.valueOf(0)));
     }
 
-    private synchronized void setBusyIndicator(IPage viewInstance, boolean isBusy, String status, Object progress) 
+    private synchronized void setBusyIndicator(IPage viewInstance, boolean isBusy, String status, Object progress)
     {
         JFrame jframe = (viewInstance != null) ? viewInstance.getFramework().getJFrame() :
             UtilConsoleGlobals.getActivatedFrame();
@@ -1136,7 +1190,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
         Debug.println(5, "Instantiate  " + topologyDN);
         IServerObject so = null;
         Object obj = serverObjectsCache.get(serverDN);
-        if (obj != null && (obj instanceof IServerObject) == true) 
+        if (obj != null && (obj instanceof IServerObject) == true)
             {
                 Debug.println("TRACE ServerNode.createServerInstance: instance already exists: " + serverID);
                 so = (IServerObject) obj;
@@ -1144,32 +1198,32 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
             }
 
         String configDN = "cn=configuration," + serverDN;
-        try 
+        try
             {
-                setBusyIndicator(null, true, "", new Integer(0));
+                setBusyIndicator(null, true, "", Integer.valueOf(0));
                 LDAPEntry configEntry = ldc.read(configDN);
                 String className = LDAPUtil.flatting(configEntry.getAttribute("nsClassname", LDAPUtil.getLDAPAttributeLocale()));
-                if (className == null) 
+                if (className == null)
                     {
                         Debug.println("ERROR ServerNode.createServerInstance: no 'nsClassname' attribute in " + configDN);
                         return null;
                     }
 
                 ConsoleInfo ci = null;
-                if (createForSelf == true) 
+                if (createForSelf == true)
                     {
                         ci = (ConsoleInfo)consoleInfo.clone();
-                        if (ci == null) 
+                        if (ci == null)
                             {
                                 Debug.println("ERROR ServerNode.createServerInstance: could not clone ConsoleInfo");
                                 return null;
                             }
-                    } 
+                    }
                 else
                     {
                         ci = (ConsoleInfo)
                             (getServiceLocator().getConsoleInfo().clone());
-                        if (ci == null) 
+                        if (ci == null)
                             {
                                 Debug.println("ERROR ServerNode.createServerInstance: could not clone ConsoleInfo");
                                 return null;
@@ -1181,7 +1235,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
 
                 String jarName = getJARClassName(ldc, serverDN);
                 final boolean isDownloaded = ClassLoaderUtil.isAlreadyDownload(jarName);
-                
+
                 if (!isDownloaded && statusDialog == null)
                     {
                         //String title = resource.getString("ServerNodeStatus", "Title");
@@ -1192,20 +1246,20 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
                         statusDialog.setHideDelay(3000);
                         // statusDialog.setIcon(...); // TODO: need icon for jar download
                     }
-                
+
                 IProgressListener progressListener = new IProgressListener()
                     {
                         String progressTemplate = resource.getString("ServerNodeStatus", "Progress");
-                    
-                        public void progressUpdate(String jarFilename, int totalBytes, int bytesDone) 
+
+                        public void progressUpdate(String jarFilename, int totalBytes, int bytesDone)
                         {
                             int percentDone = 0;
-                            if(totalBytes > 0) 
+                            if(totalBytes > 0)
                                 {
                                     percentDone = (totalBytes == bytesDone) ? 100 : (int)((bytesDone * 100.) / totalBytes);
                                 }
-                        
-                            Object args[] = { jarFilename, new Integer(bytesDone / 1024) };
+
+                            Object args[] = { jarFilename, Integer.valueOf(bytesDone / 1024) };
                             String progressText = java.text.MessageFormat.format(progressTemplate, args);
                             statusDialog.setProgressText(progressText);
                             statusDialog.setProgressValue(percentDone);
@@ -1228,7 +1282,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
                         if(!isDownloaded) {
                             statusDialog.setVisible(false);
                         }
-                    } 
+                    }
                 catch (Exception e)
                     {
                         setBusyIndicator(null, false, "");
@@ -1242,19 +1296,19 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
                         return null;
                     }
 
-                setBusyIndicator(null, true, "", new Integer(0));
+                setBusyIndicator(null, true, "", Integer.valueOf(0));
 
-                if (c == null) 
+                if (c == null)
                     {
                         Debug.println("ERROR ServerNode.createServerInstance: could not get class " + className);
                         return null;
                     }
 
-                try 
+                try
                     {
                         so = (IServerObject) c.newInstance();
-                    } 
-                catch (Exception e) 
+                    }
+                catch (Exception e)
                     {
                         Debug.println(0,
                                       "ERROR ServerNode.createServerInstance: could not create " +
@@ -1271,7 +1325,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
                         return null;
                     }
 
-                if (ci.getAdminURL() == null) 
+                if (ci.getAdminURL() == null)
                     {
                         String serevrDN = getDN();
                         String productDN =
@@ -1288,7 +1342,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
                     }
                 so.initialize(ci);
                 loadResourceEditorExtension(ci, jarName);
-                if (so instanceof ResourceObject) 
+                if (so instanceof ResourceObject)
                     {
                         ((ResourceObject) so).setName(serverID);
                     }
@@ -1296,13 +1350,13 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
                 serverObjectsCache.put(serverDN, so);
                 return so;
             }
-        catch (LDAPException e) 
+        catch (LDAPException e)
             {
                 Debug.println("ERROR ServerNode.createServerInstance: createServerInstance failed");
                 Debug.println("    LDAPException: " + e);
                 return null;
             }
-        finally 
+        finally
             {
                 setBusyIndicator(null, false, null);
             }
@@ -1334,7 +1388,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
                 while (result.hasMoreElements()) {
                     LDAPEntry ExtensionEntry;
                     try {
-                        ExtensionEntry = (LDAPEntry) result.next();
+                        ExtensionEntry = result.next();
                     } catch (Exception e) {
                         // ldap exception
                         continue;
@@ -1391,7 +1445,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
                             deleteResourceEditorExtension.put(
                                     sCN.toLowerCase(), deleteClassesVector);
                         }
- 
+
                         while (deleteClasses.hasMoreElements()) {
                             String jarClassname = (String)
                                     deleteClasses.nextElement();
@@ -1422,7 +1476,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
         IResourceObject[]selection;
 
         public ServerRunThread(IResourceObject node,
-                               IPage viewInstance, IResourceObject[] selection) 
+                               IPage viewInstance, IResourceObject[] selection)
         {
             this.node = node;
             this.viewInstance = viewInstance;
@@ -1449,14 +1503,14 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
     /**
      * Inner class for removing the server instance in a separate thread.
      */
-    class ServerRemoveThread extends Thread 
+    class ServerRemoveThread extends Thread
     {
         ConsoleInfo ci;
         ResourceSet resource;
         IResourceObject node;
         IPage viewInstance;
 
-        public ServerRemoveThread(ConsoleInfo ci, ResourceSet resource, IResourceObject node, IPage viewInstance) 
+        public ServerRemoveThread(ConsoleInfo ci, ResourceSet resource, IResourceObject node, IPage viewInstance)
         {
             this.ci = ci;
             this.resource = resource;
@@ -1464,7 +1518,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
             this.viewInstance = viewInstance;
         }
 
-        public void run() 
+        public void run()
         {
             // Catch exception as a defensive measure to prevent the
             // run method from exiting without unsetting the busy
@@ -1503,7 +1557,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
     /**
      * Inner class for cloning a server instance in a separate thread.
      */
-    class ServerCloneThread extends Thread 
+    class ServerCloneThread extends Thread
     {
         ConsoleInfo ci;
         ResourceSet resource;
@@ -1511,7 +1565,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
         IPage viewInstance;
         JFrame frame;
 
-        public ServerCloneThread(ConsoleInfo ci, ResourceSet resource, IResourceObject node, IPage viewInstance) 
+        public ServerCloneThread(ConsoleInfo ci, ResourceSet resource, IResourceObject node, IPage viewInstance)
         {
             this.ci = ci;
             this.resource = resource;
@@ -1617,7 +1671,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
                                                        false, "");
             } }
     }
-    
+
     class ServerLoadFailedPanel extends JPanel implements UIConstants
     {
         ServerLoadFailedPanel(String titleText)
@@ -1625,7 +1679,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
             GridBagLayout g = new GridBagLayout();
             GridBagConstraints c = new GridBagConstraints();
             setLayout(g);
-            
+
             Border spacingBorder = BorderFactory.createEmptyBorder(VERT_WINDOW_INSET,
                                                                    HORIZ_WINDOW_INSET, VERT_WINDOW_INSET, HORIZ_WINDOW_INSET);
             Border etchedBorder = BorderFactory.createEtchedBorder();
@@ -1633,7 +1687,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
 
             //String titleText = resource.getString("ServerNodeError", "retryTitle");
             JLabel titleLabel = new JLabel(titleText);
-            
+
             titleLabel.setIcon(failedLoadIcon);
             titleLabel.setFont(UIManager.getFont("Title.font"));
             ActionListener l = new ActionListener()
@@ -1644,7 +1698,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
                         reload();
                     }
                 };
-            
+
             String buttonText = resource.getString("ServerNodeError","retryButton");
             JButton retryButton = JButtonFactory.create(buttonText, l, "RETRY");
             JButtonFactory.resize(retryButton);
@@ -1652,7 +1706,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
             JPanel headingPanel = new JPanel(new BorderLayout());
             headingPanel.add(BorderLayout.WEST, titleLabel);
             headingPanel.add(BorderLayout.EAST, retryButton);
-                    
+
             c.gridx = 0;      c.gridy = 0;
             c.gridwidth = 2;  c.gridheight = 1;
             c.weightx = 0.0;    c.weighty = 0.0;
@@ -1683,8 +1737,8 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
             c.insets = new Insets(COMPONENT_SPACE, 0, DIFFERENT_COMPONENT_SPACE, 0);
             g.setConstraints(errorIcon, c);
             add(errorIcon);
-            
-            
+
+
             String descriptionText = resource.getString("ServerNodeError", "retryDescription");
             JTextArea descriptionArea = new JTextArea();
             descriptionArea.setEditable(false);
@@ -1710,7 +1764,7 @@ public class ServerNode extends ServerLocNode implements IMenuInfo
  * Class used to store necessary information about the
  * clone targets in order to create them if necessary.
  */
-class CloneTarget 
+class CloneTarget
 {
     private String dn;
     private String id;
@@ -1719,7 +1773,7 @@ class CloneTarget
     private String port;
     private String name;
 
-    public CloneTarget(String dn, String id, String idSuffix, String host, String port, String name) 
+    public CloneTarget(String dn, String id, String idSuffix, String host, String port, String name)
     {
         this.dn = dn;
         this.id = id;
@@ -1729,32 +1783,32 @@ class CloneTarget
         this.name = name;
     }
 
-    public String getServerDN() 
+    public String getServerDN()
     {
         return dn;
     }
 
-    public String getServerID() 
+    public String getServerID()
     {
         return id;
     }
 
-    public String getServerIDSuffix() 
+    public String getServerIDSuffix()
     {
         return idSuffix;
     }
 
-    public String getServerHost() 
+    public String getServerHost()
     {
         return host;
     }
 
-    public String getServerPort() 
+    public String getServerPort()
     {
         return port;
     }
 
-    public String getServerName() 
+    public String getServerName()
     {
         return name;
     }

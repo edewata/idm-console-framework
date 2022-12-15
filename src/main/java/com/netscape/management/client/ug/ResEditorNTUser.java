@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -20,14 +20,47 @@
 
 package com.netscape.management.client.ug;
 
-import java.util.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import com.netscape.management.client.console.*;
-import com.netscape.management.client.components.*;
-import com.netscape.management.client.util.*;
-import com.netscape.management.nmclf.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.util.BitSet;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.Vector;
+
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+
+import com.netscape.management.client.components.TimeDayPanel;
+import com.netscape.management.client.console.ConsoleInfo;
+import com.netscape.management.client.util.ADUtil;
+import com.netscape.management.client.util.AbstractDialog;
+import com.netscape.management.client.util.DateTimePicker;
+import com.netscape.management.client.util.Debug;
+import com.netscape.management.client.util.GridBagUtil;
+import com.netscape.management.client.util.Help;
+import com.netscape.management.client.util.ModalDialogUtil;
+import com.netscape.management.client.util.UtilConsoleGlobals;
+import com.netscape.management.nmclf.SuiLookAndFeel;
+import com.netscape.management.nmclf.SuiOptionPane;
 
 
 /**
@@ -70,10 +103,10 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
     public static String _NT_USER_PRIMARY_GROUP_ID="ntuserprimarygroupid";
     public static String _NT_USER_PASSWORD_EXPIRED="ntuserpasswordexpired";
     public static String _NT_UNIQUE_ID="ntUniqueId";
-    
+
     PickerEditorResourceSet _resource = new PickerEditorResourceSet();
     private String ID;
-    
+
     boolean    _enableModified; // A flag if _cbEnable was modified
 
     JCheckBox  _cbEnable;
@@ -90,7 +123,7 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
     JTextField _tfWorkstationList;
     JLabel     _lAccountExpired;
     JButton    _bExpiredDate;
-    
+
     String _oldDomainName;
     boolean _fCreateAccount;
     boolean _fDeleteAccount;
@@ -105,18 +138,18 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
     String _oldWorkstationList;
     String _oldExpiredDate;
     String _newExpiredDate;
-    
+
     boolean _isModified = false;
     boolean _isReadOnly = false;
     boolean _isEnable = true;
     private Vector componentVector = new Vector();
-    
+
     ResourceEditor _resourceEditor;
-    
+
     ConsoleInfo _info;
-    
+
     ResourcePageObservable _observable;
-    
+
     /**
      * Used to notify the ResourcePageObservable when a value has changed.
      * Note that this updates all observers.
@@ -131,7 +164,7 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
             if(w != null && w.getFocusOwner() == null) {
                 return;
             }
- 
+
             if (_observable == null) {
                 return;
             }
@@ -159,7 +192,7 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
             }
         }
     };
-    
+
     ActionListener enableActionListener = new ActionListener()
         {
             public void actionPerformed(ActionEvent ev)
@@ -175,15 +208,15 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
                 }
             }
         };
-    
+
     /**
      * Constructor
      */
     public ResEditorNTUser() {
         super(true);
     }
-    
-    
+
+
     /**
      * A utility method to make case-insensitive check for Vector containment.
      */
@@ -218,7 +251,7 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
         _resourceEditor = parent;
         _observable = observable;
         _info = observable.getConsoleInfo();
-        
+
         // create all the label
         JLabel infoLabel = new JLabel(_resource.getString("userPage","required"));
         JLabel nameLabel = new JLabel(_resource.getString("NTUserPage", "DomainName"),SwingConstants.RIGHT);
@@ -241,7 +274,7 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
         componentVector.addElement(LogonServerLabel);
         componentVector.addElement(WksLabel);
         componentVector.addElement(AccountExpiredLabel);
-        
+
         _tfDomainName = new JTextField();
         nameLabel.setLabelFor(_tfDomainName);
         _cbEnable = new JCheckBox(_resource.getString("NTUserPage","enable"));
@@ -278,7 +311,7 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
         componentVector.addElement(_tfWorkstationList);
         componentVector.addElement(_lAccountExpired);
         componentVector.addElement(_bExpiredDate);
-        
+
         _cbEnable.addActionListener(enableActionListener);
         _tfDomainName.addFocusListener(_focusAdaptor);
         _tfComment.addFocusListener(_focusAdaptor);
@@ -287,17 +320,17 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
         _tfHomeDir.addFocusListener(_focusAdaptor);
         _tfLogonServer.addFocusListener(_focusAdaptor);
         _tfWorkstationList.addFocusListener(_focusAdaptor);
-        
+
         _bLogonHour.addActionListener(this);
         _bExpiredDate.addActionListener(this);
-        
+
         JPanel p = new JPanel(new GridBagLayout());
         GridBagUtil.constrain(p, _cbEnable, 0, 0, GridBagConstraints.REMAINDER, 1, 0.0,
                               0.0, GridBagConstraints.NORTHWEST,
                               GridBagConstraints.HORIZONTAL,
                               SuiLookAndFeel.VERT_WINDOW_INSET,
                               SuiLookAndFeel.HORIZ_WINDOW_INSET, 0, 0);
-        
+
         GridBagUtil.constrain(p, nameLabel, 0, 1, 1, 1, 0.0, 0.0,
                               GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
                               SuiLookAndFeel.VERT_WINDOW_INSET,
@@ -308,19 +341,19 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
                               SuiLookAndFeel.VERT_WINDOW_INSET,
                               SuiLookAndFeel.COMPONENT_SPACE, 0,
                               SuiLookAndFeel.HORIZ_WINDOW_INSET);
-        
+
         GridBagUtil.constrain(p, _cbCreateAccount, 1, 2, GridBagConstraints.REMAINDER, 1, 0.0,
                               0.0, GridBagConstraints.NORTHWEST,
                               GridBagConstraints.HORIZONTAL,
                               SuiLookAndFeel.COMPONENT_SPACE,
                               SuiLookAndFeel.HORIZ_WINDOW_INSET, 0, 0);
-        
+
         GridBagUtil.constrain(p, _cbDeleteAccount, 1, 3, GridBagConstraints.REMAINDER, 1, 0.0,
                               0.0, GridBagConstraints.NORTHWEST,
                               GridBagConstraints.HORIZONTAL,
                               SuiLookAndFeel.COMPONENT_SPACE,
                               SuiLookAndFeel.HORIZ_WINDOW_INSET, 0, 0);
-        
+
         GridBagUtil.constrain(p, CommentLabel, 0, 4, 1, 1, 0.0, 0.0,
                               GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
                               SuiLookAndFeel.VERT_WINDOW_INSET,
@@ -331,7 +364,7 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
                               SuiLookAndFeel.VERT_WINDOW_INSET,
                               SuiLookAndFeel.COMPONENT_SPACE, 0,
                               SuiLookAndFeel.HORIZ_WINDOW_INSET);
-        
+
         GridBagUtil.constrain(p, ProfileLabel, 0, 5, 1, 1, 0.0, 0.0,
                               GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
                               SuiLookAndFeel.VERT_WINDOW_INSET,
@@ -342,7 +375,7 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
                               SuiLookAndFeel.VERT_WINDOW_INSET,
                               SuiLookAndFeel.COMPONENT_SPACE, 0,
                               SuiLookAndFeel.HORIZ_WINDOW_INSET);
-        
+
         GridBagUtil.constrain(p, ScriptLabel, 0, 6, 1, 1, 0.0, 0.0,
                               GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
                               SuiLookAndFeel.VERT_WINDOW_INSET,
@@ -353,7 +386,7 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
                               SuiLookAndFeel.VERT_WINDOW_INSET,
                               SuiLookAndFeel.COMPONENT_SPACE, 0,
                               SuiLookAndFeel.HORIZ_WINDOW_INSET);
-        
+
         GridBagUtil.constrain(p, HomeDriveLabel, 0, 7, 1, 1, 0.0, 0.0,
                               GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
                               SuiLookAndFeel.VERT_WINDOW_INSET,
@@ -364,7 +397,7 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
                               SuiLookAndFeel.VERT_WINDOW_INSET,
                               SuiLookAndFeel.COMPONENT_SPACE, 0,
                               SuiLookAndFeel.HORIZ_WINDOW_INSET);
-        
+
         GridBagUtil.constrain(p, HomeDirLabel, 0, 8, 1, 1, 0.0, 0.0,
                               GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
                               SuiLookAndFeel.VERT_WINDOW_INSET,
@@ -375,7 +408,7 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
                               SuiLookAndFeel.VERT_WINDOW_INSET,
                               SuiLookAndFeel.COMPONENT_SPACE, 0,
                               SuiLookAndFeel.HORIZ_WINDOW_INSET);
-        
+
         GridBagUtil.constrain(p, LogonServerLabel, 0, 9, 1, 1, 0.0, 0.0,
                               GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
                               SuiLookAndFeel.VERT_WINDOW_INSET,
@@ -386,14 +419,14 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
                               SuiLookAndFeel.VERT_WINDOW_INSET,
                               SuiLookAndFeel.COMPONENT_SPACE, 0,
                               SuiLookAndFeel.HORIZ_WINDOW_INSET);
-        
+
         GridBagUtil.constrain(p, _bLogonHour, 2, 9,
                               1, 1, 1.0, 0.0,
                               GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
                               SuiLookAndFeel.VERT_WINDOW_INSET,
                               SuiLookAndFeel.COMPONENT_SPACE, 0,
                               SuiLookAndFeel.HORIZ_WINDOW_INSET);
-        
+
         GridBagUtil.constrain(p, WksLabel, 0, 10, 1, 1, 0.0, 0.0,
                               GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
                               SuiLookAndFeel.VERT_WINDOW_INSET,
@@ -404,7 +437,7 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
                               SuiLookAndFeel.VERT_WINDOW_INSET,
                               SuiLookAndFeel.COMPONENT_SPACE, 0,
                               SuiLookAndFeel.HORIZ_WINDOW_INSET);
-        
+
         GridBagUtil.constrain(p, AccountExpiredLabel, 0, 11, 1, 1, 0.0, 0.0,
                               GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
                               SuiLookAndFeel.VERT_WINDOW_INSET,
@@ -421,14 +454,14 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
                               SuiLookAndFeel.VERT_WINDOW_INSET,
                               SuiLookAndFeel.COMPONENT_SPACE, 0,
                               SuiLookAndFeel.HORIZ_WINDOW_INSET);
-        
+
         GridBagUtil.constrain(p, infoLabel, 1, 12,
                               GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
                               GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
                               SuiLookAndFeel.VERT_WINDOW_INSET,
                               SuiLookAndFeel.HORIZ_WINDOW_INSET, 0,
                               SuiLookAndFeel.HORIZ_WINDOW_INSET);
-        
+
         GridBagUtil.constrain(p, blankLabel, 0, 13,
                               GridBagConstraints.REMAINDER,
                               GridBagConstraints.REMAINDER, 1.0, 1.0,
@@ -437,13 +470,13 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
                               SuiLookAndFeel.HORIZ_WINDOW_INSET,
                               SuiLookAndFeel.VERT_WINDOW_INSET,
                               SuiLookAndFeel.HORIZ_WINDOW_INSET);
-        
+
         JScrollPane sp = new JScrollPane(p);
         sp.setBorder(null);
-        
+
         setLayout(new BorderLayout());
         add("Center", sp);
-        
+
         // set the value
         Vector valueVector = observable.get("objectclass");
         _cbEnable.setSelected(!containsIgnoreCase(valueVector, _NT_OBJECTCLASS));
@@ -452,54 +485,54 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
 
         _oldDomainName = observable.get(_NT_USER_DOMAIN_ID, 0);
         _tfDomainName.setText(_oldDomainName);
-        
+
         String sTmp = observable.get(_NT_USER_CREATE_NEW_ACCOUNT,0);
         _fCreateAccount = Boolean.valueOf(sTmp.toLowerCase()).booleanValue();
         if (_fCreateAccount)
         {
             _cbCreateAccount.setSelected(true);
         }
-        
+
         sTmp = observable.get(_NT_USER_DELETE_ACCOUNT,0);
         _fDeleteAccount = Boolean.valueOf(sTmp.toLowerCase()).booleanValue();
         if (_fDeleteAccount)
         {
             _cbDeleteAccount.setSelected(true);
         }
-        
+
         _oldComment = observable.get(_NT_USER_COMMENT,0);
         _tfComment.setText(_oldComment);
-        
+
         _oldProfile = observable.get(_NT_USER_PROFILE,0);
         _tfProfile.setText(_oldProfile);
-        
+
         _oldScript = observable.get(_NT_USER_SCRIPT_PATH,0);
         _tfScript.setText(_oldScript);
-        
+
         _oldDrive = observable.get(_NT_USER_HOME_DIR_DRIVE,0);
         for (char c='C';c<='Z';c++)
         {
-            Character tmpC = new Character(c);
+            Character tmpC = Character.valueOf(c);
             _cbDrive.addItem(tmpC.toString());
         }
         _cbDrive.setSelectedItem(_oldDrive);
         if (_oldDrive == null || _oldDrive.length() == 0) {
             _oldDrive = (String)_cbDrive.getSelectedItem();
         }
-        
+
         _oldHomeDir = observable.get(_NT_USER_HOME_DIR,0);
         _tfHomeDir.setText(_oldHomeDir);
-        
+
         _oldLogonServer = observable.get(_NT_USER_LOGON_SERVER,0);
         _tfLogonServer.setText(_oldLogonServer);
-        
+
         byte bLogonHour[]= observable.getBytes(_NT_USER_LOGON_HOUR);
         _oldLogonHour = convertBitToString(bLogonHour);
         _newLogonHour = _oldLogonHour;
-        
+
         _oldWorkstationList = observable.get(_NT_USER_WORKSTATIONS,0);
         _tfWorkstationList.setText(_oldWorkstationList);
-        
+
         _oldExpiredDate = observable.get(_NT_USER_ACCT_EXPIRED,0);
         Date dt = ADUtil.convertToJavaDateTime(_oldExpiredDate);
         if (ADUtil.neverExpires(dt)) {
@@ -511,7 +544,7 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
         }
         _newExpiredDate = _oldExpiredDate;
     }
-    
+
     private String convertBitToString(byte b[])
     {
         String sReturn="";
@@ -526,7 +559,7 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
         }
         return sReturn;
     }
-    
+
     public byte[] convertStringToBit(String s)
     {
         byte b[] = new byte[s.length()];
@@ -534,15 +567,15 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
         {
             int iByte = i/8;
             byte iPos = (byte)(1<<(i % 8));
-            b[iByte]|=(byte)((s.charAt(i)=='0')?0:iPos);
+            b[iByte]|=(s.charAt(i)=='0')?0:iPos;
         }
         return b;
     }
-    
+
     private BitSet convertStringToBitSet(String s)
     {
         BitSet b = new BitSet(168);
-        
+
         for (int i=0;i<s.length();i++)
         {
             if (s.charAt(i)=='1')
@@ -552,13 +585,13 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
         }
         return b;
     }
-    
+
     private String convertBitSetToString(BitSet b)
     {
         String s = "";
-        
+
         int size = 168;
-        
+
         for (int i=0;i<size;i++)
         {
             s+=(b.get(i)?"1":"0");
@@ -579,11 +612,11 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
             tp = new TimeDayPanel();
             tp.selectAll(); //have to do select all, if not layout will get screw up.
             GridBagUtil.constrain(getContentPane(), tp, 0, 0,
-                                  GridBagConstraints.REMAINDER, GridBagConstraints.REMAINDER, 
+                                  GridBagConstraints.REMAINDER, GridBagConstraints.REMAINDER,
                                   1.0, 1.0,
                                   GridBagConstraints.NORTH, GridBagConstraints.BOTH,
                                   0, 0, 0, 0);
-            
+
             //getContentPane().add(tp);
             super.pack();
             tp.selectNone(); //unselect all to counter the select all above
@@ -594,7 +627,7 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
         public String getBitSetString() {
 
             BitSet bset = new BitSet(NUM_HOURS*NUM_DAYS);
-            int day[] = tp.getDaySelection();            
+            int day[] = tp.getDaySelection();
             int hour[] = tp.getHourSelection();
             for (int i=0; i<day.length; i++) {
                 for (int j=0; j<hour.length; j++) {
@@ -632,7 +665,7 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
                 _newLogonHour = td.getBitSetString();
                 Debug.println("New logon hour: " + _newLogonHour);
             }
-            
+
         } else if (e.getSource()==_bExpiredDate)
         {
             // expire date
@@ -652,7 +685,7 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
             }
         }
     }
-    
+
     /**
      * Implements the Observer interface. Updates the fields when notified.
      *
@@ -670,7 +703,7 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
                 _tfDomainName.setText(observable.get(_NT_USER_DOMAIN_ID, 0));
             } else if (argString.equalsIgnoreCase(_NT_USER_CREATE_NEW_ACCOUNT)) {
                 String sTmp = observable.get(_NT_USER_DELETE_ACCOUNT,0);
-                
+
                 boolean fCreateAccount = Boolean.valueOf(sTmp.toLowerCase()).booleanValue();
                 if (fCreateAccount)
                 {
@@ -679,7 +712,7 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
             } else if (argString.equalsIgnoreCase(_NT_USER_DELETE_ACCOUNT))
             {
                 String sTmp = observable.get(_NT_USER_DELETE_ACCOUNT,0);
-                
+
                 boolean fDeleteAccount = Boolean.valueOf(sTmp.toLowerCase()).booleanValue();
                 if (fDeleteAccount)
                 {
@@ -718,7 +751,7 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
             }
         }
     }
-    
+
     /**
      * Implements the IResourceEditorPage interface.
      * Returns unique ID string which identifies the page.
@@ -728,7 +761,7 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
     public String getID() {
         return ID;
     }
-    
+
     /**
      * Implements the IResourceEditorPage interface.
      * Handle some post save condition. This is called after the
@@ -752,7 +785,7 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
      * @return               true if save succeeded; false otherwise
      * @exception Exception
      */
-    public boolean save(ResourcePageObservable observable) throws Exception 
+    public boolean save(ResourcePageObservable observable) throws Exception
     {
         String sDomainName=_tfDomainName.getText();
         String sComment   =_tfComment.getText();
@@ -781,7 +814,7 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
             if(containsIgnoreCase(valueVector, _NT_OBJECTCLASS))
                 valueVector.removeElement(getElementIgnoreCase(valueVector, _NT_OBJECTCLASS));
             observable.replace("objectclass", valueVector);
-            
+
             observable.delete(_NT_USER_DOMAIN_ID, "");
             observable.delete(_NT_USER_CREATE_NEW_ACCOUNT, "");
             observable.delete(_NT_USER_DELETE_ACCOUNT, "");
@@ -814,12 +847,12 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
             observable.delete(_NT_UNIQUE_ID, "");
             return true;
         }
-        
+
         if (sDomainName.equals(_oldDomainName)==false)
         {
             observable.replace(_NT_USER_DOMAIN_ID,sDomainName);
         }
-        
+
         if ((_fCreateAccount)&&(!_cbCreateAccount.isSelected()))
         {
             observable.replace(_NT_USER_CREATE_NEW_ACCOUNT,"false");
@@ -827,7 +860,7 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
         {
             observable.replace(_NT_USER_CREATE_NEW_ACCOUNT,"true");
         }
-        
+
         if ((_fDeleteAccount)&&(!_cbDeleteAccount.isSelected()))
         {
             observable.replace(_NT_USER_DELETE_ACCOUNT,"false");
@@ -835,62 +868,62 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
         {
             observable.replace(_NT_USER_DELETE_ACCOUNT,"true");
         }
-        
+
         if (sComment.equals(_oldComment)==false)
         {
             observable.replace(_NT_USER_COMMENT,sComment);
         }
-        
+
         if (sProfile.equals(_oldProfile)==false)
         {
             observable.replace(_NT_USER_PROFILE,sProfile);
         }
-        
+
         if (sScript.equals(_oldScript)==false)
         {
             observable.replace(_NT_USER_SCRIPT_PATH,sScript);
         }
-        
+
         if (sDrive.equals(_oldDrive)==false)
         {
             observable.replace(_NT_USER_HOME_DIR_DRIVE,sDrive);
         }
-        
+
         if (sHomeDir.equals(_oldHomeDir)==false)
         {
             observable.replace(_NT_USER_HOME_DIR,sHomeDir);
         }
-        
+
         if (sLogonServer.equals(_oldLogonServer)==false)
         {
             observable.replace(_NT_USER_LOGON_SERVER,sLogonServer);
         }
-        
+
         if (_newLogonHour.equals(_oldLogonHour)==false)
         {
             byte b[] = convertStringToBit(_newLogonHour);
             observable.replace(_NT_USER_LOGON_HOUR,b);
         }
-        
+
         if (sWorkstationList.equals(_oldWorkstationList)==false)
         {
             observable.replace(_NT_USER_WORKSTATIONS,sWorkstationList);
         }
-        
+
         if (_newExpiredDate.equals(_oldExpiredDate)==false)
         {
             observable.replace(_NT_USER_ACCT_EXPIRED,_newExpiredDate);
         }
-        
+
         return true;
     }
-    
+
     /**
      * Implements the IResourceEditorPage interface.
      * Clears all information on the page.
      */
     public void clear() {}
-    
+
     /**
      * Implements the IResourceEditorPage interface.
      * Resets information on the page.
@@ -901,14 +934,14 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
            _groupDescription.setText("");
          */
     }
-    
-    
+
+
     /**
      * Implements the IResourceEditorPage interface.
      * Sets default information on the page.
      */
     public void setDefault() {}
-    
+
     /**
      * Implements the IResourceEditorPage interface.
      * Specifies whether any information on the page has been modified.
@@ -918,7 +951,7 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
     public boolean isModified() {
         return _isModified;
     }
-    
+
     /**
      * Implements the IResourceEditorPage interface.
      * Sets the modified flag for the page.
@@ -928,7 +961,7 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
     public void setModified(boolean value) {
         _isModified = value;
     }
-    
+
     /**
      * Implements the IResourceEditorPage interface.
      * Specifies whether the information on the page is read only.
@@ -938,7 +971,7 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
     public boolean isReadOnly() {
         return _isReadOnly;
     }
-    
+
     /**
      * Implements the IResourceEditorPage interface.
      * Sets the read only flag for the page.
@@ -948,7 +981,7 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
     public void setReadOnly(boolean value) {
         _isReadOnly = value;
     }
-    
+
     /**
      * Implements the IResourceEditorPage interface.
      * Sets the enabled flag for the page.
@@ -958,7 +991,7 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
     public void setEnable(boolean value) {
         _isEnable = value;
     }
-    
+
     /**
      * Implements the IResourceEditorPage interface.
      * Specifies whether all required information has been provided for
@@ -977,7 +1010,7 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
         }
         return true;
     }
-    
+
     /**
      * Implements the IResourceEditorPage interface.
      * Returns a brief name for the page. The name should reflect the
@@ -986,14 +1019,14 @@ public class ResEditorNTUser extends JPanel implements IResourceEditorPage, Acti
     public String getDisplayName() {
         return ID;
     }
-    
+
     /**
      * Implements the IResourceEditorPage interface.
      * Displays help information for the page
      */
     public void help() {
         Help help = new Help(_resource);
-        
+
         help.contextHelp("ug","ResEditorNTUser");
     }
 }

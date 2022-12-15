@@ -7,27 +7,50 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.topology.customview;
 
-import java.awt.*;
-import java.util.*;
-import javax.swing.*;
-import javax.swing.tree.*;
-import com.netscape.management.client.util.*;
-import com.netscape.management.client.console.*;
-import com.netscape.management.client.topology.*;
-import com.netscape.management.client.*;
-import netscape.ldap.*;
+import java.awt.Toolkit;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Properties;
+import java.util.StringTokenizer;
+import java.util.Vector;
+
+import javax.swing.ImageIcon;
+import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeModel;
+
+import com.netscape.management.client.ResourceModel;
+import com.netscape.management.client.ResourceObject;
+import com.netscape.management.client.console.Console;
+import com.netscape.management.client.console.ConsoleInfo;
+import com.netscape.management.client.console.VersionInfo;
+import com.netscape.management.client.topology.ICustomView;
+import com.netscape.management.client.topology.IServerObject;
+import com.netscape.management.client.topology.ITopologyPlugin;
+import com.netscape.management.client.topology.TopologyInitializer;
+import com.netscape.management.client.util.ClassLoaderUtil;
+import com.netscape.management.client.util.Debug;
+import com.netscape.management.client.util.RemoteImage;
+
+import netscape.ldap.LDAPAttribute;
+import netscape.ldap.LDAPConnection;
+import netscape.ldap.LDAPEntry;
+import netscape.ldap.LDAPException;
+import netscape.ldap.LDAPModification;
+import netscape.ldap.LDAPSearchResults;
+import netscape.ldap.LDAPUrl;
+import netscape.ldap.LDAPv3;
 
 /**
  * Custom view
@@ -37,7 +60,7 @@ public class CustomView implements ICustomView {
     String _displayNameRaw = null;
     String _displayIconRaw= null;
     String _descriptionRaw = null;
-    String _configuration = null;    
+    String _configuration = null;
     String _className = null;
     String _resourceRef = null;
     boolean _fSystemView = false;
@@ -56,7 +79,7 @@ public class CustomView implements ICustomView {
 
     private static RemoteImage _defaultIcon = new RemoteImage(
                                                               TopologyInitializer._resource.getString("image", "folder"));
-    
+
     /**
      * constructor
      */
@@ -78,14 +101,14 @@ public class CustomView implements ICustomView {
 
         _displayNameRaw = getFirstAttributeValue(_ldapEntry, "nsDisplayName");
         // Default name is nsDisplayName is not specified
-        _cn = getFirstAttributeValue(_ldapEntry, "cn");        
+        _cn = getFirstAttributeValue(_ldapEntry, "cn");
         _displayIconRaw = getFirstAttributeValue(_ldapEntry, "nsDisplayIcon");
         _configuration  = getFirstAttributeValue(_ldapEntry, "nsViewConfiguration");
         _className      = getFirstAttributeValue(_ldapEntry, "nsClassName");
         _resourceRef    = getFirstAttributeValue(_ldapEntry, "seeAlso");
         _descriptionRaw = getFirstAttributeValue(_ldapEntry, "description");
-        getViewFlags(_ldapEntry, "nsViewFlags");        
-        
+        getViewFlags(_ldapEntry, "nsViewFlags");
+
     }
 
     /**
@@ -162,7 +185,7 @@ public class CustomView implements ICustomView {
         Enumeration attr_enum = attr.getStringValues();
         while (attr_enum != null && attr_enum.hasMoreElements()) {
             String flag = ((String)attr_enum.nextElement()).trim();
-            if (flag.equalsIgnoreCase("showTopContainer")) {                 
+            if (flag.equalsIgnoreCase("showTopContainer")) {
                 _fShowTopContainer = true;
             }
             else if (flag.equalsIgnoreCase("hideContainerIfEmpty")) {
@@ -237,7 +260,7 @@ public class CustomView implements ICustomView {
         if (propRef == null) {
             return propRef;
         }
-        
+
         int atIdx = propRef.indexOf("@");
         if (atIdx > 0) {
             String propName = propRef.substring(0, atIdx);
@@ -257,7 +280,7 @@ public class CustomView implements ICustomView {
             catch (Exception e) {
                 Debug.println(0, "Can not load " + propFile);
             }
-        }        
+        }
         return propRef;
     }
 
@@ -270,8 +293,8 @@ public class CustomView implements ICustomView {
         if (_icon != null) {
             return _icon;
         }
-        
-        // Get the icon from the class loader. The icon is specified in 
+
+        // Get the icon from the class loader. The icon is specified in
         // format iconPath[@jar[@Location]]
         if (_displayIconRaw != null) {
             byte[] buf = ClassLoaderUtil.getResource(_info, _displayIconRaw);
@@ -280,13 +303,13 @@ public class CustomView implements ICustomView {
             }
             else {
                 _icon = _defaultIcon;
-            }                
+            }
         }
         // Override resourceRef icon, only if the icon is explicitly set
         else if (_resourceRef == null) {
             _icon = _defaultIcon;
         }
-        
+
         return _icon;
     }
 
@@ -301,7 +324,7 @@ public class CustomView implements ICustomView {
 
 
     /**
-     * Get the parent view for this view 
+     * Get the parent view for this view
      *
      * @return the parent view
      */
@@ -310,7 +333,7 @@ public class CustomView implements ICustomView {
     }
 
     /**
-     * set the parent view for this view 
+     * set the parent view for this view
      *
      * @param parent the parent view
      */
@@ -327,17 +350,17 @@ public class CustomView implements ICustomView {
         _childViews = new Vector();
         if(_ldapEntry == null)
             return;
-        
+
         LDAPEntry childEntry = null;
         CustomView childView = null;
         LDAPSearchResults result = null;
-        
+
         try {
-            result = _ldc.search(_ldapEntry.getDN(), LDAPv2.SCOPE_ONE,
+            result = _ldc.search(_ldapEntry.getDN(), LDAPv3.SCOPE_ONE,
                                  "(objectclass=nsTopologyCustomView)", null, false);
             if (result != null) {
                 while (result.hasMoreElements()) {
-                    childEntry = (LDAPEntry) result.next();
+                    childEntry = result.next();
                     childView = new CustomView(childEntry);
                     childView.setParentView(this);
                     childView.initialize(_ldc, childEntry.getDN());
@@ -350,7 +373,7 @@ public class CustomView implements ICustomView {
                           e.getLDAPResultCode() + " <dn=" + _ldapEntry.getDN() + ">");
         }
     }
-    
+
     /**
      * Find a child view by it's ldap entry DN
      */
@@ -364,7 +387,7 @@ public class CustomView implements ICustomView {
         }
         return null;
     }
-        
+
     /**
      * parsing the configuration parameter for this custom view
      *
@@ -377,7 +400,7 @@ public class CustomView implements ICustomView {
         if (configuration != null) {
             StringTokenizer st = new StringTokenizer(configuration, "|");
             while (st.hasMoreTokens()) {
-                String nodeID = (String) st.nextToken();
+                String nodeID = st.nextToken();
                 Hashtable table =
                     TopologyInitializer.getNetworkTopologyPlugin()
                     ; // hashtable of ITopologyPlugin
@@ -400,7 +423,7 @@ public class CustomView implements ICustomView {
     }
 
     void createTreeModel(ResourceObject parent) {
-        Vector childViews = (Vector)_childViews.clone();            
+        Vector childViews = (Vector)_childViews.clone();
         if (_configuration != null && _configuration.length() > 0) {
             String delim = "|";
             // The default delimiter '|' can be ovirriden by specifing
@@ -410,11 +433,11 @@ public class CustomView implements ICustomView {
                 delim = String.valueOf(_configuration.charAt(0));
             }
             StringTokenizer st = new StringTokenizer(_configuration, delim);
-            
+
             while (st.hasMoreTokens()) {
-                
-                String member = ((String)st.nextToken()).trim();
-                
+
+                String member = st.nextToken().trim();
+
                 if (member.length() == 0) {
                     continue;
                 }
@@ -427,7 +450,7 @@ public class CustomView implements ICustomView {
                 }
                 else { // DN member
                     String dn = member;
-                    
+
                     // Child view can be also specified in the memeber list
                     // in order to have a guaranted order or subviews
                     CustomView childView = getChildView(childViews, dn);
@@ -442,11 +465,11 @@ public class CustomView implements ICustomView {
                         if (resourceObj != null) {
                             parent.add(resourceObj);
                         }
-                    }                        
+                    }
                 }
             }
         }
-        
+
         // Process child views not listed in the member list
         for (int i=0; i < childViews.size(); i++) {
             addChildViewNodes(parent, (CustomView) childViews.elementAt(i));
@@ -456,15 +479,15 @@ public class CustomView implements ICustomView {
     /**
      * Link child view model into this view model
      */
-    void addChildViewNodes(ResourceObject parent, CustomView childView) {        
+    void addChildViewNodes(ResourceObject parent, CustomView childView) {
         TreeModel childModel = childView.getTreeModel();
         if (childModel != null) {
             if (! childView._fHideContainerIfEmpty || childModel.getChildCount(childModel.getRoot()) >0) {
                 parent.add((MutableTreeNode)childModel.getRoot());
-            }                
+            }
         }
-    }        
-    
+    }
+
     /**
      * Add dynamic nodes defined with an ldap filter
      */
@@ -475,7 +498,7 @@ public class CustomView implements ICustomView {
                           url.getFilter().trim(),
                           new String[] {VersionInfo.getVersionNumber()}, false);
             while (result != null && result.hasMoreElements()) {
-                LDAPEntry rscEntry = (LDAPEntry) result.next();
+                LDAPEntry rscEntry = result.next();
                 ResourceObject rscObj = getTopologyResource(rscEntry.getDN());
                 if (rscObj != null) {
                     parent.add(rscObj);
@@ -490,21 +513,21 @@ public class CustomView implements ICustomView {
             Debug.println(0, "CustomView.addDynamicNodes() Cannot create dynamic view for , <url="
                           + url + "> " + e);
         }
-    }        
-        
+    }
+
     /**
      * Create root node for this view
      */
     ResourceObject createRootNode() {
-        
+
         // If className is refencing this class, ignore it. Earlier versions
         // of Console store CustomeView as the nsClassName attribute
         if (_className != null) {
             if (_className.endsWith("customview.CustomView")) {
                 _className = null;
             }
-        }        
-        // Otherwise, it must reference a ResourceObject 
+        }
+        // Otherwise, it must reference a ResourceObject
         if (_className != null) {
             Class c = ClassLoaderUtil.getClass(_info, _className);
             if (c != null) {
@@ -524,21 +547,21 @@ public class CustomView implements ICustomView {
             }
             return null;
         }
-        
+
         // Return the default view
         return new ViewObject(this);
     }
-    
+
     /**
      * Lookup a resource object by it's DN in the topology plugin
      */
     ResourceObject getTopologyResource(String dn) {
-        
+
         if (dn == null) {
             return null;
-        }            
+        }
         Hashtable table = TopologyInitializer.getNetworkTopologyPlugin();
-        
+
         ResourceObject resourceObj = null;
         Enumeration e = table.elements();
         while(e.hasMoreElements() && resourceObj == null) {
@@ -546,7 +569,7 @@ public class CustomView implements ICustomView {
             resourceObj = plugin.getResourceObjectByID(dn);
         }
         return resourceObj;
-    }        
+    }
 
     /**
      * return the tree model of the custom view
@@ -560,16 +583,16 @@ public class CustomView implements ICustomView {
         if (_childViews == null) {
             loadChildViews();
         }
-        
+
         //ResourceObject rootNode = new ResourceObject(_displayNameRaw,
         //        new RemoteImage(
         //        TopologyInitializer._resource.getString("image", "folder")),
         //        new RemoteImage(
         //        TopologyInitializer._resource.getString("image", "largefolder")));
-        
+
         //_model = new ResourceModel(
         //        parseConfiguration(_configuration, rootNode));
-        
+
         ResourceObject rootNode = createRootNode();
         createTreeModel(rootNode);
         _model = new ResourceModel(rootNode);

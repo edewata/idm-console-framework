@@ -7,23 +7,23 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.acleditor;
 
+import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableCellEditor;
-import javax.swing.SwingConstants;
+import javax.swing.table.TableCellRenderer;
 
 import com.netscape.management.client.util.ResourceSet;
 
@@ -155,7 +155,7 @@ public abstract class DataModelAdapter extends AbstractTableModel implements ACL
       */
     public Object getColumnIdentifier(int col) {
         if (headerNames == null)
-            return new Integer(col);
+            return Integer.valueOf(col);
         return headerNames[col];
     }
 

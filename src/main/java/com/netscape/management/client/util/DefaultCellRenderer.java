@@ -7,24 +7,30 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.util;
 
-import java.awt.Component;
 import java.awt.Color;
-import java.lang.Boolean;
-import javax.swing.table.*;
-import javax.swing.*;
+import java.awt.Component;
 import java.io.Serializable;
+
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.UIManager;
+import javax.swing.table.TableCellRenderer;
 
 
 /**
@@ -121,7 +127,7 @@ Serializable {
                             ((JCheckBox) component).setSelected(
                                     ((Boolean) x).booleanValue());
                         } else if (x instanceof String) {
-                            Boolean b = new Boolean((String) x);
+                            Boolean b = Boolean.valueOf((String) x);
                             ((JCheckBox) component).setSelected(
                                     b.booleanValue());
                         } else {
@@ -177,7 +183,7 @@ Serializable {
 
     public void setToolTipText(String text) {
         if (component instanceof JComponent)
-            ((JComponent) component).setToolTipText(text);
+            component.setToolTipText(text);
     }
 
     public Component getComponent() {

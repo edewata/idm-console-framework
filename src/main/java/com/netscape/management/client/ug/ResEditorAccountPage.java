@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -20,15 +20,32 @@
 
 package com.netscape.management.client.ug;
 
-import java.awt.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Window;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.Vector;
 
-import com.netscape.management.client.util.*;
-import com.netscape.management.nmclf.*;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableColumn;
 
-import javax.swing.*;
-import javax.swing.table.*;
-import javax.swing.event.*;
+import com.netscape.management.client.util.ClassLoaderUtil;
+import com.netscape.management.client.util.Debug;
+import com.netscape.management.client.util.GridBagUtil;
+import com.netscape.management.client.util.Help;
+import com.netscape.management.nmclf.SuiLookAndFeel;
+import com.netscape.management.nmclf.SuiTable;
 
 
 /**
@@ -103,7 +120,7 @@ Observer {
             String sDisplayName = (String) eKey.nextElement();
             IResourceEditorAccPage o =
                     (IResourceEditorAccPage)_HTPlugin.get(sDisplayName);
-            String sObjectClassName[] = ((IResourceEditorAccPage) o).
+            String sObjectClassName[] = o.
                     getAssociatedObjectClass();
             if (sObjectClassName != null) {
                 for (int i = 0; i < sObjectClassName.length; i++) {
@@ -447,7 +464,7 @@ class AccountPageTableModel extends AbstractTableModel {
             o = _vName.elementAt(row);
             break;
         case 1:
-            o = new Boolean(_vSelected.contains(_vName.elementAt(row)));
+            o = Boolean.valueOf(_vSelected.contains(_vName.elementAt(row)));
             break;
         }
         return o;
@@ -489,7 +506,7 @@ class AccountPageTableModel extends AbstractTableModel {
                                 if (w!=null) {
                                     w.setCursor(Cursor.getDefaultCursor());
                                 }
-                                
+
                             }
                         });
                     }

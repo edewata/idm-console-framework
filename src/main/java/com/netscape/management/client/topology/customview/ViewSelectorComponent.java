@@ -7,30 +7,47 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.topology.customview;
 
-import java.util.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.tree.*;
-import com.netscape.management.nmclf.*;
-import com.netscape.management.client.*;
-import com.netscape.management.client.util.*;
-import com.netscape.management.client.topology.*;
-import com.netscape.management.client.console.*;
-import com.netscape.management.client.preferences.*;
-import netscape.ldap.*;
+import java.awt.Component;
+import java.awt.event.ActionListener;
+import java.util.Enumeration;
+import java.util.Vector;
+
+import javax.swing.Box;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.tree.TreeModel;
+
+import com.netscape.management.client.Framework;
+import com.netscape.management.client.IResourceObject;
+import com.netscape.management.client.ResourceModel;
+import com.netscape.management.client.console.ConsoleInfo;
+import com.netscape.management.client.preferences.LDAPPreferenceManager;
+import com.netscape.management.client.preferences.LDAPPreferences;
+import com.netscape.management.client.topology.ICustomView;
+import com.netscape.management.client.topology.TopologyInitializer;
+import com.netscape.management.client.util.Debug;
+import com.netscape.management.client.util.LDAPUtil;
+import com.netscape.management.nmclf.SuiConstants;
+
+import netscape.ldap.LDAPConnection;
+import netscape.ldap.LDAPEntry;
+import netscape.ldap.LDAPException;
+import netscape.ldap.LDAPSearchResults;
+import netscape.ldap.LDAPv3;
 import netscape.ldap.util.DN;
 
 /**
@@ -51,7 +68,7 @@ public class ViewSelectorComponent extends Box implements SwingConstants, SuiCon
         return TopologyInitializer._resource.getString("customview", id);
     }
     static String _defaultViewPref = "DefaultView";
-    
+
     /**
       * constructor
       *
@@ -89,7 +106,7 @@ public class ViewSelectorComponent extends Box implements SwingConstants, SuiCon
         publicViewPreferences = (LDAPPreferences) pm.getPreferences("PublicViews");
 
         publicViewDN = publicViewPreferences.getDN();
-        
+
         Vector allViews = reloadViewList();
 
         /**
@@ -101,7 +118,7 @@ public class ViewSelectorComponent extends Box implements SwingConstants, SuiCon
             Debug.println("user defaultView=" +
             userViewPreferences.getString(_defaultViewPref));
         }
-        setDefaultView(allViews, 
+        setDefaultView(allViews,
             userViewPreferences.getString(_defaultViewPref),
             publicViewPreferences.getString(_defaultViewPref));
     }
@@ -148,10 +165,10 @@ public class ViewSelectorComponent extends Box implements SwingConstants, SuiCon
         String curViewRef = userViewPreferences.getString(_defaultViewPref);
         if (curViewRef != null) {
             DN curViewDN = new DN(curViewRef);
-            
+
             if (curViewDN.equals(new DN(viewRef))) {
                 if (Debug.isEnabled()) {
-                    Debug.println(6,"do not need to save DefaultView");               
+                    Debug.println(6,"do not need to save DefaultView");
                 }
                return ;
             }
@@ -159,25 +176,25 @@ public class ViewSelectorComponent extends Box implements SwingConstants, SuiCon
                 Debug.println(5, "save pref DefaultView="+viewRef);
             }
         }
-        
+
         userViewPreferences.set(_defaultViewPref, viewRef);
         userViewPreferences.save();
     }
 
     /**
      * Set the default view from preferences, check first user preferences then the public ones
-     */   
+     */
     void setDefaultView(Vector allViews, String userDefaultView, String domainDefaultView) {
         String defaultView = (userDefaultView == null) ? domainDefaultView : userDefaultView;
 
         if (defaultView != null && defaultView.length() > 0) {
-            
+
             // Compare DNs using ldap.DN to handles blanks that can be ignored
             DN dnDefaultView = new DN(defaultView);
             DN dnView = null;
             for (int i=0; i < allViews.size(); i++) {
                 ViewInfo vi = (ViewInfo) allViews.elementAt(i);
-            
+
                 if (vi.getID() == null) {
                     continue;
                 }
@@ -185,7 +202,7 @@ public class ViewSelectorComponent extends Box implements SwingConstants, SuiCon
                 if (dnView.equals(dnDefaultView)) {
                     if (Debug.isEnabled()) {
                         Debug.println("Select Default View - " + vi);
-                    }                        
+                    }
                     final ViewInfo fvi = vi;
                     SwingUtilities.invokeLater(new Runnable() {
                        public void run() {
@@ -197,7 +214,7 @@ public class ViewSelectorComponent extends Box implements SwingConstants, SuiCon
             }
         }
     }
-        
+
     public TreeModel getUserDefaultViewModel() {
         return defaultViewTreeModel;
     }
@@ -205,15 +222,15 @@ public class ViewSelectorComponent extends Box implements SwingConstants, SuiCon
     private String getViewDN(ViewInfo vi)
     {
         String baseDN;
-        
+
         if(vi.isPublic())
             baseDN = publicViewDN;
         else
             baseDN = privateViewDN;
-        
+
         return ("cn=" + vi.getID() + "," + baseDN);
     }
-    
+
     /**
       * reload all the custom views selection in the list box
       */
@@ -225,8 +242,8 @@ public class ViewSelectorComponent extends Box implements SwingConstants, SuiCon
                 new ViewInfo(null, i18n("DefaultView"), null));
 
         Vector allViews = new Vector();
-                         
-        // load topology view plugins 
+
+        // load topology view plugins
         // misnamed container "CustomView" should be maintained for compatibility
         loadViewsFromDN(allViews, "cn=CustomView," + LDAPUtil.getAdminGlobalParameterEntry(), null, true);
 
@@ -239,7 +256,7 @@ public class ViewSelectorComponent extends Box implements SwingConstants, SuiCon
 
         // load private user custom views
         loadViewsFromDN(allViews, privateViewDN, null, false);
-        
+
         for (Enumeration e = allViews.elements(); e.hasMoreElements();) {
             ViewInfo vi = (ViewInfo) e.nextElement();
             viewComboBox.addItem(vi);
@@ -260,15 +277,14 @@ public class ViewSelectorComponent extends Box implements SwingConstants, SuiCon
         // load public user custom views
         loadViewsFromDN(userViews, publicViewDN,
             "(&(Objectclass=nsCustomView)(!(nsViewFlags=systemView)))", true);
-        
+
         // load private user custom views
         loadViewsFromDN(userViews, privateViewDN, null, false);
-        
+
         ViewSelectorDialog dialog = new ViewSelectorDialog(
                 getParentFrame(ViewSelectorComponent.this), userViews,
                 defaultViewTreeModel, ldc, privateViewDN, publicViewDN, consoleInfo);
-        String viewID = (String)
-                ((ViewInfo) viewComboBox.getSelectedItem()).getID();
+        String viewID = ((ViewInfo) viewComboBox.getSelectedItem()).getID();
         dialog.show();
         reloadViewList();
         int itemToSelect = 0;
@@ -289,18 +305,18 @@ public class ViewSelectorComponent extends Box implements SwingConstants, SuiCon
     {
         LDAPEntry ldapEntry = null;
         LDAPSearchResults result = null;
-        
+
         if (filter == null) {
             filter = "(Objectclass=nsCustomView)";
         }
 
         try {
-            result = ldc.search(customViewDN, LDAPv2.SCOPE_ONE, filter, null, false);
+            result = ldc.search(customViewDN, LDAPv3.SCOPE_ONE, filter, null, false);
             if (result != null) {
                 try {
                     while (result.hasMoreElements()) {
-                        ldapEntry = (LDAPEntry) result.next();
-                        if (ldapEntry != null) {                        
+                        ldapEntry = result.next();
+                        if (ldapEntry != null) {
                             ViewInfo vi = new ViewInfo(ldapEntry);
                             vi.setPublic(isPublic);
                             viewVector.addElement(vi);
@@ -316,7 +332,7 @@ public class ViewSelectorComponent extends Box implements SwingConstants, SuiCon
             Debug.println(0, "<dn=" + customViewDN + ">");
         }
     }
-    
+
     private JFrame getParentFrame(Component c) {
         do {
             c = c.getParent();

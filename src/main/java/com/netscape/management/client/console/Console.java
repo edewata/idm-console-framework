@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -379,21 +379,21 @@ public class Console implements CommClient {
      * Called by createPerInstanceUI().
      */
     private String serverIDtoDN(String id) {
-        
+
         LDAPConnection ldc = _info.getLDAPConnection();
         Vector instances = new Vector();
-        
+
         try {
             LDAPSearchResults res = ldc.search(
-                "o=netscapeRoot", 
+                "o=netscapeRoot",
                 LDAPConnection.SCOPE_SUB,
                 "(nsServerID=" + id + ")",
                 new String[]{"dn"}, false);
-                
+
             while (res.hasMoreElements()) {
                 LDAPEntry hostEntry = res.next();
                 instances.addElement(hostEntry.getDN());
-            }                    
+            }
 
             if (instances.size() == 0) {
                 System.err.println("Server instance " + id + " does not exist.");
@@ -403,11 +403,11 @@ public class Console implements CommClient {
                 id = (String) instances.elementAt(0);
             }
             else {
-                
+
                 if (_splashScreen != null) {
                     _splashScreen.setVisible(false);
                 }
-                
+
                 int idx = -1;
                 while (idx == -1) {
                     System.out.println("\nThere are multiple instances of server \"" + id + "\":\n");
@@ -426,7 +426,7 @@ public class Console implements CommClient {
                             }
                             catch (Exception ignore) {}
                         }
-                            
+
                         if (idx >=1 && idx <= instances.size()) {
                                idx = idx - 1;
                         }
@@ -451,11 +451,11 @@ public class Console implements CommClient {
     }
 
     protected void createPerInstanceUI(String host) {
-        
+
         if (!DN.isDN(host)) {
             host = serverIDtoDN(host);
         }
-        
+
         LDAPConnection ldc = _info.getLDAPConnection();
         String configDN = "cn=configuration," + host;
         try {
@@ -552,7 +552,7 @@ public class Console implements CommClient {
         common_init(language);
         String userid = uid;
         String password = passwd;
-		
+
         if (userid == null) {
             userid = _preferences.getString(PREFERENCE_UID);
         }
@@ -561,10 +561,10 @@ public class Console implements CommClient {
 		if(lastUsedURL != null) {
 			recentURLs.addElement(lastUsedURL);
 			if(adminURL == null) {
-				adminURL = lastUsedURL;	
+				adminURL = lastUsedURL;
 				}
 	    }
-		
+
 		if(adminURL == null) {
 			adminURL = localAdminURL;
 		}
@@ -675,7 +675,7 @@ public class Console implements CommClient {
                 if (rememberUserid) {
                     _preferences.set(PREFERENCE_UID, userid);
                     _preferences.set(PREFERENCE_URL, adminURL);
-					
+
 					String recentlyUsedURL;
 					int count = 1;
 					Enumeration urlEnum = recentURLs.elements();
@@ -684,7 +684,7 @@ public class Console implements CommClient {
 						if(!recentlyUsedURL.equals(adminURL))
 							_preferences.set(PREFERENCE_URL+Integer.toString(count++), recentlyUsedURL);
 					}
-					
+
 					for(; count < MAX_RECENT_URLS; count++) {
 						_preferences.remove(PREFERENCE_URL+Integer.toString(count));
 					}
@@ -713,7 +713,7 @@ public class Console implements CommClient {
                 _splashScreen.dispose();
                 SplashScreen.removeInstance();
                 _splashScreen = null;
-               
+
                 break;
             }
         }
@@ -1138,7 +1138,7 @@ public class Console implements CommClient {
                 double days = (secondsToExpiration / (1.0 * 3600 * 24));
                 String msg = MessageFormat.format(
                         _resource.getString("warning","pwExpireSoon"),
-                        new Object[]{ new Double(days)});
+                        new Object[]{ Double.valueOf(days)});
                 Debug.println("Console: " + msg);
                 JOptionPane.showMessageDialog(
                         SplashScreen.getInstance(), msg,
@@ -1598,7 +1598,7 @@ public class Console implements CommClient {
 
     static public void main(String argv[]) {
 		GetOpt opt = new GetOpt("h:a:A:f:l:u:w:y:s:D:x:", argv);
-         
+
         if (opt.hasOption('f')) {
             String outFile = opt.getOptionParam('f');
             try {
@@ -1689,7 +1689,7 @@ public class Console implements CommClient {
             System.exit(0);
         }
 
-		// bug 353403: -a option intended for end-user to 
+		// bug 353403: -a option intended for end-user to
 		// specify default admin url.  This option overrides
 		// -A option.
         String sAdminURL = null;
@@ -1735,7 +1735,7 @@ public class Console implements CommClient {
                 }
             }
         }
-        
+
         if (opt.hasOption('y')) {
             String passwdFile = opt.getOptionParam('y');
             try {
@@ -1749,7 +1749,7 @@ public class Console implements CommClient {
             }
         }
 
-        
+
 
         _console = new Console(sAdminURL, localAdminURL, sLang, host, uid, password);
         return;
@@ -1809,7 +1809,7 @@ class TeeStream extends PrintStream {
 /**
   * An internal class used to wrap the parameters of an
   * authentication request.
-  * 
+  *
   * @author David Tompkins, 12/13/97
   */
 class Response {

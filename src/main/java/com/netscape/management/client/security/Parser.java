@@ -7,19 +7,21 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.security;
-import java.util.*;
-import java.io.*;
+import java.io.StreamTokenizer;
+import java.io.StringReader;
+import java.util.Hashtable;
+import java.util.Vector;
 
 class Parser extends Vector{
     public Parser(String unparsedString) {
@@ -67,10 +69,10 @@ class Parser extends Vector{
                     }
                     token = new StringBuffer();
                     tokenStart = true;
-                    token.append((new Character((char)(tokenizer.ttype))).toString());
+                    token.append((Character.valueOf((char)(tokenizer.ttype))).toString());
                 } else if (tokenStart && (tokenizer.ttype == '>')) {
                     tokenStart = false;
-                    token.append((new Character((char)(tokenizer.ttype))).toString());
+                    token.append((Character.valueOf((char)(tokenizer.ttype))).toString());
                     /*tokenList.*/addElement(token.toString());
                     token = new StringBuffer();
                 } else if (tokenizer.ttype == StreamTokenizer.TT_WORD) {
@@ -78,7 +80,7 @@ class Parser extends Vector{
                 /*} else if (tokenizer.ttype == tokenizer.TT_NUMBER) {
                     token.append((int)tokenizer.nval);*/
                 } else {
-                    token.append((new Character((char)(tokenizer.ttype))).toString());
+                    token.append((Character.valueOf((char)(tokenizer.ttype))).toString());
                 }
             }
         } catch (Exception e) {
@@ -93,7 +95,7 @@ class Parser extends Vector{
     public String peek(int by) {
 	return index<size()?(String)elementAt(index+by):null;
     }
-    
+
     public void advanceBy(int by) {
 	index += by;
     }
@@ -135,7 +137,7 @@ class Parser extends Vector{
 	    cert.put(token.substring(1, token.length()-1), new Hashtable());
 	    SecurityUtil.printException("Parser::getTokenObject(...)",e);
 	}
-	
+
 	return cert;
     }
 }

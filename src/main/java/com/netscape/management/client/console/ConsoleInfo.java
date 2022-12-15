@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -20,12 +20,15 @@
 
 package com.netscape.management.client.console;
 
-import java.util.*;
-import netscape.ldap.*;
-import com.netscape.management.client.util.*;
-import javax.swing.*;
-
 import java.applet.Applet;
+import java.util.Enumeration;
+import java.util.Hashtable;
+
+import javax.swing.JFrame;
+
+import com.netscape.management.client.util.Debug;
+
+import netscape.ldap.LDAPConnection;
 
 
 /**
@@ -136,7 +139,7 @@ public class ConsoleInfo extends Hashtable {
       * @param port  the directory server port number
       */
     public void setPort(int port) {
-        put(KEY_PORT, new Integer(port));
+        put(KEY_PORT, Integer.valueOf(port));
     }
 
 
@@ -155,7 +158,7 @@ public class ConsoleInfo extends Hashtable {
       * @param port  the directory server port number
       */
     public void setUserPort(int port) {
-        put(KEY_USER_PORT, new Integer(port));
+        put(KEY_USER_PORT, Integer.valueOf(port));
     }
 
 

@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -20,7 +20,12 @@
 
 package com.netscape.management.client.util;
 
-import netscape.ldap.*;
+import netscape.ldap.LDAPConnection;
+import netscape.ldap.LDAPException;
+import netscape.ldap.LDAPRebind;
+import netscape.ldap.LDAPRebindAuth;
+import netscape.ldap.LDAPSocketFactory;
+import netscape.ldap.LDAPv3;
 
 /**
  * The KingpinLDAPConnection is a subclass of LDAPConnection
@@ -125,7 +130,7 @@ public class KingpinLDAPConnection extends LDAPConnection {
     void initialize(String sBindDN, String sBindPassword) {
         _rebindInfo = new KingpinLDAPRebind(sBindDN, sBindPassword);
         try {
-            setOption(LDAPv3.REFERRALS, new Boolean(true));
+            setOption(LDAPv3.REFERRALS, Boolean.valueOf(true));
             setOption(LDAPv3.REFERRALS_REBIND_PROC, _rebindInfo);
 
             if (Debug.isTraceTypeEnabled(Debug.TYPE_LDAP)) {

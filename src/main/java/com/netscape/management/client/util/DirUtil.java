@@ -7,12 +7,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -20,7 +20,11 @@
 package com.netscape.management.client.util;
 
 import java.lang.reflect.Method;
-import netscape.ldap.*;
+
+import netscape.ldap.LDAPConnection;
+import netscape.ldap.LDAPException;
+import netscape.ldap.LDAPSSLSocketFactory;
+import netscape.ldap.LDAPv3;
 
 /**
  * Utility class to prepare an LDAP connection, using a clear or an
@@ -37,9 +41,9 @@ public class DirUtil {
     public static void setDefaultReferralCredentials( LDAPConnection ldc ) {
 		if ( ldc != null ) {
 			try {
-				ldc.setOption( LDAPv2.REFERRALS, new Boolean(true) );
+				ldc.setOption( LDAPv3.REFERRALS, Boolean.valueOf(true) );
 				ldc.setOption(
-					LDAPv2.REFERRALS_REBIND_PROC,
+					LDAPv3.REFERRALS_REBIND_PROC,
 					new SimpleReferral( ldc.getAuthenticationDN(),
 										ldc.getAuthenticationPassword() ) );
 			} catch ( LDAPException e ) {

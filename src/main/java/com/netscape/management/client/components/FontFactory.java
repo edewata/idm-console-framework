@@ -7,28 +7,32 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.components;
 
-import java.util.*;
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.plaf.*;
-import com.netscape.management.client.util.*;
+import java.awt.Font;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.StringTokenizer;
+
+import javax.swing.UIManager;
+import javax.swing.plaf.FontUIResource;
+
+import com.netscape.management.client.util.ResourceSet;
 
 public class FontFactory
 {
     private static Hashtable fontHashtable = new Hashtable();
-    
+
     public static final String FONT_CONTROL = "CONTROLS";
     public static final String FONT_DATA = "DATA_VARIABLE";
     public static final String FONT_MONOSPACED = "DATA_FIXED";
@@ -37,7 +41,7 @@ public class FontFactory
     public static final String FONT_TASK = "TASK";
     public static ResourceSet resource = new ResourceSet("com.netscape.management.client.components.components");
 
-    static 
+    static
     {
         fontHashtable.put(FONT_CONTROL, new FontUIResource("SansSerif", Font.PLAIN, 11));
         fontHashtable.put(FONT_DATA, new FontUIResource("SansSerif", Font.PLAIN, 11));
@@ -46,7 +50,7 @@ public class FontFactory
         fontHashtable.put(FONT_TITLE, new FontUIResource("SansSerif", Font.PLAIN, 18));
         fontHashtable.put(FONT_TASK, new FontUIResource("SansSerif", Font.PLAIN, 18));
     }
-    
+
     /**
       * Return localized string from the framework resource bundle
       */
@@ -54,12 +58,12 @@ public class FontFactory
         return resource.getString(group, id);
     }
 
-    
+
     public static Enumeration getFontIDs()
     {
         return fontHashtable.keys();
     }
-    
+
     /**
      * @param fontItemID a FONT constant (defined above)
      * @return font associated with this screen element
@@ -82,7 +86,7 @@ public class FontFactory
     {
         return i18n("font", fontID);
     }
-    
+
     public static void initializeLFFonts()
     {
         Font fontControl = getFont(FONT_CONTROL);
@@ -96,7 +100,7 @@ public class FontFactory
         UIManager.put("TaskList.font", fontTaskList);
         UIManager.put("Title.font", fontTitle);
         UIManager.put("Status.font", fontStatus);
-        
+
         UIManager.put("Button.font", fontControl);
         UIManager.put("ToggleButton.font", fontControl);
         UIManager.put("RadioButton.font", fontControl);
@@ -129,7 +133,7 @@ public class FontFactory
         UIManager.put("ToolTip.font", fontData);
         UIManager.put("Tree.font", fontData);
     }
-    
+
     public static String toFontInfoString(Font f) {
         return f.getName() + ":" + String.valueOf(f.getStyle()) + ":" +
                 String.valueOf(f.getSize());
@@ -143,9 +147,9 @@ public class FontFactory
         StringTokenizer st = new StringTokenizer(fontInfo, ":");
         if (st.hasMoreTokens()) {
             name = st.nextToken();
-            Integer i = new Integer(st.nextToken());
+            Integer i = Integer.valueOf(st.nextToken());
             style = i.intValue();
-            i = new Integer(st.nextToken());
+            i = Integer.valueOf(st.nextToken());
             size = i.intValue();
         }
         return new Font(name, style, size);

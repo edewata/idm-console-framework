@@ -7,21 +7,23 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client;
 
-import java.awt.*;
-import com.netscape.management.client.util.*;
-import javax.swing.*;
+import java.awt.Component;
+
+import javax.swing.JLabel;
+
+import com.netscape.management.client.util.RemoteImage;
 
 /**
  * Implements a status item that shows whether the connetion
@@ -76,7 +78,7 @@ public class StatusItemSecureMode extends JLabel implements IStatusItem {
      * Sets ID
      */
     public void setSecureMode(boolean state) {
-        setState(new Boolean(state));
+        setState(Boolean.valueOf(state));
     }
 
     /**

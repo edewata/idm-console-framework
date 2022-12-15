@@ -7,28 +7,47 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.topology;
 
-import java.util.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import com.netscape.management.client.*;
-import com.netscape.management.client.console.*;
-import com.netscape.management.client.util.*;
-import com.netscape.management.nmclf.*;
-import netscape.ldap.*;
+import java.awt.Component;
+import java.awt.event.KeyAdapter;
+import java.awt.event.MouseAdapter;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
+
+import javax.swing.JFrame;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import com.netscape.management.client.Framework;
+import com.netscape.management.client.IPage;
+import com.netscape.management.client.IResourceObject;
+import com.netscape.management.client.ResourceModel;
+import com.netscape.management.client.ResourceObject;
+import com.netscape.management.client.ResourcePage;
+import com.netscape.management.client.StatusItemProgress;
+import com.netscape.management.client.console.ConsoleInfo;
+import com.netscape.management.client.util.Debug;
+import com.netscape.management.client.util.LDAPUtil;
+import com.netscape.management.client.util.ResourceSet;
+import com.netscape.management.nmclf.SuiConstants;
+
+import netscape.ldap.LDAPAttribute;
+import netscape.ldap.LDAPConnection;
+import netscape.ldap.LDAPEntry;
+import netscape.ldap.LDAPException;
+import netscape.ldap.LDAPModification;
 
 /**
  * A partially implemented class that is suitable to create
@@ -104,7 +123,7 @@ INodeInfo, SuiConstants {
         String serverName = (String)_nodeDataTable.get(_nodeNameKey);
         if (serverName == null) {
             _nodeDataTable.put(_nodeNameKey,
-                    (String)_nodeDataTable.get("cn"));
+                    _nodeDataTable.get("cn"));
         }
         setName((String)_nodeDataTable.get(_nodeNameKey));
 
@@ -316,7 +335,7 @@ INodeInfo, SuiConstants {
                     rpm.fireChangeStatusItemState(null,
                     Framework.STATUS_TEXT, status);
             rpm.fireChangeStatusItemState(null,
-                    ResourcePage.STATUS_PROGRESS, new Integer(0));
+                    ResourcePage.STATUS_PROGRESS, Integer.valueOf(0));
         }
     }
 

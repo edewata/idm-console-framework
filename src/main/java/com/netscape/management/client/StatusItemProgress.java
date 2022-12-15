@@ -43,7 +43,7 @@ public class StatusItemProgress extends JProgressBar implements IStatusItem {
     int _percent = 0;
     int _mode = MODE_PERCENT;
 
-    public static Integer STATE_BUSY = new Integer(-1);
+    public static Integer STATE_BUSY = Integer.valueOf(-1);
     protected String _id = null;
     private javax.swing.Timer busyTimer = null;
 
@@ -114,14 +114,14 @@ public class StatusItemProgress extends JProgressBar implements IStatusItem {
     // Miodrag: this method is used by cert4.x servers. need it for compatibility
     @Deprecated
     public void stop() {
-        setState(new Integer(0));
+        setState(Integer.valueOf(0));
     }
 
     /**
      * Returns current state.
      */
     public Object getState() {
-        return new Integer(getValue());
+        return Integer.valueOf(getValue());
     }
 
     /**

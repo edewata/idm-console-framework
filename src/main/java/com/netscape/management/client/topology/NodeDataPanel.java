@@ -7,26 +7,67 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.topology;
 
-import java.util.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.event.*;
-import com.netscape.management.client.util.*;
-import com.netscape.management.nmclf.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.Hashtable;
+import java.util.Vector;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import com.netscape.management.client.util.Debug;
+import com.netscape.management.client.util.GridBagUtil;
+import com.netscape.management.client.util.Help;
+import com.netscape.management.client.util.JButtonFactory;
+import com.netscape.management.client.util.ResourceSet;
+import com.netscape.management.client.util.SingleByteTextArea;
+import com.netscape.management.client.util.SingleByteTextField;
+import com.netscape.management.nmclf.SuiConstants;
 
 /**
  * A general configurational panel to edit attributes. Inside NodeDataPanel, it will
@@ -143,9 +184,9 @@ public class NodeDataPanel extends JPanel implements SuiConstants,
 
 	/**
 	 * Sets help context-sensitive help info for this panel.
-	 * When the Help button is pressed, the help viewer is launched 
+	 * When the Help button is pressed, the help viewer is launched
 	 * with these parameters.
-	 * 
+	 *
 	 * @param productID		the product identifier, which corresponds to the manual directory on the back-end
 	 * @param topic			the help topic contained in tokens.map
 	 */
@@ -154,10 +195,10 @@ public class NodeDataPanel extends JPanel implements SuiConstants,
         helpProduct = productID;
         helpTopic = topic;
     }
-	
+
 	/**
 	 * Returns the help topic used for this panel.
-	 * 
+	 *
 	 * @return the string that is help token for this dialog.
 	 * @see #setHelpTopic
 	 */
@@ -165,7 +206,7 @@ public class NodeDataPanel extends JPanel implements SuiConstants,
 	{
 		return helpTopic;
 	}
-    
+
     /**
      * create the panel internal control
      *
@@ -358,14 +399,14 @@ public class NodeDataPanel extends JPanel implements SuiConstants,
                                                               new CancelButtonListener());
             _cancelButton.setToolTipText(_resource.getString("General","Cancel_tt"));
             v.addElement(_cancelButton);
-			
+
 			this.add(_helpHorizontalSpace);
 			_helpButton = JButtonFactory.createHelpButton(new ActionListener(){
                     public void actionPerformed(ActionEvent e){
                         helpInvoked();}});
 			this.add(_helpButton);
 			v.addElement(_helpButton);
-			
+
             JButton[] buttonGroup = new JButton[v.size()];
             v.copyInto(buttonGroup);
             if (buttonGroup != null) {
@@ -398,18 +439,18 @@ public class NodeDataPanel extends JPanel implements SuiConstants,
 		_editButton.requestFocus();
 		_buttonPanel.add(_helpHorizontalSpace);
 		_buttonPanel.add(_helpButton);
-		
+
         validate();
         repaint();
     }
-	
+
 	/**
 	 * Sets initial default button (button pressed on enter).
 	 */
 	public void setDefaultButton(JButton button) {
 		getRootPane().setDefaultButton(button);
 	}
-	
+
     class EditButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             for (int i = 0; i < _editableArray.length; i++) {
@@ -476,7 +517,7 @@ public class NodeDataPanel extends JPanel implements SuiConstants,
                     textArea.setBorder(BorderFactory.createEmptyBorder());
                     textArea.setMargin(new Insets(0, 0, 0, 0));
 				} else if ((_component instanceof JTextField) &&
-						   !(_component instanceof JPasswordField)) { 
+						   !(_component instanceof JPasswordField)) {
 					JTextField textField = (JTextField)_component;
                     textField.setEditable(false);
                     textField.setBackground(UIManager.getColor("control"));
@@ -502,7 +543,7 @@ public class NodeDataPanel extends JPanel implements SuiConstants,
                     textArea.setBackground(Color.white);
                     textArea.select(0, 0);
                     // valueLabel.setMargin(new Insets()); // doesn't work, using compound border instead...
-                    
+
                     textArea.setBorder( BorderFactory.createCompoundBorder(
                                                                            loweredBorder, spacingBorder));
                     _originalValue = textArea.getText();
@@ -513,14 +554,14 @@ public class NodeDataPanel extends JPanel implements SuiConstants,
                     textField.setBackground(Color.white);
                     textField.select(0, 0);
                     // valueLabel.setMargin(new Insets()); // doesn't work, using compound border instead...
-                    
+
                     textField.setBorder( BorderFactory.createCompoundBorder(
                                                                             loweredBorder, spacingBorder));
                     _originalValue = textField.getText();
-							   
+
                 } else if (_component instanceof JCheckBox) {
                     JCheckBox checkbox = (JCheckBox)_component;
-                    _originalValue = new Boolean(checkbox.isSelected());
+                    _originalValue = Boolean.valueOf(checkbox.isSelected());
                     _component.setEnabled(true);
                 } else if (_component != null) {
                     _component.setEnabled(true);
@@ -604,21 +645,21 @@ public class NodeDataPanel extends JPanel implements SuiConstants,
             _nodeInfo.actionNodeDataChanged(new NodeData(ID_OPEN, null));
         }
     }
-	
+
     /**
      * Called when HELP button is pressed
      * Default implementation calls Help.showContextHelp
-     * with product and topic parameters specified in 
+     * with product and topic parameters specified in
      * setHelpTopic.
-     * 
+     *
      * @see #setHelpTopic
      */
-    protected void helpInvoked() 
+    protected void helpInvoked()
 	{
 		if(helpProduct == null || helpTopic == null)
 			throw new IllegalStateException("Help product or token not set.");
 		else
 			Help.showContextHelp(helpProduct, helpTopic);
     }
-    
+
 }

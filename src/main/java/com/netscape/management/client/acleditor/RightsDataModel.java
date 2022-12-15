@@ -7,27 +7,28 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.acleditor;
 
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableCellEditor;
-
 import java.util.Enumeration;
 
-import com.netscape.management.client.acl.Rule;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+
 import com.netscape.management.client.acl.AttributeList;
+import com.netscape.management.client.acl.Rule;
 import com.netscape.management.client.util.ResourceSet;
-import com.netscape.management.nmclf.*;
+import com.netscape.management.nmclf.SuiCheckCellEditor;
+import com.netscape.management.nmclf.SuiCheckCellRenderer;
 
 /**
  * The RightsDataModel defines the set of rights that
@@ -128,7 +129,7 @@ public class RightsDataModel extends DataModelAdapter {
 
         switch (col) {
         case 0:
-            return new Boolean(
+            return Boolean.valueOf(
                     datacopy.containsAttribute(rights[rowIndex]));
 
         case 1:

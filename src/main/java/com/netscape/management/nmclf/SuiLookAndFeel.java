@@ -7,35 +7,44 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.nmclf;
 
-import java.awt.*;
-
-import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.plaf.basic.*;
-import javax.swing.plaf.*;
-import javax.swing.plaf.metal.*;
-
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Insets;
+import java.awt.SystemColor;
 import java.io.Serializable;
 
-import com.netscape.management.client.util.*;
+import javax.swing.BorderFactory;
+import javax.swing.LookAndFeel;
+import javax.swing.UIDefaults;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.plaf.BorderUIResource;
+import javax.swing.plaf.ColorUIResource;
+import javax.swing.plaf.InsetsUIResource;
+import javax.swing.plaf.basic.BasicBorders;
+import javax.swing.plaf.basic.BasicGraphicsUtils;
+import javax.swing.plaf.metal.MetalLookAndFeel;
+
+import com.netscape.management.client.util.RemoteImage;
 
 /**
  * This Look and Feel class customizes certain JFC widgets.
  * Some customizations are done to provide a Netscape identity,
  * while other changes fix JFC visual and functional bugs.
- * 
+ *
  * This package has undergone a major overhaul in Console 5.0.
  * A lot of dead-code was removed, and most dependencies to
  * console packages were removed.
@@ -43,50 +52,50 @@ import com.netscape.management.client.util.*;
  * @author Ben fry
  * @author Andy Hakim
  */
-public class SuiLookAndFeel extends MetalLookAndFeel implements Serializable, SuiConstants 
+public class SuiLookAndFeel extends MetalLookAndFeel implements Serializable, SuiConstants
 {
     public static final boolean _isWindows =
             System.getProperty("os.name").startsWith("Windows");
 
-    public String getName() 
+    public String getName()
     {
         return "Console Look and Feel";
     }
 
-    public String getID() 
+    public String getID()
     {
         return "NMCLF";
     }
 
-    public String getDescription() 
+    public String getDescription()
     {
         return "";
     }
 
-    public boolean isNativeLookAndFeel() 
+    public boolean isNativeLookAndFeel()
     {
         return _isWindows;
     }
 
-    public boolean isSupportedLookAndFeel() 
+    public boolean isSupportedLookAndFeel()
     {
         return true;
     }
 
     /**
      * Override the parent initialize method.
-     * 
+     *
      * With JDK1.4, the parent Win L&F will fail to initialize if
      * the OS version contains letters (e.g. B.11.11 for hpux).
      * Adjust the version string, if necessary, and restore the
      * original one afterwards.
      */
     public void initialize() {
-              
+
         String osVersion = System.getProperty("os.version");
         String osVersionTemp = null;
 
-        try {            
+        try {
             try {
                 Float.parseFloat(osVersion);
             }
@@ -97,7 +106,7 @@ public class SuiLookAndFeel extends MetalLookAndFeel implements Serializable, Su
             }
 
             super.initialize();
-        }        
+        }
         finally {
             // Restore the real os version
             if (osVersionTemp != null) {
@@ -106,7 +115,7 @@ public class SuiLookAndFeel extends MetalLookAndFeel implements Serializable, Su
         }
     }
 
-    public UIDefaults getDefaults() 
+    public UIDefaults getDefaults()
     {
         UIDefaults table = new UIDefaults();
         initClassDefaults(table);
@@ -129,12 +138,12 @@ public class SuiLookAndFeel extends MetalLookAndFeel implements Serializable, Su
 
         String suiPackageName = "com.netscape.management.nmclf.";
 
-        Object[] uiDefaults = 
+        Object[] uiDefaults =
         {
             "TreeUI", suiPackageName + "SuiTreeUI",
-            "TableUI", suiPackageName + "SuiTableUI", 
-            "ComboBoxUI", suiPackageName + "SuiComboBoxUI", 
-            "OptionPaneUI", suiPackageName + "SuiOptionPaneUI" 
+            "TableUI", suiPackageName + "SuiTableUI",
+            "ComboBoxUI", suiPackageName + "SuiComboBoxUI",
+            "OptionPaneUI", suiPackageName + "SuiOptionPaneUI"
         };
 
         table.putDefaults(uiDefaults);
@@ -158,7 +167,7 @@ public class SuiLookAndFeel extends MetalLookAndFeel implements Serializable, Su
                 }
                 table.put(systemColors[i], new ColorUIResource(color));
             }
-            // ahakim: now tweak the standard colors a little bit 
+            // ahakim: now tweak the standard colors a little bit
             table.put("scrollbar", new ColorUIResource(Color.decode("#E0E0E0")));  // Scrollbar background (usually the "track")
         } else {
             /* PENDING(hmuller) We don't load the system colors below because
@@ -178,27 +187,27 @@ public class SuiLookAndFeel extends MetalLookAndFeel implements Serializable, Su
         }
     }
 
-    protected void initComponentDefaults(UIDefaults table) 
+    protected void initComponentDefaults(UIDefaults table)
     {
         super.initComponentDefaults(table);
 
-        SuiFieldBorder fb = new SuiFieldBorder((Color)table.get("controlShadow"), 
+        SuiFieldBorder fb = new SuiFieldBorder((Color)table.get("controlShadow"),
                                                (Color)table.get("controlDkShadow"),
-                                               (Color)table.get("controlHighlight"), 
+                                               (Color)table.get("controlHighlight"),
                                                (Color)table.get("controlLtHighlight"));
 
         Object textBorder = new UIDefaults.LazyValue() {
-            public Object createValue(UIDefaults table) 
+            public Object createValue(UIDefaults table)
             {
                 return new BorderUIResource( new CompoundBorder(
                         SuiFieldBorder.getFieldBorder(),
                         new BasicBorders.MarginBorder()));
             }
         };
-        
-        Object buttonBorder = new UIDefaults.LazyValue() 
+
+        Object buttonBorder = new UIDefaults.LazyValue()
         {
-                public Object createValue(UIDefaults table) 
+                public Object createValue(UIDefaults table)
                 {
                     return new BorderUIResource.CompoundBorderUIResource(
                             new BasicBorders.ButtonBorder(
@@ -209,7 +218,7 @@ public class SuiLookAndFeel extends MetalLookAndFeel implements Serializable, Su
                             new BasicBorders.MarginBorder());
                 }
         };
-                        
+
         // default selection/highlight color
         ColorUIResource highlightColor = new ColorUIResource(204, 204, 255);
 
@@ -219,26 +228,26 @@ public class SuiLookAndFeel extends MetalLookAndFeel implements Serializable, Su
 
         Border focusCellHighlightBorder = BorderFactory.createEmptyBorder(0, 3, 0, 3);
 
-        Object listCellRendererActiveValue = new UIDefaults.ActiveValue() 
+        Object listCellRendererActiveValue = new UIDefaults.ActiveValue()
         {
-            public Object createValue(UIDefaults table) 
+            public Object createValue(UIDefaults table)
             {
                 return new SuiListCellRenderer();
             }
         };
-        
+
         // Only add stuff to default array that replaces WindowsLookAndFeel/BasicLookAndFeel
-        Object[] defaults = 
+        Object[] defaults =
         {
             "List.focusCellHighlightBorder", focusCellHighlightBorder,
             "List.cellRenderer", listCellRendererActiveValue,
             "List.nonSelectionBackground", table.get("controlText"),
-            
+
             "TabbedPane.contentBorderInsets", new InsetsUIResource(1, 1, 2, 2),
-                                
-            "Tree.leftChildIndent", new Integer(7),
-            "Tree.rightChildIndent", new Integer(13),
-            "Tree.rowHeight", new Integer(18),
+
+            "Tree.leftChildIndent", Integer.valueOf(7),
+            "Tree.rightChildIndent", Integer.valueOf(13),
+            "Tree.rowHeight", Integer.valueOf(18),
             "Tree.scrollsOnExpand", Boolean.TRUE,
             "Tree.openIcon", LookAndFeel.makeIcon(getClass(), "icons/TreeOpen.gif"),
             "Tree.closedIcon", LookAndFeel.makeIcon(getClass(), "icons/TreeClosed.gif"),
@@ -247,39 +256,39 @@ public class SuiLookAndFeel extends MetalLookAndFeel implements Serializable, Su
             "Tree.collapsedIcon", null,
             "Tree.changeSelectionWithFocus", Boolean.TRUE,
             "Tree.drawsFocusBorderAroundIcon", Boolean.FALSE,
-            
+
             "TabbedPane.tabInsets", new InsetsUIResource(0, 15, 1, 15),
 
             "Label.error", errorColor,         // TODO: possibly never used, remove
             "Label.modified", modifiedColor,   // TODO: possibly never used, remove
-            
-            "SplitPane.dividerSize", new Integer(4),
-            
+
+            "SplitPane.dividerSize", Integer.valueOf(4),
+
             "ComboBox.border", textBorder,
-            "ComboBox.background", table.get("window"), 
-            "ComboBox.foreground", Color.black, 
-            
+            "ComboBox.background", table.get("window"),
+            "ComboBox.foreground", Color.black,
+
             "Table.focusCellHighlightBorder", focusCellHighlightBorder,
-            "Table.scrollPaneBorder", textBorder,            
-            "PasswordField.border", textBorder, 
-            "TextField.border", textBorder, 
-            "Button.border", buttonBorder, 
+            "Table.scrollPaneBorder", textBorder,
+            "PasswordField.border", textBorder,
+            "TextField.border", textBorder,
+            "Button.border", buttonBorder,
             "ScrollPane.border", textBorder,
-            
+
             "TextField.margin", new InsetsUIResource(0, 3, 0, 3),
             "TextArea.margin", new InsetsUIResource(0, 3, 0, 3),
             "Button.margin", new InsetsUIResource(0, 15, 0, 15),
-            
-            "Tree.background", table.get("window"), 
-            "Tree.textSelectionColor", table.get("textSelectionColor"), 
+
+            "Tree.background", table.get("window"),
+            "Tree.textSelectionColor", table.get("textSelectionColor"),
             "Tree.textNonSelectionColor", table.get("controlText"),
-            "Tree.collapsedIcon", LookAndFeel.makeIcon(getClass(), "icons/TreeExpander.gif"), 
-            "Tree.expandedIcon", LookAndFeel.makeIcon(getClass(), "icons/TreeCollapser.gif"), 
-            
-            "OptionPane.errorIcon", new RemoteImage("com/netscape/management/nmclf/icons/Error.gif"), 
-            "OptionPane.informationIcon", new RemoteImage("com/netscape/management/nmclf/icons/Inform.gif"), 
-            "OptionPane.warningIcon", new RemoteImage("com/netscape/management/nmclf/icons/Warn.gif"), 
-            "OptionPane.questionIcon", new RemoteImage("com/netscape/management/nmclf/icons/Question.gif"), 
+            "Tree.collapsedIcon", LookAndFeel.makeIcon(getClass(), "icons/TreeExpander.gif"),
+            "Tree.expandedIcon", LookAndFeel.makeIcon(getClass(), "icons/TreeCollapser.gif"),
+
+            "OptionPane.errorIcon", new RemoteImage("com/netscape/management/nmclf/icons/Error.gif"),
+            "OptionPane.informationIcon", new RemoteImage("com/netscape/management/nmclf/icons/Inform.gif"),
+            "OptionPane.warningIcon", new RemoteImage("com/netscape/management/nmclf/icons/Warn.gif"),
+            "OptionPane.questionIcon", new RemoteImage("com/netscape/management/nmclf/icons/Question.gif"),
         };
         table.putDefaults(defaults);
     }
@@ -318,17 +327,17 @@ class SuiGraphicsUtils extends BasicGraphicsUtils {
 // needed to create proper border for various components
 class SuiFieldBorder extends BasicBorders.FieldBorder {
     private static Border fieldBorder = null;
-    
+
     public SuiFieldBorder(Color shadow, Color darkShadow, Color highlight, Color lightHighlight)
     {
         super(shadow, darkShadow, highlight, lightHighlight);
-        
+
         if (fieldBorder == null)
         {
             fieldBorder = this;
         }
     }
-    
+
     public static Border getFieldBorder() {
         return fieldBorder;
     }

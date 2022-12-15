@@ -7,35 +7,28 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.topology;
 
-import javax.swing.JCheckBox;
-import javax.swing.JPasswordField;
-import javax.swing.event.ChangeListener;
-import javax.swing.tree.MutableTreeNode;
-
-import netscape.ldap.LDAPAttribute;
-import netscape.ldap.LDAPConnection;
-import netscape.ldap.LDAPEntry;
-import netscape.ldap.LDAPException;
-import netscape.ldap.LDAPModification;
-import netscape.ldap.LDAPSearchResults;
-
 import java.awt.Component;
 import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
+
+import javax.swing.JCheckBox;
+import javax.swing.JPasswordField;
+import javax.swing.event.ChangeListener;
+import javax.swing.tree.MutableTreeNode;
 
 import com.netscape.management.client.IMenuInfo;
 import com.netscape.management.client.IMenuItem;
@@ -51,6 +44,13 @@ import com.netscape.management.client.util.LDAPUtil;
 import com.netscape.management.client.util.RemoteImage;
 import com.netscape.management.client.util.ResourceSet;
 import com.netscape.management.nmclf.SuiPasswordField;
+
+import netscape.ldap.LDAPAttribute;
+import netscape.ldap.LDAPConnection;
+import netscape.ldap.LDAPEntry;
+import netscape.ldap.LDAPException;
+import netscape.ldap.LDAPModification;
+import netscape.ldap.LDAPSearchResults;
 
 
 /**
@@ -169,9 +169,9 @@ INodeInfo {
             if (ldapURL.regionMatches(true, 0, "ldaps",0, 5)) {
                 _isSecure = true;
                 cbSSL.setSelected(_isSecure);
-                _LDAPPort = (String)"636";
+                _LDAPPort = "636";
             } else
-                _LDAPPort = (String)"389";
+                _LDAPPort = "389";
             int iStart = ldapURL.indexOf("://") + 3;
             int iEnd = ldapURL.indexOf('/',iStart);
             if ((iStart != (-1)) && (iEnd != (-1))) {
@@ -232,7 +232,7 @@ INodeInfo {
                 System.getProperty("profile") != null) {
             splashScreen.setStatusText( MessageFormat.format(
                     Console._resource.getString("splash", "hostsCount"),
-                    new Object[]{ new Integer(hostCount), getName()}));
+                    new Object[]{ Integer.valueOf(hostCount), getName()}));
         }
 
         LDAPSearchResults result =
@@ -242,7 +242,7 @@ INodeInfo {
             long t4, t3 = t0;
             try {
                 while (result.hasMoreElements()) {
-                    LDAPEntry findEntry = (LDAPEntry) result.next();
+                    LDAPEntry findEntry = result.next();
                     cnt++;
                     //if (pbar != null) pbar.setValue(cnt);
 
@@ -256,8 +256,8 @@ INodeInfo {
                                 splashScreen.setStatusText(
                                         MessageFormat.format(
                                         _i18nHostsCreatedOutOf,
-                                        new Object[]{ new Integer(cnt)
-                                        , new Integer(hostCount),
+                                        new Object[]{ Integer.valueOf(cnt)
+                                        , Integer.valueOf(hostCount),
                                         getName()}));
 
                             } else // do not know what is the total number
@@ -265,7 +265,7 @@ INodeInfo {
                                 splashScreen.setStatusText(
                                         MessageFormat.format(
                                         _i18nHostsCreated,
-                                        new Object[]{ new Integer(cnt)
+                                        new Object[]{ Integer.valueOf(cnt)
                                         , getName()}));
                             }
                         }

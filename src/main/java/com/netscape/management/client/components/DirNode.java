@@ -43,7 +43,7 @@ import netscape.ldap.LDAPSearchConstraints;
 import netscape.ldap.LDAPSearchResults;
 import netscape.ldap.LDAPSortKey;
 import netscape.ldap.LDAPUrl;
-import netscape.ldap.LDAPv2;
+import netscape.ldap.LDAPv3;
 import netscape.ldap.controls.LDAPSortControl;
 
 /**
@@ -472,7 +472,7 @@ public class DirNode extends DefaultMutableTreeNode
             cons.setServerControls( controls );
             // Search for immediate children
             LDAPSearchResults result =
-                ldc.search( dn, LDAPv2.SCOPE_ONE,
+                ldc.search( dn, LDAPv3.SCOPE_ONE,
                             getChildFilter(),
                             _baseAttrs, false, cons );
             Debug.println(9, "DirNode.getChildList: <" + dn +
@@ -540,7 +540,7 @@ public class DirNode extends DefaultMutableTreeNode
             Debug.println(9, "DirNode.countChildren: " +
                           "<" + dn + "> , " + filter );
             LDAPSearchResults result =
-                ldc.search( dn, LDAPv2.SCOPE_ONE,
+                ldc.search( dn, LDAPv3.SCOPE_ONE,
                             filter,
                             attrs, false, cons );
 

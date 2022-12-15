@@ -7,27 +7,47 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.ace;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import javax.swing.*;
-import javax.swing.table.*;
-import netscape.ldap.LDAPConnection;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.StringTokenizer;
+import java.util.Vector;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
+
+import com.netscape.management.client.components.ButtonFactory;
+import com.netscape.management.client.components.Table;
+import com.netscape.management.client.components.UIConstants;
 import com.netscape.management.client.console.ConsoleHelp;
-import com.netscape.management.client.components.*;
-import com.netscape.management.client.util.*;
+import com.netscape.management.client.util.Debug;
+import com.netscape.management.client.util.ResourceSet;
+
+import netscape.ldap.LDAPConnection;
 
 /**
  * This tab controls which capabilities are allowed if permission is granted.
@@ -49,16 +69,16 @@ class RightsTab implements IACITab, UIConstants
     private JButton noneButton;
 	private JPanel p = new JPanel();
 	private boolean isInitialized = false;
-    
-    private static String i18n(String id) 
+
+    private static String i18n(String id)
     {
         return i18n.getString("right", id);
     }
-    
+
     /**
      * Called once to provide global information about this
      * invocation of the ACIManager.
-     * 
+     *
      * @param parentFrame   a JFrame object that will be the parent for this dialog.
      * @param aciLdc        a LDAP connection to server where ACIs reside
      * @param aciDN         a DN where ACIs reside
@@ -68,21 +88,21 @@ class RightsTab implements IACITab, UIConstants
     public void initialize(JFrame parentFrame, LDAPConnection aciLdc, String aciDN, LDAPConnection ugLdc, String ugDN)
     {
     }
-    
+
     /**
      * Notification that the ACI has changed
      * This method is called in two situations:
      * 1) during initialization, after getComponent is called.
      * 2) after a change from manual to visual mode.
-     * 
+     *
      * The tab implementation should examine the changed aci and return
      * all parsed ACIAttribute objects the tab recognized and processed.
      * The return value may be null if no attributes were recognized.
-     * 
+     *
      * @param aciAttributes  the aci as an array of ACIAttribute objects
      * @param rawACI         the aci string
      * @return an array of ACIAttribute objects that were recognized
-     * 
+     *
      * @see ACIParser#parseACI
      * @see ACIAttribute
      */
@@ -91,7 +111,7 @@ class RightsTab implements IACITab, UIConstants
         Vector usedAttributes = new Vector();
         boolean isAllow = false;
         String rightsString = null;
-        
+
         for(int i = 0; i < aciAttributes.length; i++)
         {
             ACIAttribute a = aciAttributes[i];
@@ -109,13 +129,13 @@ class RightsTab implements IACITab, UIConstants
                 usedAttributes.addElement(a);
             }
         }
-        
+
         if(rightsString == null)
         {
             checkAll();
             return null;
         }
-        
+
         Vector rightsVector = new Vector();
         rightsString = rightsString.toLowerCase();
         StringTokenizer st = new StringTokenizer(rightsString, "( ),\n");
@@ -129,8 +149,8 @@ class RightsTab implements IACITab, UIConstants
             }
             rightsVector.addElement(right);
         }
-        
-        TableModel tm = (TableModel)rightsTable.getModel();
+
+        TableModel tm = rightsTable.getModel();
         int rowCount = tm.getRowCount();
         for(int i = 0; i < rowCount; i++)
         {
@@ -146,7 +166,7 @@ class RightsTab implements IACITab, UIConstants
                 if(rightsVector.contains(KEYWORD_ALL) || rightsVector.contains(right))
                     state = isAllow;
             }
-            tm.setValueAt(new Boolean(state), i, 0);
+            tm.setValueAt(Boolean.valueOf(state), i, 0);
         }
         return ACIAttribute.toArray(usedAttributes);
     }
@@ -159,15 +179,15 @@ class RightsTab implements IACITab, UIConstants
         }
         if  (KEYWORD_ALL.equalsIgnoreCase(right))
             return true;
-        
+
         return false;
     }
 
     /**
      * Retrieves the Component which renders the
      * content for this tab.
-     * 
-     * @param parentFrame the Frame used by the ace dialog 
+     *
+     * @param parentFrame the Frame used by the ace dialog
      */
     public JComponent getComponent()
     {
@@ -183,14 +203,14 @@ class RightsTab implements IACITab, UIConstants
      * Range: 0 to 10 or -1 for LAST.
      * If multiple tabs have the same preferred position,
      * the tabs are ordered by name.
-     * 
+     *
      * @return the preferred tab position in the tabbed pane
      */
     public int getPreferredPosition()
     {
         return TAB_POSITION;
     }
-    
+
     private JPanel createButtonPanel()
     {
         JPanel p = new JPanel();
@@ -204,31 +224,31 @@ class RightsTab implements IACITab, UIConstants
         gbc.anchor = GridBagConstraints.NORTH;
         gbc.fill = GridBagConstraints.NONE;
         gbc.insets = new Insets(0, 0, COMPONENT_SPACE, 0);
-        
+
         ActionListener buttonListener = new ButtonActionListener();
-        
+
         allButton = ButtonFactory.createButton(i18n("all"), buttonListener, ALL_COMMAND);
         allButton.setToolTipText(i18n("all_tt"));
         gbl.setConstraints(allButton, gbc);
         p.add(allButton);
-            
+
         noneButton = ButtonFactory.createButton(i18n("none"), buttonListener, NONE_COMMAND);
         noneButton.setToolTipText(i18n("none_tt"));
         gbl.setConstraints(noneButton, gbc);
         p.add(noneButton);
 
         ButtonFactory.resizeButtons(allButton, noneButton);
-        return p;            
+        return p;
     }
 
     private DefaultTableModel createTableModel()
     {
         DefaultTableModel tm = new DefaultTableModel()
             {
-                public Class getColumnClass(int c)                 {                    return getValueAt(0, c).getClass();
+                public Class getColumnClass(int c)                {                    return getValueAt(0, c).getClass();
                 }
-                
-                public boolean isCellEditable(int row, int col)                 {
+
+                public boolean isCellEditable(int row, int col)                {
                     return col == 0;
                 }            };
         tm.addColumn(""); // column name figured out via getColumnClass()==Boolean.class
@@ -236,15 +256,15 @@ class RightsTab implements IACITab, UIConstants
         tm.addColumn(i18n("columnDesc"));
         for(int i = 0; i < RIGHTS.length; i++)
         {
-            tm.addRow(new Object[] { new Boolean(false), RIGHTS[i], i18n(RIGHTS[i]) });
+            tm.addRow(new Object[] { Boolean.valueOf(false), RIGHTS[i], i18n(RIGHTS[i]) });
         }
         return tm;
     }
-    
+
     /**
      * Retrieves the title for this tab.
      * The title should be short, usually one word.
-     * 
+     *
      * @return the title string for this tab.
      */
     public String getTitle()
@@ -261,7 +281,7 @@ class RightsTab implements IACITab, UIConstants
 		if(isInitialized)
 			return;
 		isInitialized = true;
-		
+
         p.setBorder(BorderFactory.createEmptyBorder(VERT_WINDOW_INSET,
                 HORIZ_WINDOW_INSET, VERT_WINDOW_INSET, HORIZ_WINDOW_INSET));
         GridBagLayout gbl = new GridBagLayout();
@@ -278,7 +298,7 @@ class RightsTab implements IACITab, UIConstants
         infoLabel.setText(i18n("info"));
         gbl.setConstraints(infoLabel, gbc);
         p.add(infoLabel);
-        
+
         gbc.gridx = 0;       gbc.gridy = 1;
         gbc.gridwidth = 1;   gbc.gridheight = 1;
         gbc.weightx = 1.0;   gbc.weighty = 1.0;
@@ -302,7 +322,7 @@ class RightsTab implements IACITab, UIConstants
         JPanel buttonPanel = createButtonPanel();
         gbl.setConstraints(buttonPanel, gbc);
         p.add(buttonPanel);
-        
+
     }
 
 	/**
@@ -312,7 +332,7 @@ class RightsTab implements IACITab, UIConstants
 	{
 		ConsoleHelp.showContextHelp("ace-rights");
 	}
-	
+
     /**
      * Called when the OK button is pressed.
      */
@@ -326,16 +346,16 @@ class RightsTab implements IACITab, UIConstants
     public void cancelInvoked()
     {
     }
-	
+
     /**
      * Returns a new ACI that includes attributes from this tab.
-     * This tab's attributes can be appended/prepended/inserted 
+     * This tab's attributes can be appended/prepended/inserted
      * into the existingACI.
-     * 
+     *
      * This method is called when in two situations:
      * 1) when the user presses OK in the ACIEditor dialog.
      * 2) after a change from visual to manual mode.
-     * 
+     *
      * @param existingACI   the existing aci
      * @return the new aci that includes this tab's attributes
      */
@@ -371,41 +391,41 @@ class RightsTab implements IACITab, UIConstants
                         areAllEnabled = false;
                     }
                 }
-                
+
                 if(areAllEnabled)
                 {
                     newACI = new StringBuffer(KEYWORD_ALL);
                 }
-                
+
                 if(isProxyEnabled)
                 {
                     if(newACI.length() > 0)
                         newACI.append(",");
                     newACI.append(KEYWORD_PROXY);
                 }
-                
+
                 if(newACI.length() > 0)
                     existingACI.insert(insertionIndex+2,  "\n" + KEYWORD_ALLOW + " (" + newACI + ")");
                 else
                     existingACI.insert(insertionIndex+2,  "\n" + KEYWORD_DENY + " (" + KEYWORD_ALL + ")");
-                
+
                 return existingACI;
             }
         }
         System.err.println("ACI ERROR: unable to encode rights");
 		return existingACI;
 	}
-    
+
     private void checkAll()
     {
         setAllState(true);
     }
-    
+
     private void checkNone()
     {
         setAllState(false);
     }
-    
+
     private void setAllState(boolean state)
     {
         int rowCount = rightsTableModel.getRowCount();
@@ -416,17 +436,17 @@ class RightsTab implements IACITab, UIConstants
                 String right = (String)rightsTableModel.getValueAt(i, 1);
                 if(!right.equalsIgnoreCase(KEYWORD_PROXY))
                 {
-                    rightsTableModel.setValueAt(new Boolean(state), i, 0);
+                    rightsTableModel.setValueAt(Boolean.valueOf(state), i, 0);
                 }
             }
             else
             {
-                rightsTableModel.setValueAt(new Boolean(state), i, 0);
+                rightsTableModel.setValueAt(Boolean.valueOf(state), i, 0);
             }
         }
         rightsTableModel.fireTableDataChanged();
     }
-    
+
     class ButtonActionListener implements ActionListener
     {
         public void actionPerformed(ActionEvent e)
@@ -439,12 +459,12 @@ class RightsTab implements IACITab, UIConstants
                 checkNone();
         }
     }
-    
+
     /**
      * Returns a list of supported ACI attributes (keywords, operators, values).
      * This information is used when editing manually for the purposes of
      * syntax checking, color highlighting, and word completion.
-     * 
+     *
      * Alphanumeric and digit characters are treated as required literals.
      * Special characters:
      * "|"  indicates multiple choices
@@ -458,8 +478,8 @@ class RightsTab implements IACITab, UIConstants
             rightsList.append("|");
         }
         rightsList.append(KEYWORD_ALL);
-        
-        return new ACIAttribute[] 
+
+        return new ACIAttribute[]
             {
                 new ACIAttribute(KEYWORD_ALLOW, "", "(" + rightsList.toString() + ")"),
                 new ACIAttribute(KEYWORD_ALLOW, "", "(" + KEYWORD_ALL + ")"),

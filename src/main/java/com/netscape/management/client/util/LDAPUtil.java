@@ -40,7 +40,7 @@ import netscape.ldap.LDAPDN;
 import netscape.ldap.LDAPEntry;
 import netscape.ldap.LDAPException;
 import netscape.ldap.LDAPSearchResults;
-import netscape.ldap.LDAPv2;
+import netscape.ldap.LDAPv3;
 import netscape.ldap.util.DN;
 import netscape.ldap.util.RDN;
 
@@ -609,11 +609,11 @@ public class LDAPUtil {
                       vlvScope + " " + vlvFilter + " " + vlvSort);
         String indexVLVSort = null;
         try {
-            String scope = (new Integer(vlvScope)).toString();
+            String scope = (Integer.valueOf(vlvScope)).toString();
 
             LDAPSearchResults res =
                 ldc.search(backendInstance,
-                    LDAPv2.SCOPE_ONE,
+                    LDAPv3.SCOPE_ONE,
                     "(objectclass=vlvSearch)",
                     null, false);
 
@@ -656,7 +656,7 @@ public class LDAPUtil {
                 // Check the sort attributes
                  LDAPSearchResults res1 =
                     ldc.search(entry.getDN(),
-                               LDAPv2.SCOPE_ONE,
+                               LDAPv3.SCOPE_ONE,
                                "(objectclass=vlvIndex)",
                                null, false);
                   if (res1.hasMoreElements()) {

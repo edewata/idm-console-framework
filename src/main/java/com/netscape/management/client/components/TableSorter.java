@@ -7,29 +7,29 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * END COPYRIGHT BLOCK **/
 /**
- * A sorter for TableModels. The sorter has a model (conforming to TableModel) 
- * and itself implements TableModel. TableSorter does not store or copy 
- * the data in the TableModel, instead it maintains an array of 
- * integers which it keeps the same size as the number of rows in its 
- * model. When the model changes it notifies the sorter that something 
- * has changed eg. "rowsAdded" so that its internal array of integers 
- * can be reallocated. As requests are made of the sorter (like 
- * getValueAt(row, col) it redirects them to its model via the mapping 
- * array. That way the TableSorter appears to hold another copy of the table 
- * with the rows in a different order. The sorting algorthm used is stable 
- * which means that it does not move around rows when its comparison 
- * function returns 0 to denote that they are equivalent. 
+ * A sorter for TableModels. The sorter has a model (conforming to TableModel)
+ * and itself implements TableModel. TableSorter does not store or copy
+ * the data in the TableModel, instead it maintains an array of
+ * integers which it keeps the same size as the number of rows in its
+ * model. When the model changes it notifies the sorter that something
+ * has changed eg. "rowsAdded" so that its internal array of integers
+ * can be reallocated. As requests are made of the sorter (like
+ * getValueAt(row, col) it redirects them to its model via the mapping
+ * array. That way the TableSorter appears to hold another copy of the table
+ * with the rows in a different order. The sorting algorthm used is stable
+ * which means that it does not move around rows when its comparison
+ * function returns 0 to denote that they are equivalent.
  *
  * Andy Hakim: added support for ISortableTableModel interface
  *
@@ -39,12 +39,13 @@
  */
 package com.netscape.management.client.components;
 
-import java.util.*;
+import java.util.Date;
+import java.util.Vector;
 
-import javax.swing.table.TableModel;
 import javax.swing.event.TableModelEvent;
+import javax.swing.table.TableModel;
 
-// Imports for picking up mouse events from the JTable. 
+// Imports for picking up mouse events from the JTable.
 
 import com.netscape.management.client.util.Debug;
 
@@ -64,8 +65,8 @@ public class TableSorter extends TableMap implements ISortableTableModel
     }
 
     public void setModel(TableModel model) {
-        super.setModel(model); 
-        reallocateIndexes(); 
+        super.setModel(model);
+        reallocateIndexes();
     }
 
     public int compareRowsByColumn(int row1, int row2, int column) {
@@ -75,15 +76,15 @@ public class TableSorter extends TableMap implements ISortableTableModel
         // Check for nulls.
 
         Object o1 = data.getValueAt(row1, column);
-        Object o2 = data.getValueAt(row2, column); 
+        Object o2 = data.getValueAt(row2, column);
 
         // If both values are null, return 0.
         if (o1 == null && o2 == null) {
-            return 0; 
-        } else if (o1 == null) { // Define null less than everything. 
-            return -1; 
-        } else if (o2 == null) { 
-            return 1; 
+            return 0;
+        } else if (o1 == null) { // Define null less than everything.
+            return -1;
+        } else if (o2 == null) {
+            return 1;
         }
 
         /*
@@ -198,7 +199,7 @@ public class TableSorter extends TableMap implements ISortableTableModel
             Debug.println(8, "TableSorter.checkModel: table size was changed - need to reallocate indexes");
             reallocateIndexes();
         } else {
-            Debug.println(8, "TableSorter.checkModel: table size was not changed - no need to reallocate indexes");            
+            Debug.println(8, "TableSorter.checkModel: table size was not changed - no need to reallocate indexes");
         }
         super.tableChanged(e);
     }
@@ -215,7 +216,7 @@ public class TableSorter extends TableMap implements ISortableTableModel
         compares = 0;
         // n2sort();
         // qsort(0, indexes.length-1);
-        shuttlesort((int[])indexes.clone(), indexes, 0, indexes.length);
+        shuttlesort(indexes.clone(), indexes, 0, indexes.length);
         Debug.println(9, "TableSorter.sort: Compares: " + compares);
     }
 
@@ -269,7 +270,7 @@ public class TableSorter extends TableMap implements ISortableTableModel
             return;
         }
 
-        // A normal merge. 
+        // A normal merge.
 
         for (int i = low; i < high; i++) {
             if (q >= high || (p < middle && compare(from[p], from[q]) <= 0)) {
@@ -307,7 +308,7 @@ public class TableSorter extends TableMap implements ISortableTableModel
     public void sortByColumn(int column, boolean ascending) {
         this.ascending = ascending;
         sortingColumns.removeAllElements();
-        sortingColumns.addElement(new Integer(column));
+        sortingColumns.addElement(Integer.valueOf(column));
         sort(this);
         Debug.println("TableSorter.sortByColumn: model.getRowCount() = " + model.getRowCount());
         fireTableRowsUpdated(0, model.getRowCount());

@@ -7,28 +7,57 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation version
  * 2.1 of the License.
- *                                                                                 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *                                                                                 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * END COPYRIGHT BLOCK **/
 package com.netscape.management.client.ace;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
-import netscape.ldap.*;
+import java.awt.Container;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Enumeration;
+import java.util.Vector;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.event.TableModelEvent;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+
+import com.netscape.management.client.components.ButtonFactory;
+import com.netscape.management.client.components.DirBrowserDialog;
+import com.netscape.management.client.components.Table;
+import com.netscape.management.client.components.UIConstants;
 import com.netscape.management.client.console.ConsoleHelp;
-import com.netscape.management.client.components.*;
-import com.netscape.management.client.util.*;
+import com.netscape.management.client.util.Debug;
+import com.netscape.management.client.util.ResourceSet;
+
+import netscape.ldap.LDAPAttributeSchema;
+import netscape.ldap.LDAPConnection;
+import netscape.ldap.LDAPException;
+import netscape.ldap.LDAPSchema;
 
 /**
  * This tab controls the target settings.
@@ -67,8 +96,8 @@ class TargetTab implements IACITab, UIConstants
     private String targetEntryEquality = "=";
     private String targetFilterEquality = "=";
     private String targetAttrEquality = "=";
-    
-    private static String i18n(String id) 
+
+    private static String i18n(String id)
     {
         return i18n.getString("target", id);
     }
@@ -76,7 +105,7 @@ class TargetTab implements IACITab, UIConstants
     /**
      * Called once to provide global information about this
      * invocation of the ACIManager.
-     * 
+     *
      * @param parentFrame   a JFrame object that will be the parent for this dialog.
      * @param aciLdc        a LDAP connection to server where ACIs reside
      * @param aciDN         a DN where ACIs reside
@@ -89,12 +118,12 @@ class TargetTab implements IACITab, UIConstants
         this.aciLdc = aciLdc;
         this.aciDN = aciDN;
     }
-    
+
     /**
      * Retrieves the Component which renders the
      * content for this tab.
-     * 
-     * @param parentFrame the Frame used by the ace dialog 
+     *
+     * @param parentFrame the Frame used by the ace dialog
      */
     public JComponent getComponent()
     {
@@ -107,14 +136,14 @@ class TargetTab implements IACITab, UIConstants
      * Range: 0 to 10 or -1 for LAST.
      * If multiple tabs have the same preferred position,
      * the tabs are ordered by name.
-     * 
+     *
      * @return the preferred tab position in the tabbed pane
      */
     public int getPreferredPosition()
     {
         return TAB_POSITION;
     }
-    
+
     private JPanel createEntryPanel()
     {
         JPanel p = new JPanel();
@@ -132,7 +161,7 @@ class TargetTab implements IACITab, UIConstants
         targetLabel.setLabelFor(entryField);
         gbl.setConstraints(targetLabel, gbc);
         p.add(targetLabel);
-            
+
         gbc.gridx = 0;       gbc.gridy = 1;
         gbc.gridwidth = 1;   gbc.gridheight = 1;
         gbc.weightx = 1.0;   gbc.weighty = 1.0;
@@ -164,9 +193,9 @@ class TargetTab implements IACITab, UIConstants
         gbl.setConstraints(browseButton, gbc);
         p.add(browseButton);
 
-        return p;            
+        return p;
     }
-    
+
     private JPanel createFilterPanel()
     {
         JPanel p = new JPanel();
@@ -184,7 +213,7 @@ class TargetTab implements IACITab, UIConstants
         filterLabel.setLabelFor(filterField);
         gbl.setConstraints(filterLabel, gbc);
         p.add(filterLabel);
-            
+
         gbc.gridx = 0;       gbc.gridy = 1;
         gbc.gridwidth = 1;   gbc.gridheight = 1;
         gbc.weightx = 1.0;   gbc.weighty = 1.0;
@@ -206,16 +235,16 @@ class TargetTab implements IACITab, UIConstants
         gbl.setConstraints(constructButton, gbc);
         p.add(constructButton);
 
-        return p;            
+        return p;
     }
-    
+
     private JPanel createAttributePanel()
     {
         JPanel p = new JPanel();
         GridBagLayout gbl = new GridBagLayout();
         p.setLayout(gbl);
         GridBagConstraints gbc = new GridBagConstraints();
-        
+
         gbc.gridx = 0;       gbc.gridy = 0;
         gbc.gridwidth = 2;   gbc.gridheight = 1;
         gbc.weightx = 0.0;   gbc.weighty = 0.0;
@@ -225,7 +254,7 @@ class TargetTab implements IACITab, UIConstants
         JLabel attrLabel = new JLabel(i18n("attrLabel"));
         gbl.setConstraints(attrLabel, gbc);
         p.add(attrLabel);
-            
+
         gbc.gridx = 0;       gbc.gridy = 1;
         gbc.gridwidth = 1;   gbc.gridheight = 1;
         gbc.weightx = 1.0;   gbc.weighty = 1.0;
@@ -242,7 +271,7 @@ class TargetTab implements IACITab, UIConstants
         col = attrTable.getColumnModel().getColumn(1);
         col.setPreferredWidth(50);
         col.setWidth(50);
-        
+
         sp = new JScrollPane(attrTable);
         sp.setPreferredSize(new Dimension(250, 150));
         gbl.setConstraints(sp, gbc);
@@ -260,7 +289,7 @@ class TargetTab implements IACITab, UIConstants
 
         return p;
     }
-    
+
     private JPanel createButtonPanel()
     {
         JPanel p = new JPanel();
@@ -274,34 +303,34 @@ class TargetTab implements IACITab, UIConstants
         gbc.anchor = GridBagConstraints.NORTH;
         gbc.fill = GridBagConstraints.NONE;
         gbc.insets = new Insets(0, 0, COMPONENT_SPACE, 0);
-        
+
         allButton = ButtonFactory.createButton(i18n("all"), buttonListener, ALL_COMMAND);
         allButton.setToolTipText(i18n("all_tt"));
         gbl.setConstraints(allButton, gbc);
         p.add(allButton);
-            
+
         noneButton = ButtonFactory.createButton(i18n("none"), buttonListener, NONE_COMMAND);
         noneButton.setToolTipText(i18n("none_tt"));
         gbl.setConstraints(noneButton, gbc);
         p.add(noneButton);
 
-        return p;            
+        return p;
     }
-    
+
     /**
      * Notification that the ACI has changed
      * This method is called in two situations:
      * 1) during initialization, after getComponent is called.
      * 2) after a change from manual to visual mode.
-     * 
+     *
      * The tab implementation should examine the changed aci and return
      * all parsed ACIAttribute objects the tab recognized and processed.
      * The return value may be null if no attributes were recognized.
-     * 
+     *
      * @param aciAttributes  the aci as an array of ACIAttribute objects
      * @param rawACI         the aci string
      * @return an array of ACIAttribute objects that were recognized
-     * 
+     *
      * @see ACIParser#parseACI
      * @see ACIAttribute
      */
@@ -371,11 +400,11 @@ class TargetTab implements IACITab, UIConstants
             this.setAttrEditingEnabled(true);
         return ACIAttribute.toArray(usedAttributes);
     }
-    
+
     /**
      * Retrieves the title for this tab.
      * The title should be short, usually one word.
-     * 
+     *
      * @return the title string for this tab.
      */
     public String getTitle()
@@ -391,7 +420,7 @@ class TargetTab implements IACITab, UIConstants
         if(isInitialized)
             return;
         isInitialized = true;
-        
+
         p.setBorder(BorderFactory.createEmptyBorder(VERT_WINDOW_INSET,
                 HORIZ_WINDOW_INSET, VERT_WINDOW_INSET, HORIZ_WINDOW_INSET));
         GridBagLayout gbl = new GridBagLayout();
@@ -407,7 +436,7 @@ class TargetTab implements IACITab, UIConstants
         JPanel entryPanel = createEntryPanel();
         gbl.setConstraints(entryPanel, gbc);
         p.add(entryPanel);
-        
+
         gbc.gridx = 0;       gbc.gridy = GridBagConstraints.RELATIVE;
         gbc.gridwidth = 1;   gbc.gridheight = 1;
         gbc.weightx = 0.0;   gbc.weighty = 0.0;
@@ -417,7 +446,7 @@ class TargetTab implements IACITab, UIConstants
         JPanel filterPanel = createFilterPanel();
         gbl.setConstraints(filterPanel, gbc);
         p.add(filterPanel);
-        
+
         gbc.gridx = 0;       gbc.gridy = GridBagConstraints.RELATIVE;
         gbc.gridwidth = 1;   gbc.gridheight = 1;
         gbc.weightx = 1.0;   gbc.weighty = 1.0;
@@ -427,9 +456,9 @@ class TargetTab implements IACITab, UIConstants
         JPanel attrPanel = createAttributePanel();
         gbl.setConstraints(attrPanel, gbc);
         p.add(attrPanel);
-    
+
         ButtonFactory.resizeButtons(browseButton, constructButton, allButton, noneButton);
-        
+
         Thread schemaThread = new SchemaThread(aciLdc);
         schemaThread.start();
     }
@@ -455,16 +484,16 @@ class TargetTab implements IACITab, UIConstants
     public void cancelInvoked()
     {
     }
-    
+
     /**
      * Returns a new ACI that includes attributes from this tab.
-     * This tab's attributes can be appended/prepended/inserted 
+     * This tab's attributes can be appended/prepended/inserted
      * into the existingACI.
-     * 
+     *
      * This method is called when in two situations:
      * 1) when the user presses OK in the ACIEditor dialog.
      * 2) after a change from visual to manual mode.
-     * 
+     *
      * @param existingACI   the existing aci
      * @return the new aci that includes this tab's attributes
      */
@@ -475,13 +504,13 @@ class TargetTab implements IACITab, UIConstants
         {
             existingACI.insert(0, "(" + KEYWORD_TARGETFILTER + " " + targetFilterEquality + " " + filterString + ") \n");
         }
-        
+
         String entryString = entryField.getText();
         if(entryString.length() > 0)
         {
             existingACI.insert(0, "(" + KEYWORD_TARGETENTRY + " " + targetEntryEquality + " \"" + BIND_PREFIX + entryString + "\") \n");
         }
-        
+
         StringBuffer targetAttrs = new StringBuffer();
         if(attrTableModel == null || !attrTable.isEnabled())
         {
@@ -503,7 +532,7 @@ class TargetTab implements IACITab, UIConstants
                 }
             }
             targetAttrEquality = "=";
-        
+
             // syntax optimizations:
             if(numSelected == rowCount)  // all attrs selected
             {
@@ -534,7 +563,7 @@ class TargetTab implements IACITab, UIConstants
     }
 
     void setBusyCursor( boolean busy) {
-        
+
         JDialog dlg = (JDialog) SwingUtilities.getAncestorOfClass(JDialog.class, p);
         if (dlg != null) {
             Cursor cursor =  Cursor.getPredefinedCursor(
@@ -542,7 +571,7 @@ class TargetTab implements IACITab, UIConstants
             dlg.setCursor(cursor);
         }
     }
-    
+
     class ButtonActionListener implements ActionListener
     {
         public void actionPerformed(ActionEvent e)
@@ -550,8 +579,8 @@ class TargetTab implements IACITab, UIConstants
             String actionCommand = e.getActionCommand();
             if(actionCommand.equals(ButtonFactory.BROWSE))
             {
-                try { 
-                    setBusyCursor(true);                    
+                try {
+                    setBusyCursor(true);
                     DirBrowserDialog db = new DirBrowserDialog(parentFrame, aciLdc, aciDN);
                     db.show();
                     entryField.setText(db.getSelectedDN());
@@ -573,7 +602,7 @@ class TargetTab implements IACITab, UIConstants
                 checkNone();
         }
     }
-    
+
     class AttributeTableModel extends DefaultTableModel
     {
         public AttributeTableModel()
@@ -582,16 +611,16 @@ class TargetTab implements IACITab, UIConstants
             addColumn(i18n("columnName"));
             addColumn(i18n("columnDesc"));
         }
-        
-        public Class getColumnClass(int c)         {
+
+        public Class getColumnClass(int c)        {
             if(c == 0)
                 return Boolean.class;
             else
                 return String.class;        }
-                
-        public boolean isCellEditable(int row, int col)         {
+
+        public boolean isCellEditable(int row, int col)        {
             return col == 0;
-        }        
+        }
         /**
          *  Adds a row to the end of the model.  The new row will contain
          *  <code>null</code> values unless <code>rowData</code> is specified.
@@ -599,13 +628,13 @@ class TargetTab implements IACITab, UIConstants
          *
          * @param   rowData          optional data of the row being added
          */
-        public void addRow(Vector rowData) 
+        public void addRow(Vector rowData)
         {
-            if (rowData == null) 
+            if (rowData == null)
             {
                 rowData = new Vector(getColumnCount());
             }
-            else 
+            else
             {
                 rowData.setSize(getColumnCount());
             }
@@ -633,11 +662,11 @@ class TargetTab implements IACITab, UIConstants
     private boolean isAllAttrsWildcard(StringBuffer sb)
     {
         int idx = -1, cnt = 0; // searching for '*'
-        
+
         for (int i=0; i < sb.length(); i++)
         {
             if (sb.charAt(i) == '*') {
-                idx = i;       
+                idx = i;
                 cnt++;
             }
             else if (sb.charAt(i) != ' ') {
@@ -650,7 +679,7 @@ class TargetTab implements IACITab, UIConstants
         }
         return false;
     }
-    
+
     // Find an attribute in the parsing list and remove it from the list
     private boolean hasAttr(StringBuffer attrList, String attr)
     {
@@ -664,7 +693,7 @@ class TargetTab implements IACITab, UIConstants
         }
         return false;
     }
-    
+
     // At the end of processing the list should contain only blancs
     private boolean isEmptyAttrList(StringBuffer attrList)
     {
@@ -677,15 +706,15 @@ class TargetTab implements IACITab, UIConstants
         }
         return true;
     }
-        
+
     private synchronized void updateAttributeTable() throws Exception
     {
         DefaultTableModel tm = attrTableModel;
         if(tm == null)
             return;
-        
+
         StringBuffer attrList = prepareAttrListForParsing(selectedACIAttrs.toLowerCase());
-        
+
         int rowCount = tm.getRowCount();
         String attrName;
         boolean equality = targetAttrEquality.equals("=");
@@ -703,7 +732,7 @@ class TargetTab implements IACITab, UIConstants
             }
             oldState = (Boolean)tm.getValueAt(i, 0);
             if(oldState.booleanValue() != newState)
-                tm.setValueAt(new Boolean(newState), i, 0);
+                tm.setValueAt(Boolean.valueOf(newState), i, 0);
         }
         if (!isEmptyAttrList(attrList)) // list completely processed?
         {
@@ -711,7 +740,7 @@ class TargetTab implements IACITab, UIConstants
         }
         tm.fireTableDataChanged();
     }
-    
+
     private void setAttrEditingEnabled(boolean enable)
     {
         noneButton.setEnabled(enable);
@@ -720,7 +749,7 @@ class TargetTab implements IACITab, UIConstants
         attrTable.setBackground((enable ? UIManager.getColor("window") :
                                           UIManager.getColor("control")));
     }
-        
+
     private void populateAttributeTable()
     {
         DefaultTableModel tm = attrTableModel;
@@ -729,7 +758,7 @@ class TargetTab implements IACITab, UIConstants
         while(e.hasMoreElements())
         {
           LDAPAttributeSchema attr = (LDAPAttributeSchema)e.nextElement();
-          tm.addRow(new Object[] { new Boolean(false), attr.getName(), attr.getOID() });
+          tm.addRow(new Object[] { Boolean.valueOf(false), attr.getName(), attr.getOID() });
           if(count++ == 100)
           {
               count = 0;
@@ -738,17 +767,17 @@ class TargetTab implements IACITab, UIConstants
         }
         tm.newRowsAdded(new TableModelEvent(tm, 0, tm.getRowCount()-1, TableModelEvent.ALL_COLUMNS, TableModelEvent.INSERT));
     }
-    
+
     class SchemaThread extends Thread
     {
         LDAPConnection ldc;
-                 
+
         public SchemaThread(LDAPConnection ldc)
         {
             this.ldc = ldc;
             setPriority(Thread.MIN_PRIORITY);
         }
-                 
+
         public void run()
         {
             attrTable.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -760,10 +789,10 @@ class TargetTab implements IACITab, UIConstants
                     schema = new LDAPSchema();
                     schema.fetchSchema(ldc);
                 }
-                
+
                 if(attrTableModel.getRowCount() == 0)
                     populateAttributeTable();
-                
+
                 try {
                     updateAttributeTable();
                 }
@@ -796,34 +825,34 @@ class TargetTab implements IACITab, UIConstants
     {
         setAllState(true);
     }
-    
+
     private void checkNone()
     {
         setAllState(false);
     }
-    
+
     private void setAllState(boolean state)
     {
         int rowCount = attrTableModel.getRowCount();
         for(int i = 0; i < rowCount; i++)
         {
-            attrTableModel.setValueAt(new Boolean(state), i, 0);
+            attrTableModel.setValueAt(Boolean.valueOf(state), i, 0);
         }
         attrTableModel.fireTableDataChanged();
     }
-    
+
     /**
      * Returns a list of supported ACI attributes (keywords, operators, values).
      * This information is used when editing manually for the purposes of
      * syntax checking, color highlighting, and word completion.
-     * 
+     *
      * Alphanumeric and digit characters are treated as required literals.
      * Special characters:
      * "|" used to indicate multiple choices
      */
     public ACIAttribute[] getSupportedAttributes()
     {
-        return new ACIAttribute[] 
+        return new ACIAttribute[]
             {
                 new ACIAttribute(KEYWORD_TARGETENTRY, "=|!=", "\"" + BIND_PREFIX + " \""),
                 new ACIAttribute(KEYWORD_TARGETFILTER, "=|!=", "\" \""),
