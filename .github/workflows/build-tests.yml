@@ -3,16 +3,18 @@ name: Build Tests
 on: [push, pull_request]
 
 jobs:
+  init:
+    name: Initialization
+    uses: ./.github/workflows/init.yml
+    secrets: inherit
+
   build-test:
     name: Build Test
+    needs: init
     runs-on: ubuntu-latest
-    env:
-      COPR_REPO: "@pki/master"
     strategy:
-      matrix:
-        os:
-          - 'fedora:latest'
-    container: ${{ matrix.os }}
+      matrix: ${{ fromJSON(needs.init.outputs.matrix) }}
+    container: fedora:${{ matrix.os }}
     steps:
     - name: Clone repository
       uses: actions/checkout@v2
@@ -20,7 +22,7 @@ jobs:
     - name: Install dependencies
       run: |
         dnf install -y dnf-plugins-core rpm-build
-        dnf copr enable -y $COPR_REPO
+        dnf copr enable -y ${{ needs.init.outputs.repo }}
         dnf builddep -y --spec idm-console-framework.spec
 
     - name: Build IDM Console Framework
