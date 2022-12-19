@@ -19,11 +19,29 @@ jobs:
     - name: Clone repository
       uses: actions/checkout@v2
 
-    - name: Install dependencies
+    - name: Install build dependencies from Fedora
       run: |
-        dnf install -y dnf-plugins-core rpm-build
-        dnf copr enable -y ${{ needs.init.outputs.repo }}
-        dnf builddep -y --spec idm-console-framework.spec
+        dnf install -y dnf-plugins-core moby-engine rpm-build
+        if [ -n "$COPR_REPO" ]; then dnf copr enable -y $COPR_REPO; fi
+        dnf builddep -y --skip-unavailable --spec idm-console-framework.spec
+      env:
+        COPR_REPO: ${{ needs.init.outputs.repo }}
+
+    - name: Import JSS packages from jss-builder
+      run: |
+        docker pull ghcr.io/dogtagpki/jss-builder:latest
+        docker create --name=jss-builder ghcr.io/dogtagpki/jss-builder:latest
+        docker cp jss-builder:/root/jss/build/RPMS/. /tmp/RPMS/
+
+    - name: Import LDAP SDK packages from ldapjdk-builder
+      run: |
+        docker pull ghcr.io/dogtagpki/ldapjdk-builder:latest
+        docker create --name=ldapjdk-builder ghcr.io/dogtagpki/ldapjdk-builder:latest
+        docker cp ldapjdk-builder:/root/ldapjdk/build/RPMS/. /tmp/RPMS/
+
+    - name: Install build dependencies from GitHub Packages
+      run: |
+        dnf localinstall -y /tmp/RPMS/*
 
     - name: Build IDM Console Framework
       run: ./build.sh
