@@ -29,17 +29,17 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Retrieve idm-console-framework-builder image
+      - name: Retrieve idm-console-framework-dist image
         uses: actions/cache@v3
         with:
-          key: idm-console-framework-builder-${{ matrix.os }}-${{ github.sha }}
-          path: idm-console-framework-builder.tar
+          key: idm-console-framework-dist-${{ matrix.os }}-${{ github.sha }}
+          path: idm-console-framework-dist.tar
 
-      - name: Publish idm-console-framework-builder image
+      - name: Publish idm-console-framework-dist image
         run: |
-          docker load --input idm-console-framework-builder.tar
-          docker tag idm-console-framework-builder ghcr.io/${{ github.repository_owner }}/idm-console-framework-builder:latest
-          docker push ghcr.io/${{ github.repository_owner }}/idm-console-framework-builder:latest
+          docker load --input idm-console-framework-dist.tar
+          docker tag idm-console-framework-dist ghcr.io/${{ github.repository_owner }}/idm-console-framework-dist:latest
+          docker push ghcr.io/${{ github.repository_owner }}/idm-console-framework-dist:latest
 
       - name: Retrieve idm-console-framework-runner image
         uses: actions/cache@v3
