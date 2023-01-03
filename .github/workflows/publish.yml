@@ -19,8 +19,6 @@ jobs:
     name: Publishing IDM Console Framework
     needs: init
     runs-on: ubuntu-latest
-    strategy:
-      matrix: ${{ fromJSON(needs.init.outputs.matrix) }}
     steps:
       - name: Log in to the Container registry
         uses: docker/login-action@v2
@@ -32,7 +30,7 @@ jobs:
       - name: Retrieve idm-console-framework-dist image
         uses: actions/cache@v3
         with:
-          key: idm-console-framework-dist-${{ matrix.os }}-${{ github.sha }}
+          key: idm-console-framework-dist-${{ github.sha }}
           path: idm-console-framework-dist.tar
 
       - name: Publish idm-console-framework-dist image
@@ -44,7 +42,7 @@ jobs:
       - name: Retrieve idm-console-framework-runner image
         uses: actions/cache@v3
         with:
-          key: idm-console-framework-runner-${{ matrix.os }}-${{ github.sha }}
+          key: idm-console-framework-runner-${{ github.sha }}
           path: idm-console-framework-runner.tar
 
       - name: Publish idm-console-framework-runner image
