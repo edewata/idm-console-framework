@@ -1,0 +1,62 @@
+name: Publish IDM Console Framework
+
+on:
+  push:
+    branches:
+      - v1.3
+
+env:
+  NAMESPACE: ${{ vars.REGISTRY_NAMESPACE || github.repository_owner }}
+
+jobs:
+  init:
+    name: Initialization
+    uses: ./.github/workflows/init.yml
+    secrets: inherit
+    if: vars.REGISTRY != ''
+
+  build:
+    name: Waiting for build
+    needs: init
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for build
+        uses: lewagon/wait-on-check-action@v1.2.0
+        with:
+          ref: ${{ github.ref }}
+          check-name: 'Building IDM Console Framework'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 30
+
+  publish:
+    name: Publishing IDM Console Framework
+    needs: [init, build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ vars.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+        if: vars.REGISTRY == 'ghcr.io'
+
+      - name: Log in to other container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ vars.REGISTRY }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+        if: vars.REGISTRY != 'ghcr.io'
+
+      - name: Retrieve idm-console-framework-dist image
+        uses: actions/cache@v3
+        with:
+          key: idm-console-framework-dist-${{ github.sha }}
+          path: idm-console-framework-dist.tar
+
+      - name: Publish idm-console-framework-dist image
+        run: |
+          docker load --input idm-console-framework-dist.tar
+          docker tag idm-console-framework-dist ${{ vars.REGISTRY }}/$NAMESPACE/idm-console-framework-dist:1.3
+          docker push ${{ vars.REGISTRY }}/$NAMESPACE/idm-console-framework-dist:1.3
