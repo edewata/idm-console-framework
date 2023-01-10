@@ -3,25 +3,40 @@ name: Build Tests
 on: [push, pull_request]
 
 jobs:
+  init:
+    name: Initialization
+    uses: ./.github/workflows/init.yml
+    secrets: inherit
+
   build-test:
     name: Build Test
+    needs: init
     runs-on: ubuntu-latest
     env:
-      COPR_REPO: "@pki/10.13"
-    strategy:
-      matrix:
-        os:
-          - 'fedora:34'
-    container: ${{ matrix.os }}
+      COPR_REPO: ${{ needs.init.outputs.repo }}
+    container: ${{ needs.init.outputs.base-image }}
     steps:
-    - name: Clone repository
-      uses: actions/checkout@v2
+      - name: Clone repository
+        uses: actions/checkout@v2
 
-    - name: Install dependencies
-      run: |
-        dnf install -y dnf-plugins-core rpm-build
-        dnf copr enable -y $COPR_REPO
-        dnf builddep -y --spec idm-console-framework.spec
+      - name: Install dependencies
+        run: |
+          dnf install -y dnf-plugins-core moby-engine rpm-build
+          if [ -n "$COPR_REPO" ]; then dnf copr enable -y $COPR_REPO; fi
+          dnf builddep -y --skip-unavailable --spec idm-console-framework.spec
+          mkdir -p /tmp/RPMS
 
-    - name: Build IDM Console Framework
-      run: ./build.sh
+          docker pull quay.io/dogtagpki/jss-dist:4.9
+          docker create --name=jss-dist quay.io/dogtagpki/jss-dist:4.9
+          docker cp jss-dist:/root/RPMS/. /tmp/RPMS/
+          docker rm -f jss-dist
+
+          docker pull quay.io/dogtagpki/ldapjdk-dist:4.23
+          docker create --name=ldapjdk-dist quay.io/dogtagpki/ldapjdk-dist:4.23
+          docker cp ldapjdk-dist:/root/RPMS/. /tmp/RPMS/
+          docker rm -f ldapjdk-dist
+
+          dnf localinstall -y /tmp/RPMS/*
+
+      - name: Build IDM Console Framework
+        run: ./build.sh
