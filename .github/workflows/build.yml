@@ -19,6 +19,37 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
+      - name: Cache Docker layers
+        id: cache-buildx
+        uses: actions/cache@v3
+        with:
+          key: buildx-${{ hashFiles('idm-console-framework.spec') }}
+          path: /tmp/.buildx-cache
+
+      - name: Build idm-console-framework-deps image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          build-args: |
+            BASE_IMAGE=${{ needs.init.outputs.base-image }}
+            COPR_REPO=${{ needs.init.outputs.repo }}
+          tags: idm-console-framework-deps
+          target: idm-console-framework-deps
+          cache-to: type=local,dest=/tmp/.buildx-cache
+        if: steps.cache-buildx.outputs.cache-hit != 'true'
+
+      - name: Build idm-console-framework-builder-deps image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          build-args: |
+            BASE_IMAGE=${{ needs.init.outputs.base-image }}
+            COPR_REPO=${{ needs.init.outputs.repo }}
+          tags: idm-console-framework-builder-deps
+          target: idm-console-framework-builder-deps
+          cache-to: type=local,dest=/tmp/.buildx-cache
+        if: steps.cache-buildx.outputs.cache-hit != 'true'
+
       - name: Build idm-console-framework-builder image
         uses: docker/build-push-action@v3
         with:
@@ -28,6 +59,7 @@ jobs:
             COPR_REPO=${{ needs.init.outputs.repo }}
           tags: idm-console-framework-builder
           target: idm-console-framework-builder
+          cache-from: type=local,src=/tmp/.buildx-cache
           outputs: type=docker,dest=idm-console-framework-builder.tar
 
       - name: Store idm-console-framework-builder image
@@ -45,6 +77,7 @@ jobs:
             COPR_REPO=${{ needs.init.outputs.repo }}
           tags: idm-console-framework-dist
           target: idm-console-framework-dist
+          cache-from: type=local,src=/tmp/.buildx-cache
           outputs: type=docker,dest=idm-console-framework-dist.tar
 
       - name: Store idm-console-framework-dist image
@@ -62,6 +95,7 @@ jobs:
             COPR_REPO=${{ needs.init.outputs.repo }}
           tags: idm-console-framework-runner
           target: idm-console-framework-runner
+          cache-from: type=local,src=/tmp/.buildx-cache
           outputs: type=docker,dest=idm-console-framework-runner.tar
 
       - name: Store idm-console-framework-runner image
