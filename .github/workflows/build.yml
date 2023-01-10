@@ -1,0 +1,71 @@
+name: Build IDM Console Framework
+
+on: [push, pull_request]
+
+jobs:
+  init:
+    name: Initialization
+    uses: ./.github/workflows/init.yml
+    secrets: inherit
+
+  build:
+    name: Building IDM Console Framework
+    needs: init
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build idm-console-framework-builder image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          build-args: |
+            BASE_IMAGE=${{ needs.init.outputs.base-image }}
+            COPR_REPO=${{ needs.init.outputs.repo }}
+          tags: idm-console-framework-builder
+          target: idm-console-framework-builder
+          outputs: type=docker,dest=idm-console-framework-builder.tar
+
+      - name: Store idm-console-framework-builder image
+        uses: actions/cache@v3
+        with:
+          key: idm-console-framework-builder-${{ github.sha }}
+          path: idm-console-framework-builder.tar
+
+      - name: Build idm-console-framework-dist image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          build-args: |
+            BASE_IMAGE=${{ needs.init.outputs.base-image }}
+            COPR_REPO=${{ needs.init.outputs.repo }}
+          tags: idm-console-framework-dist
+          target: idm-console-framework-dist
+          outputs: type=docker,dest=idm-console-framework-dist.tar
+
+      - name: Store idm-console-framework-dist image
+        uses: actions/cache@v3
+        with:
+          key: idm-console-framework-dist-${{ github.sha }}
+          path: idm-console-framework-dist.tar
+
+      - name: Build idm-console-framework-runner image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          build-args: |
+            BASE_IMAGE=${{ needs.init.outputs.base-image }}
+            COPR_REPO=${{ needs.init.outputs.repo }}
+          tags: idm-console-framework-runner
+          target: idm-console-framework-runner
+          outputs: type=docker,dest=idm-console-framework-runner.tar
+
+      - name: Store idm-console-framework-runner image
+        uses: actions/cache@v3
+        with:
+          key: idm-console-framework-runner-${{ github.sha }}
+          path: idm-console-framework-runner.tar
