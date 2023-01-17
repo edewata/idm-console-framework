@@ -10,6 +10,7 @@ jobs:
     name: Initialization
     uses: ./.github/workflows/init.yml
     secrets: inherit
+    if: vars.REGISTRY != ''
 
   build:
     name: Waiting for build
@@ -29,12 +30,21 @@ jobs:
     needs: [init, build]
     runs-on: ubuntu-latest
     steps:
-      - name: Log in to the Container registry
+      - name: Log in to GitHub Container Registry
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+        if: vars.REGISTRY == 'ghcr.io'
+
+      - name: Log in to other container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ vars.REGISTRY }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+        if: vars.REGISTRY != 'ghcr.io'
 
       - name: Retrieve idm-console-framework-dist image
         uses: actions/cache@v3
@@ -45,17 +55,5 @@ jobs:
       - name: Publish idm-console-framework-dist image
         run: |
           docker load --input idm-console-framework-dist.tar
-          docker tag idm-console-framework-dist ghcr.io/${{ github.repository_owner }}/idm-console-framework-dist:latest
-          docker push ghcr.io/${{ github.repository_owner }}/idm-console-framework-dist:latest
-
-      - name: Retrieve idm-console-framework-runner image
-        uses: actions/cache@v3
-        with:
-          key: idm-console-framework-runner-${{ github.sha }}
-          path: idm-console-framework-runner.tar
-
-      - name: Publish idm-console-framework-runner image
-        run: |
-          docker load --input idm-console-framework-runner.tar
-          docker tag idm-console-framework-runner ghcr.io/${{ github.repository_owner }}/idm-console-framework-runner:latest
-          docker push ghcr.io/${{ github.repository_owner }}/idm-console-framework-runner:latest
+          docker tag idm-console-framework-dist ${{ needs.init.outputs.registry }}/${{ needs.init.outputs.registry-namespace }}/idm-console-framework-dist:latest
+          docker push ${{ needs.init.outputs.registry }}/${{ needs.init.outputs.registry-namespace }}/idm-console-framework-dist:latest
