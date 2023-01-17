@@ -51,7 +51,7 @@ COPY --from=ghcr.io/dogtagpki/jss-dist:latest /root/RPMS /tmp/RPMS/
 # Import LDAP SDK packages
 COPY --from=ghcr.io/dogtagpki/ldapjdk-dist:latest /root/RPMS /tmp/RPMS/
 
-# Install build depencencies
+# Install build dependencies
 RUN dnf localinstall -y /tmp/RPMS/* \
     && dnf clean all \
     && rm -rf /var/cache/dnf \
