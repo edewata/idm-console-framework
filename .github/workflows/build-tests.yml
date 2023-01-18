@@ -26,13 +26,13 @@ jobs:
           dnf builddep -y --skip-unavailable --spec idm-console-framework.spec
           mkdir -p /tmp/RPMS
 
-          docker pull ghcr.io/dogtagpki/jss-dist:4
-          docker create --name=jss-dist ghcr.io/dogtagpki/jss-dist:4
+          docker pull quay.io/dogtagpki/jss-dist:4
+          docker create --name=jss-dist quay.io/dogtagpki/jss-dist:4
           docker cp jss-dist:/root/RPMS/. /tmp/RPMS/
           docker rm -f jss-dist
 
-          docker pull ghcr.io/dogtagpki/ldapjdk-dist:4
-          docker create --name=ldapjdk-dist ghcr.io/dogtagpki/ldapjdk-dist:4
+          docker pull quay.io/dogtagpki/ldapjdk-dist:4
+          docker create --name=ldapjdk-dist quay.io/dogtagpki/ldapjdk-dist:4
           docker cp ldapjdk-dist:/root/RPMS/. /tmp/RPMS/
           docker rm -f ldapjdk-dist
 

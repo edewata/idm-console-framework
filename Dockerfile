@@ -47,10 +47,10 @@ RUN dnf builddep -y --skip-unavailable --spec idm-console-framework.spec
 FROM idm-console-framework-builder-deps AS idm-console-framework-builder
 
 # Import JSS packages
-COPY --from=ghcr.io/dogtagpki/jss-dist:4 /root/RPMS /tmp/RPMS/
+COPY --from=quay.io/dogtagpki/jss-dist:4 /root/RPMS /tmp/RPMS/
 
 # Import LDAP SDK packages
-COPY --from=ghcr.io/dogtagpki/ldapjdk-dist:4 /root/RPMS /tmp/RPMS/
+COPY --from=quay.io/dogtagpki/ldapjdk-dist:4 /root/RPMS /tmp/RPMS/
 
 # Install build dependencies
 RUN dnf localinstall -y /tmp/RPMS/* \
@@ -67,17 +67,17 @@ RUN ./build.sh --work-dir=build rpm
 ################################################################################
 FROM alpine:latest AS idm-console-framework-dist
 
-# Import Tomcat JSS packages
+# Import IDM Console Framework packages
 COPY --from=idm-console-framework-builder /root/idm-console-framework/build/RPMS /root/RPMS/
 
 ################################################################################
 FROM idm-console-framework-deps AS idm-console-framework-runner
 
 # Import JSS packages
-COPY --from=ghcr.io/dogtagpki/jss-dist:4 /root/RPMS /tmp/RPMS/
+COPY --from=quay.io/dogtagpki/jss-dist:4 /root/RPMS /tmp/RPMS/
 
 # Import LDAP SDK packages
-COPY --from=ghcr.io/dogtagpki/ldapjdk-dist:4 /root/RPMS /tmp/RPMS/
+COPY --from=quay.io/dogtagpki/ldapjdk-dist:4 /root/RPMS /tmp/RPMS/
 
 # Import IDM Console Framework packages
 COPY --from=idm-console-framework-dist /root/RPMS /tmp/RPMS/
