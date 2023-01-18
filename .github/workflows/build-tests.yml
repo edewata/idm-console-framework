@@ -27,15 +27,15 @@ jobs:
 
     - name: Import JSS packages from jss-dist
       run: |
-        docker pull ghcr.io/dogtagpki/jss-dist:latest
-        docker create --name=jss-dist ghcr.io/dogtagpki/jss-dist:latest
+        docker pull quay.io/dogtagpki/jss-dist:latest
+        docker create --name=jss-dist quay.io/dogtagpki/jss-dist:latest
         docker cp jss-dist:/root/RPMS/. /tmp/RPMS/
         docker rm -f jss-dist
 
     - name: Import LDAP SDK packages from ldapjdk-dist
       run: |
-        docker pull ghcr.io/dogtagpki/ldapjdk-dist:latest
-        docker create --name=ldapjdk-dist ghcr.io/dogtagpki/ldapjdk-dist:latest
+        docker pull quay.io/dogtagpki/ldapjdk-dist:latest
+        docker create --name=ldapjdk-dist quay.io/dogtagpki/ldapjdk-dist:latest
         docker cp ldapjdk-dist:/root/RPMS/. /tmp/RPMS/
         docker rm -f ldapjdk-dist
 
