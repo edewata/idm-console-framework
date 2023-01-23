@@ -47,7 +47,8 @@ usage() {
 
 generate_rpm_sources() {
 
-    TARBALL="idm-console-framework-$VERSION${_PHASE}.tar.gz"
+    PREFIX="idm-console-framework-$FULL_VERSION"
+    TARBALL="$PREFIX.tar.gz"
 
     if [ "$SOURCE_TAG" != "" ] ; then
 
@@ -58,7 +59,7 @@ generate_rpm_sources() {
         git -C "$SRC_DIR" \
             archive \
             --format=tar.gz \
-            --prefix idm-console-framework-$VERSION${_PHASE}/ \
+            --prefix $PREFIX/ \
             -o "$WORK_DIR/SOURCES/$TARBALL" \
             $SOURCE_TAG
 
@@ -80,7 +81,7 @@ generate_rpm_sources() {
     fi
 
     tar czf "$WORK_DIR/SOURCES/$TARBALL" \
-        --transform "s,^./,idm-console-framework-$VERSION${_PHASE}/," \
+        --transform "s,^./,$PREFIX/," \
         --exclude .git \
         --exclude .svn \
         --exclude .swp \
@@ -122,18 +123,13 @@ generate_rpm_spec() {
     sed -i "s/^\(Name: *\).*\$/\1${NAME}/g" "$SPEC_FILE"
 
     # hard-code timestamp
-    if [ "$_TIMESTAMP" != "" ] ; then
-        sed -i "s/%{?_timestamp}/${_TIMESTAMP}/g" "$SPEC_FILE"
+    if [ "$TIMESTAMP" != "" ] ; then
+        sed -i "s/%undefine *timestamp/%global timestamp $TIMESTAMP/g" "$SPEC_FILE"
     fi
 
     # hard-code commit ID
-    if [ "$_COMMIT_ID" != "" ] ; then
-        sed -i "s/%{?_commit_id}/${_COMMIT_ID}/g" "$SPEC_FILE"
-    fi
-
-    # hard-code phase
-    if [ "$_PHASE" != "" ] ; then
-        sed -i "s/%{?_phase}/${_PHASE}/g" "$SPEC_FILE"
+    if [ "$COMMIT_ID" != "" ] ; then
+        sed -i "s/%undefine *commit_id/%global commit_id $COMMIT_ID/g" "$SPEC_FILE"
     fi
 
     # hard-code patch
@@ -267,18 +263,19 @@ if [ "$DEBUG" = true ] ; then
 fi
 
 spec=$(<"$SPEC_TEMPLATE")
-regex=$'%global *_phase *([^\n]+)'
+regex=$'%global *phase *([^\n]+)'
 if [[ $spec =~ $regex ]] ; then
-    _PHASE="${BASH_REMATCH[1]}"
+    PHASE="${BASH_REMATCH[1]}"
+    RELEASE=$RELEASE.$PHASE
 fi
 
 if [ "$DEBUG" = true ] ; then
-    echo "PHASE: ${_PHASE}"
+    echo "PHASE: $PHASE"
 fi
 
 if [ "$WITH_TIMESTAMP" = true ] ; then
-    TIMESTAMP="$(date -u +"%Y%m%d%H%M%S%Z")"
-    _TIMESTAMP=".$TIMESTAMP"
+    TIMESTAMP=$(date -u +"%Y%m%d%H%M%S%Z")
+    RELEASE="$RELEASE.$TIMESTAMP"
 fi
 
 if [ "$DEBUG" = true ] ; then
@@ -286,15 +283,29 @@ if [ "$DEBUG" = true ] ; then
 fi
 
 if [ "$WITH_COMMIT_ID" = true ]; then
-    COMMIT_ID="`git -C "$SRC_DIR" rev-parse --short=8 HEAD`"
-    _COMMIT_ID=".$COMMIT_ID"
+    COMMIT_ID=$(git -C "$SRC_DIR" rev-parse --short=8 HEAD)
+    RELEASE="$RELEASE.$COMMIT_ID"
 fi
 
 if [ "$DEBUG" = true ] ; then
     echo "COMMIT_ID: $COMMIT_ID"
 fi
 
-echo "Building $NAME-$VERSION-$RELEASE${_TIMESTAMP}${_COMMIT_ID}"
+if [ "$DEBUG" = true ] ; then
+    echo "RELEASE: $RELEASE"
+fi
+
+FULL_VERSION="$VERSION"
+
+if [ "$PHASE" != "" ]; then
+    FULL_VERSION="$FULL_VERSION-$PHASE"
+fi
+
+if [ "$DEBUG" = true ] ; then
+    echo "FULL_VERSION: $FULL_VERSION"
+fi
+
+echo "Building $NAME-$VERSION-$RELEASE$"
 
 rm -rf BUILD
 rm -rf RPMS
@@ -344,14 +355,6 @@ OPTIONS=()
 
 OPTIONS+=(--quiet)
 OPTIONS+=(--define "_topdir ${WORK_DIR}")
-
-if [ "$WITH_TIMESTAMP" = true ] ; then
-    OPTIONS+=(--define "_timestamp ${_TIMESTAMP}")
-fi
-
-if [ "$WITH_COMMIT_ID" = true ] ; then
-    OPTIONS+=(--define "_commit_id ${_COMMIT_ID}")
-fi
 
 if [ "$DIST" != "" ] ; then
     OPTIONS+=(--define "dist .$DIST")

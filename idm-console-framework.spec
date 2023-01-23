@@ -9,17 +9,27 @@ Name:             idm-console-framework
 %global           minor_version 0
 %global           update_version 0
 
+# Downstream release number:
+# - development/stabilization (unsupported): 0.<n> where n >= 1
+# - GA/update (supported): <n> where n >= 1
+%global           release_number 1
+
+# Development phase:
+# - development (unsupported): alpha<n> where n >= 1
+# - stabilization (unsupported): beta<n> where n >= 1
+# - GA/update (supported): <none>
+%undefine         phase
+
+%undefine         timestamp
+%undefine         commit_id
+
 Summary:          Identity Management Console Framework
 URL:              https://github.com/dogtagpki/idm-console-framework
 License:          LGPLv2
+Version:          %{major_version}.%{minor_version}.%{update_version}
+Release:          %{release_number}%{?phase:.}%{?phase}%{?timestamp:.}%{?timestamp}%{?commit_id:.}%{?commit_id}%{?dist}
 
 BuildArch:        noarch
-
-# For development (i.e. unsupported) releases, use x.y.z-0.n.<phase>.
-# For official (i.e. supported) releases, use x.y.z-r where r >=1.
-Version:          %{major_version}.%{minor_version}.%{update_version}
-Release:          1%{?_timestamp}%{?_commit_id}%{?dist}
-#global           _phase -alpha1
 
 # To create a tarball from a version tag:
 # $ git archive \
@@ -27,7 +37,7 @@ Release:          1%{?_timestamp}%{?_commit_id}%{?dist}
 #     --prefix idm-console-framework-<version>/ \
 #     -o idm-console-framework-<version>.tar.gz \
 #     <version tag>
-Source: https://github.com/dogtagpki/idm-console-framework/archive/v%{version}%{?_phase}/idm-console-framework-%{version}%{?_phase}.tar.gz
+Source: https://github.com/dogtagpki/idm-console-framework/archive/v%{version}%{?phase:-}/idm-console-framework-%{version}%{?phase:-}%{?phase}.tar.gz
 
 # To create a patch for all changes since a version tag:
 # $ git format-patch \
@@ -80,7 +90,7 @@ A Java Management Console framework used for remote server management.
 %prep
 ################################################################################
 
-%autosetup -n idm-console-framework-%{version}%{?_phase} -p 1
+%autosetup -n idm-console-framework-%{version}%{?phase:-}%{?phase} -p 1
 
 ################################################################################
 %build
