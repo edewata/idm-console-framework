@@ -5,15 +5,16 @@
 # All rights reserved.
 # END COPYRIGHT BLOCK
 
-SCRIPT_PATH=`readlink -f "$0"`
-SCRIPT_NAME=`basename "$SCRIPT_PATH"`
-SRC_DIR=`dirname "$SCRIPT_PATH"`
+SCRIPT_PATH=$(readlink -f "$0")
+SCRIPT_NAME=$(basename "$SCRIPT_PATH")
+SRC_DIR=$(dirname "$SCRIPT_PATH")
 
 NAME=
 WORK_DIR=
 
 SOURCE_TAG=
-SPEC_TEMPLATE=
+SPEC_TEMPLATE="$SRC_DIR/idm-console-framework.spec"
+SPEC_FILE=
 
 WITH_TIMESTAMP=
 WITH_COMMIT_ID=
@@ -29,7 +30,7 @@ usage() {
     echo "    --name=<name>          Package name (default: idm-console-framework)."
     echo "    --work-dir=<path>      Working directory (default: ~/build/idm-console-framework)."
     echo "    --source-tag=<tag>     Generate RPM sources from a source tag."
-    echo "    --spec=<file>          Use the specified RPM spec as a template."
+    echo "    --spec=<file>          Use the specified RPM spec (default: $SPEC_TEMPLATE)."
     echo "    --with-timestamp       Append timestamp to release number."
     echo "    --with-commit-id       Append commit ID to release number."
     echo "    --dist=<name>          Distribution name (e.g. fc28)."
@@ -111,38 +112,36 @@ generate_patch() {
 
 generate_rpm_spec() {
 
-    RPM_SPEC="$NAME.spec"
-
     if [ "$VERBOSE" = true ] ; then
-        echo "Generating $RPM_SPEC"
+        echo "Creating $SPEC_FILE"
     fi
+
+    cp "$SPEC_TEMPLATE" "$SPEC_FILE"
 
     # hard-code package name
-    commands="s/^\(Name: *\).*\$/\1${NAME}/g"
+    sed -i "s/^\(Name: *\).*\$/\1${NAME}/g" "$SPEC_FILE"
 
+    # hard-code timestamp
     if [ "$_TIMESTAMP" != "" ] ; then
-        # hard-code timestamp
-        commands="${commands}; s/%{?_timestamp}/${_TIMESTAMP}/g"
+        sed -i "s/%{?_timestamp}/${_TIMESTAMP}/g" "$SPEC_FILE"
     fi
 
+    # hard-code commit ID
     if [ "$_COMMIT_ID" != "" ] ; then
-        # hard-code commit ID
-        commands="${commands}; s/%{?_commit_id}/${_COMMIT_ID}/g"
+        sed -i "s/%{?_commit_id}/${_COMMIT_ID}/g" "$SPEC_FILE"
     fi
 
+    # hard-code phase
     if [ "$_PHASE" != "" ] ; then
-        # hard-code phase
-        commands="${commands}; s/%{?_phase}/${_PHASE}/g"
+        sed -i "s/%{?_phase}/${_PHASE}/g" "$SPEC_FILE"
     fi
 
     # hard-code patch
     if [ "$PATCH" != "" ] ; then
-        commands="${commands}; s/# Patch: idm-console-framework-VERSION-RELEASE.patch/Patch: $PATCH/g"
+        sed -i "s/# Patch: idm-console-framework-VERSION-RELEASE.patch/Patch: $PATCH/g" "$SPEC_FILE"
     fi
 
-    sed "$commands" "$SPEC_TEMPLATE" > "$WORK_DIR/SPECS/$RPM_SPEC"
-
-    # rpmlint "$WORK_DIR/SPECS/$RPM_SPEC"
+    # rpmlint "$SPEC_FILE"
 }
 
 while getopts v-: arg ; do
@@ -214,7 +213,17 @@ else
     BUILD_TARGET=$1
 fi
 
+if [ "$NAME" = "" ] ; then
+    NAME="idm-console-framework"
+fi
+
+if [ "$WORK_DIR" = "" ] ; then
+    WORK_DIR="$HOME/build/$NAME"
+fi
+
 if [ "$DEBUG" = true ] ; then
+    echo "NAME: $NAME"
+    echo "WORK_DIR: $WORK_DIR"
     echo "BUILD_TARGET: $BUILD_TARGET"
 fi
 
@@ -226,21 +235,20 @@ if [ "$BUILD_TARGET" != "src" ] &&
     exit 1
 fi
 
-if [ "$NAME" = "" ] ; then
-    NAME="idm-console-framework"
+################################################################################
+# Initialization
+################################################################################
+
+if [ "$VERBOSE" = true ] ; then
+    echo "Initializing $WORK_DIR"
 fi
 
-if [ "$DEBUG" = true ] ; then
-    echo "NAME: $NAME"
-fi
+mkdir -p "$WORK_DIR"
+cd "$WORK_DIR"
 
-if [ "$WORK_DIR" = "" ] ; then
-    WORK_DIR="$HOME/build/$NAME"
-fi
-
-if [ "$DEBUG" = true ] ; then
-    echo "WORK_DIR: $WORK_DIR"
-fi
+################################################################################
+# Prepare RPM build
+################################################################################
 
 if [ "$SPEC_TEMPLATE" = "" ] ; then
     SPEC_TEMPLATE="$SRC_DIR/idm-console-framework.spec"
@@ -288,17 +296,6 @@ fi
 
 echo "Building $NAME-$VERSION-$RELEASE${_TIMESTAMP}${_COMMIT_ID}"
 
-################################################################################
-# Initialize working directory
-################################################################################
-
-if [ "$VERBOSE" = true ] ; then
-    echo "Initializing $WORK_DIR"
-fi
-
-mkdir -p $WORK_DIR
-cd $WORK_DIR
-
 rm -rf BUILD
 rm -rf RPMS
 rm -rf SOURCES
@@ -314,6 +311,8 @@ mkdir SRPMS
 ################################################################################
 # Generate RPM sources
 ################################################################################
+
+SPEC_FILE="$WORK_DIR/SPECS/$NAME.spec"
 
 generate_rpm_sources
 
@@ -359,11 +358,11 @@ if [ "$DIST" != "" ] ; then
 fi
 
 if [ "$DEBUG" = true ] ; then
-    echo "rpmbuild -bs ${OPTIONS[@]} $WORK_DIR/SPECS/$RPM_SPEC"
+    echo "rpmbuild -bs" "${OPTIONS[@]}" "$SPEC_FILE"
 fi
 
 # build SRPM with user-provided options
-rpmbuild -bs "${OPTIONS[@]}" "$WORK_DIR/SPECS/$RPM_SPEC"
+rpmbuild -bs "${OPTIONS[@]}" "$SPEC_FILE"
 
 rc=$?
 
