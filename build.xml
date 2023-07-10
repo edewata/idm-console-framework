@@ -35,6 +35,7 @@ END COPYRIGHT BLOCK
   <property name="javadoc.dir"      value="${built.dir}/doc"/>
   <property name="imports.dir"      value="${console.root}/../imports"/>
   <property name="java.src.dir"     value="src/main/java"/>
+  <property name="resources.src.dir" value="src/main/resources"/>
   <property environment="env"/>
 
   <!-- Prepare -->
@@ -190,12 +191,12 @@ END COPYRIGHT BLOCK
     <!-- Create jar files -->
     <jar jarfile="${built.jardir}/idm-console-framework.jar" >
       <fileset dir="${built.classdir}"/>
-      <fileset dir="${java.src.dir}">
+      <fileset dir="${resources.src.dir}">
          <include name="com/netscape/management/client/**/*.properties" />
          <include name="com/netscape/management/client/**/*.gif" />
          <include name="com/netscape/management/client/**/*.jpg" />
       </fileset>
-      <fileset dir="${java.src.dir}">
+      <fileset dir="${resources.src.dir}">
          <include name="com/netscape/management/nmclf/**/*.properties" />
          <include name="com/netscape/management/nmclf/**/*.gif" />
          <include name="com/netscape/management/nmclf/**/*.jpg" />
