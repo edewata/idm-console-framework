@@ -113,11 +113,19 @@ mkdir -p %{buildroot}%{_javadir}
     --java-dir=%{buildroot}%{_javadir} \
     install
 
+# create links for backward compatibility
+ln -s idm-console-framework/idm-console-framework.jar %{buildroot}%{_javadir}/idm-console-base.jar
+ln -s idm-console-framework/idm-console-framework.jar %{buildroot}%{_javadir}/idm-console-mcc.jar
+ln -s idm-console-framework/idm-console-framework.jar %{buildroot}%{_javadir}/idm-console-mcc_en.jar
+ln -s idm-console-framework/idm-console-framework.jar %{buildroot}%{_javadir}/idm-console-nmclf.jar
+ln -s idm-console-framework/idm-console-framework.jar %{buildroot}%{_javadir}/idm-console-nmclf_en.jar
+
 ################################################################################
 %files -n %{product_id}
 ################################################################################
 
 %doc LICENSE
+%{_javadir}/idm-console-framework/idm-console-framework.jar
 %{_javadir}/idm-console-base.jar
 %{_javadir}/idm-console-mcc.jar
 %{_javadir}/idm-console-mcc_en.jar

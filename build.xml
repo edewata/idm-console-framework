@@ -188,67 +188,17 @@ END COPYRIGHT BLOCK
   <!-- Package -->
   <target name="build_jars" depends="build,prepare_jars">
     <!-- Create jar files -->
-    <jar jarfile="${built.jardir}/${mcc.core}.jar" >
-      <fileset dir="${built.classdir}">
-         <include name="com/netscape/management/client/**/*.class" />
-         <include name="sun/net/www/protocol/https/**/*.class" />
-         <exclude name="com/netscape/management/client/topology/IServerObject.class"/>
-         <exclude name="com/netscape/management/client/topology/IRemovableServerObject.class"/>
-         <exclude name="com/netscape/management/client/topology/IProductObject.class"/>
-         <exclude name="com/netscape/management/client/topology/AbstractServerObject.class"/>
-         <exclude name="com/netscape/management/client/topology/ServerNode.class"/>
-         <exclude name="com/netscape/management/client/IPage.class"/>
-         <exclude name="com/netscape/management/client/IFramework.class"/>
-         <exclude name="com/netscape/management/client/IFrameworkInitializer.class"/>
-         <exclude name="com/netscape/management/client/FrameworkInitializer.class"/>
-         <exclude name="com/netscape/management/client/IResourceObject.class"/>
-         <exclude name="com/netscape/management/client/ResourceObject.class"/>
-         <exclude name="com/netscape/management/client/util/ClassLoaderUtil.class"/>
-         <exclude name="com/netscape/management/client/util/LocalJarClassLoader.class"/>
-         <exclude name="com/netscape/management/client/util/KingpinClassLoader.class"/>
-         <exclude name="com/netscape/management/client/util/UtilConsoleGlobals.class"/>
-         <exclude name="com/netscape/management/client/console/ConsoleInfo.class"/>
-         <exclude name="com/netscape/management/client/console/VersionInfo.class"/>
-      </fileset>
-    </jar>
-    <jar jarfile="${built.jardir}/${mcc.core}_${lang}.jar" >
+    <jar jarfile="${built.jardir}/idm-console-framework.jar" >
+      <fileset dir="${built.classdir}"/>
       <fileset dir="${java.src.dir}">
          <include name="com/netscape/management/client/**/*.properties" />
          <include name="com/netscape/management/client/**/*.gif" />
          <include name="com/netscape/management/client/**/*.jpg" />
       </fileset>
-    </jar>
-    <jar jarfile="${built.jardir}/${nmclf.core}.jar" >
-      <fileset dir="${built.classdir}">
-         <include name="com/netscape/management/nmclf/**/*.class" />
-      </fileset>
-    </jar>
-    <jar jarfile="${built.jardir}/${nmclf.core}_${lang}.jar" >
       <fileset dir="${java.src.dir}">
          <include name="com/netscape/management/nmclf/**/*.properties" />
          <include name="com/netscape/management/nmclf/**/*.gif" />
          <include name="com/netscape/management/nmclf/**/*.jpg" />
-      </fileset>
-    </jar>
-    <jar jarfile="${built.jardir}/${base.core}.jar" >
-      <fileset dir="${built.classdir}">
-        <include name="com/netscape/management/client/topology/IServerObject.class"/>
-        <include name="com/netscape/management/client/topology/IRemovableServerObject.class"/>
-        <include name="com/netscape/management/client/topology/IProductObject.class"/>
-        <include name="com/netscape/management/client/topology/AbstractServerObject.class"/>
-        <include name="com/netscape/management/client/topology/ServerNode.class"/>
-        <include name="com/netscape/management/client/IPage.class"/>
-        <include name="com/netscape/management/client/IFramework.class"/>
-        <include name="com/netscape/management/client/IFrameworkInitializer.class"/>
-        <include name="com/netscape/management/client/FrameworkInitializer.class"/>
-        <include name="com/netscape/management/client/IResourceObject.class"/>
-        <include name="com/netscape/management/client/ResourceObject.class"/>
-        <include name="com/netscape/management/client/util/ClassLoaderUtil.class"/>
-        <include name="com/netscape/management/client/util/LocalJarClassLoader.class"/>
-        <include name="com/netscape/management/client/util/KingpinClassLoader.class"/>
-        <include name="com/netscape/management/client/util/UtilConsoleGlobals.class"/>
-        <include name="com/netscape/management/client/console/ConsoleInfo.class"/>
-        <include name="com/netscape/management/client/console/VersionInfo.class"/>
       </fileset>
     </jar>
   </target>
@@ -256,11 +206,7 @@ END COPYRIGHT BLOCK
   <!-- Package -->
   <target name="package" depends="build_jars,prepare_package,import_jss_lib,import_nss_lib,import_nspr_lib">
     <!-- Copy built jars to packaging area -->
-    <copy file="${built.jardir}/${mcc.core}.jar" todir="${java.dir}"/>
-    <copy file="${built.jardir}/${mcc.core}_${lang}.jar" todir="${java.dir}"/>
-    <copy file="${built.jardir}/${nmclf.core}.jar" todir="${java.dir}"/>
-    <copy file="${built.jardir}/${nmclf.core}_${lang}.jar" todir="${java.dir}"/>
-    <copy file="${built.jardir}/${base.core}.jar" todir="${java.dir}"/>
+    <copy file="${built.jardir}/idm-console-framework.jar" todir="${java.dir}"/>
 
     <!-- Copy components into packaging area -->
     <copy file="${ldapjdk.local.location}/${ldapjdk.jar.name}" todir="${java.dir}"/>
