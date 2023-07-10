@@ -29,8 +29,6 @@ License:          LGPLv2
 Version:          %{major_version}.%{minor_version}.%{update_version}
 Release:          %{release_number}%{?phase:.}%{?phase}%{?timestamp:.}%{?timestamp}%{?commit_id:.}%{?commit_id}%{?dist}
 
-BuildArch:        noarch
-
 # To create a tarball from a version tag:
 # $ git archive \
 #     --format=tar.gz \
@@ -46,6 +44,11 @@ Source: https://github.com/dogtagpki/idm-console-framework/archive/v%{version}%{
 #     > idm-console-framework-VERSION-RELEASE.patch
 # Patch: idm-console-framework-VERSION-RELEASE.patch
 
+BuildArch:        noarch
+%if 0%{?fedora}
+ExclusiveArch:    %{java_arches} noarch
+%endif
+
 ################################################################################
 # Java
 ################################################################################
@@ -59,9 +62,10 @@ Source: https://github.com/dogtagpki/idm-console-framework/archive/v%{version}%{
 ################################################################################
 
 BuildRequires:    %{java_devel}
+BuildRequires:    maven-local
 BuildRequires:    ant >= 1.6.2
-BuildRequires:    jss >= 5.0
-BuildRequires:    ldapjdk >= 5.0
+BuildRequires:    mvn(org.dogtagpki.jss:jss-base) >= 5.5.0
+BuildRequires:    mvn(org.dogtagpki.ldap-sdk:ldapjdk) >= 5.5.0
 
 %description
 A Java Management Console framework used for remote server management.
@@ -73,8 +77,8 @@ A Java Management Console framework used for remote server management.
 Summary:          Identity Management Console Framework
 
 Requires:         %{java_headless}
-Requires:         jss >= 5.0
-Requires:         ldapjdk >= 5.0
+Requires:         mvn(org.dogtagpki.jss:jss-base) >= 5.5.0
+Requires:         mvn(org.dogtagpki.ldap-sdk:ldapjdk) >= 5.5.0
 
 %if "%{product_id}" != "idm-console-framework"
 Obsoletes:        idm-console-framework < %{version}-%{release}
@@ -96,22 +100,21 @@ A Java Management Console framework used for remote server management.
 %build
 ################################################################################
 
-./build.sh \
-    %{?_verbose:-v} \
-    --work-dir=%{_vpath_builddir} \
-    dist
+export JAVA_HOME=%{java_home}
+
+# flatten-maven-plugin is not available in RPM
+%pom_remove_plugin org.codehaus.mojo:flatten-maven-plugin
+
+# build without Javadoc
+%mvn_build -j
 
 ################################################################################
 %install
 ################################################################################
 
-mkdir -p %{buildroot}%{_javadir}
+%mvn_install
 
-./build.sh \
-    %{?_verbose:-v} \
-    --work-dir=%{_vpath_builddir} \
-    --java-dir=%{buildroot}%{_javadir} \
-    install
+install -p target/idm-console-framework.jar %{buildroot}%{_javadir}/idm-console-framework.jar
 
 # create links for backward compatibility
 ln -s idm-console-framework.jar %{buildroot}%{_javadir}/idm-console-base.jar
@@ -121,7 +124,7 @@ ln -s idm-console-framework.jar %{buildroot}%{_javadir}/idm-console-nmclf.jar
 ln -s idm-console-framework.jar %{buildroot}%{_javadir}/idm-console-nmclf_en.jar
 
 ################################################################################
-%files -n %{product_id}
+%files -n %{product_id} -f .mfiles
 ################################################################################
 
 %doc LICENSE
