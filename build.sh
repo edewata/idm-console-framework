@@ -306,11 +306,11 @@ if [ "$BUILD_TARGET" = "install" ] ; then
         echo "Installing $NAME-$VERSION"
     fi
 
-    echo install -d $JAVA_DIR/idm-console-framework
-    install -d $JAVA_DIR/idm-console-framework
+    echo install -d $JAVA_DIR
+    install -d $JAVA_DIR
 
-    echo install -m 644 $WORK_DIR/release/jars/idm-console-framework.jar $JAVA_DIR/idm-console-framework
-    install -m 644 $WORK_DIR/release/jars/idm-console-framework.jar $JAVA_DIR/idm-console-framework
+    echo install -m 644 $WORK_DIR/release/jars/idm-console-framework.jar $JAVA_DIR
+    install -m 644 $WORK_DIR/release/jars/idm-console-framework.jar $JAVA_DIR
 
     exit
 fi
