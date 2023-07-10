@@ -96,18 +96,22 @@ A Java Management Console framework used for remote server management.
 %build
 ################################################################################
 
-%{ant} \
+./build.sh \
     %{?_verbose:-v} \
-    -Dlib.dir=%{_libdir} \
-    -Dbuilt.dir=`pwd`/built \
-    -Dclassdest=%{_javadir}
+    --work-dir=%{_vpath_builddir} \
+    dist
 
 ################################################################################
 %install
 ################################################################################
 
-install -d $RPM_BUILD_ROOT%{_javadir}
-install -m644 built/release/jars/idm-console-* $RPM_BUILD_ROOT%{_javadir}
+mkdir -p %{buildroot}%{_javadir}
+
+./build.sh \
+    %{?_verbose:-v} \
+    --work-dir=%{_vpath_builddir} \
+    --java-dir=%{buildroot}%{_javadir} \
+    install
 
 ################################################################################
 %files -n %{product_id}

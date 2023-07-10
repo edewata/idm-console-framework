@@ -9,8 +9,10 @@ SCRIPT_PATH=$(readlink -f "$0")
 SCRIPT_NAME=$(basename "$SCRIPT_PATH")
 SRC_DIR=$(dirname "$SCRIPT_PATH")
 
-NAME=
+NAME=idm-console-framework
 WORK_DIR=
+
+JAVA_DIR=/usr/share/java
 
 SOURCE_TAG=
 SPEC_TEMPLATE="$SRC_DIR/idm-console-framework.spec"
@@ -27,8 +29,9 @@ usage() {
     echo "Usage: $SCRIPT_NAME [OPTIONS] <target>"
     echo
     echo "Options:"
-    echo "    --name=<name>          Package name (default: idm-console-framework)."
-    echo "    --work-dir=<path>      Working directory (default: ~/build/idm-console-framework)."
+    echo "    --name=<name>          Package name (default: $NAME)."
+    echo "    --work-dir=<path>      Working directory (default: ~/build/$NAME)."
+    echo "    --java-dir=<path>      Java directory (default: $JAVA_DIR)"
     echo "    --source-tag=<tag>     Generate RPM sources from a source tag."
     echo "    --spec=<file>          Use the specified RPM spec (default: $SPEC_TEMPLATE)."
     echo "    --with-timestamp       Append timestamp to release number."
@@ -39,10 +42,12 @@ usage() {
     echo "    --help                 Show help message."
     echo
     echo "Target:"
-    echo "    src    Generate RPM sources."
-    echo "    spec   Generate RPM spec."
-    echo "    srpm   Build SRPM package."
-    echo "    rpm    Build RPM packages (default)."
+    echo "    dist     Build binaries (default)."
+    echo "    install  Install binaries."
+    echo "    src      Generate RPM sources."
+    echo "    spec     Generate RPM spec."
+    echo "    srpm     Build SRPM package."
+    echo "    rpm      Build RPM packages."
 }
 
 generate_rpm_sources() {
@@ -153,7 +158,10 @@ while getopts v-: arg ; do
             NAME="$LONG_OPTARG"
             ;;
         work-dir=?*)
-            WORK_DIR=`readlink -f "$LONG_OPTARG"`
+            WORK_DIR=$(readlink -f "$LONG_OPTARG")
+            ;;
+        java-dir=?*)
+            JAVA_DIR=$(readlink -f "$LONG_OPTARG")
             ;;
         source-tag=?*)
             SOURCE_TAG="$LONG_OPTARG"
@@ -184,7 +192,7 @@ while getopts v-: arg ; do
         '')
             break # "--" terminates argument processing
             ;;
-        name* | work-dir* | source-tag* | spec* | dist*)
+        name* | work-dir* | java-dir* | source-tag* | spec* | dist*)
             echo "ERROR: Missing argument for --$OPTARG option" >&2
             exit 1
             ;;
@@ -204,7 +212,7 @@ done
 shift $((OPTIND-1))
 
 if [ "$#" -lt 1 ] ; then
-    BUILD_TARGET=rpm
+    BUILD_TARGET=dist
 else
     BUILD_TARGET=$1
 fi
@@ -220,10 +228,13 @@ fi
 if [ "$DEBUG" = true ] ; then
     echo "NAME: $NAME"
     echo "WORK_DIR: $WORK_DIR"
+    echo "JAVA_DIR: $JAVA_DIR"
     echo "BUILD_TARGET: $BUILD_TARGET"
 fi
 
-if [ "$BUILD_TARGET" != "src" ] &&
+if [ "$BUILD_TARGET" != "dist" ] &&
+        [ "$BUILD_TARGET" != "install" ] &&
+        [ "$BUILD_TARGET" != "src" ] &&
         [ "$BUILD_TARGET" != "spec" ] &&
         [ "$BUILD_TARGET" != "srpm" ] &&
         [ "$BUILD_TARGET" != "rpm" ] ; then
@@ -242,10 +253,6 @@ fi
 mkdir -p "$WORK_DIR"
 cd "$WORK_DIR"
 
-################################################################################
-# Prepare RPM build
-################################################################################
-
 if [ "$SPEC_TEMPLATE" = "" ] ; then
     SPEC_TEMPLATE="$SRC_DIR/idm-console-framework.spec"
 fi
@@ -255,6 +262,66 @@ VERSION="`rpmspec -P "$SPEC_TEMPLATE" | grep "^Version:" | awk '{print $2;}'`"
 if [ "$DEBUG" = true ] ; then
     echo "VERSION: $VERSION"
 fi
+
+################################################################################
+# Build binaries
+################################################################################
+
+if [ "$BUILD_TARGET" = "dist" ] ; then
+
+    if [ "$VERBOSE" = "true" ] ; then
+        echo "Building $NAME-$VERSION"
+    fi
+
+    OPTIONS=()
+
+    if [ "$VERBOSE" = "true" ] ; then
+        OPTIONS+=(-v)
+    fi
+
+    OPTIONS+=(-f "$SRC_DIR/build.xml")
+    OPTIONS+=(-Dbuilt.dir="$WORK_DIR")
+
+    echo ant "${OPTIONS[@]}"
+    ant "${OPTIONS[@]}"
+
+    echo
+    echo "Build artifacts:"
+    echo "- $WORK_DIR/release/jars/idm-console-base.jar"
+    echo "- $WORK_DIR/release/jars/idm-console-mcc.jar"
+    echo "- $WORK_DIR/release/jars/idm-console-mcc_en.jar"
+    echo "- $WORK_DIR/release/jars/idm-console-nmclf.jar"
+    echo "- $WORK_DIR/release/jars/idm-console-nmclf_en.jar"
+    echo
+    echo "To install the build: $0 install"
+    echo "To create RPM packages: $0 rpm"
+    echo
+
+    exit
+fi
+
+################################################################################
+# Install binaries
+################################################################################
+
+if [ "$BUILD_TARGET" = "install" ] ; then
+
+    if [ "$VERBOSE" = true ] ; then
+        echo "Installing $NAME-$VERSION"
+    fi
+
+    echo install -d $JAVA_DIR
+    install -d $JAVA_DIR
+
+    echo install -m 644 $WORK_DIR/release/jars/idm-console-* $JAVA_DIR
+    install -m 644 $WORK_DIR/release/jars/idm-console-* $JAVA_DIR
+
+    exit
+fi
+
+################################################################################
+# Prepare RPM build
+################################################################################
 
 RELEASE="`rpmspec -P "$SPEC_TEMPLATE" --undefine dist | grep "^Release:" | awk '{print $2;}'`"
 
