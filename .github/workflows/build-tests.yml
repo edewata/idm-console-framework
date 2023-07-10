@@ -43,5 +43,44 @@ jobs:
       run: |
         dnf localinstall -y /tmp/RPMS/*
 
-    - name: Build IDM Console Framework
+    - name: Build with Ant
       run: ./build.sh
+
+    - name: Install JSS into local Maven repo
+      run: |
+        # get JSS <major>.<minor>.<update> version
+        JSS_VERSION=$(rpm -q --qf "%{version}" dogtag-jss)
+
+        # if built by COPR, jss-base.jar will be installed in /usr/lib/java,
+        # otherwise it will be in /usr/share/java.
+        JSS_BASE_JAR=$(find /usr/lib/java /usr/share/java -name jss-base.jar)
+
+        mvn install:install-file \
+            -Dfile=$JSS_BASE_JAR \
+            -DgroupId=org.dogtagpki.jss \
+            -DartifactId=jss-base \
+            -Dversion=$JSS_VERSION-SNAPSHOT \
+            -Dpackaging=jar \
+            -DgeneratePom=true
+
+    - name: Install LDAP JDK into local Maven repo
+      run: |
+        # get LDAP JDK <major>.<minor>.<update> version
+        LDAPJDK_VERSION=$(rpm -q --qf "%{version}" dogtag-ldapjdk)
+
+        mvn install:install-file \
+            -Dfile=/usr/share/java/ldapjdk.jar \
+            -DgroupId=org.dogtagpki.ldap-sdk \
+            -DartifactId=ldapjdk \
+            -Dversion=$LDAPJDK_VERSION-SNAPSHOT \
+            -Dpackaging=jar \
+            -DgeneratePom=true
+
+    - name: Build with Maven
+      run: mvn package
+
+    - name: Compare idm-console-framework.jar
+      run: |
+        jar tvf $HOME/build/idm-console-framework/release/jars/idm-console-framework.jar | awk '{print $8;}' | grep -v '/$' | sort | tee idm-console-framework.ant
+        jar tvf target/idm-console-framework.jar | awk '{print $8;}' | grep -v -E '^META-INF/maven/|/$' | sort | tee idm-console-framework.maven
+        diff idm-console-framework.ant idm-console-framework.maven
