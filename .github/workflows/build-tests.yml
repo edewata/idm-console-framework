@@ -2,12 +2,13 @@ name: Build Tests
 
 on: [push, pull_request]
 
+env:
+  COPR_REPO: ${{ vars.COPR_REPO || '@pki/11.4' }}
+
 jobs:
   build-test:
     name: Build Test
     runs-on: ubuntu-latest
-    env:
-      COPR_REPO: "@pki/master"
     strategy:
       matrix:
         os:
