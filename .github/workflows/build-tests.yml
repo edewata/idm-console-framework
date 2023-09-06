@@ -2,6 +2,9 @@ name: Build Tests
 
 on: [push, pull_request]
 
+env:
+  COPR_REPO: ${{ vars.COPR_REPO || '@pki/master' }}
+
 jobs:
   init:
     name: Initialization
@@ -22,8 +25,6 @@ jobs:
         dnf install -y dnf-plugins-core moby-engine rpm-build
         if [ -n "$COPR_REPO" ]; then dnf copr enable -y $COPR_REPO; fi
         dnf builddep -y --skip-unavailable --spec idm-console-framework.spec
-      env:
-        COPR_REPO: ${{ needs.init.outputs.repo }}
 
     - name: Import JSS packages from jss-dist
       run: |
