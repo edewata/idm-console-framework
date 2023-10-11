@@ -66,7 +66,8 @@ RUN ./build.sh --work-dir=build rpm
 ################################################################################
 FROM alpine:latest AS idm-console-framework-dist
 
-# Import Tomcat JSS packages
+# Import IDM Console Framework packages
+COPY --from=idm-console-framework-builder /root/idm-console-framework/build/SRPMS /root/SRPMS/
 COPY --from=idm-console-framework-builder /root/idm-console-framework/build/RPMS /root/RPMS/
 
 ################################################################################
