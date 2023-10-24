@@ -100,18 +100,6 @@ A Java Management Console framework used for remote server management.
 %pom_remove_plugin org.codehaus.mojo:flatten-maven-plugin
 
 # specify Maven artifact locations
-%mvn_file org.dogtagpki.ldap-sdk:ldapjdk     ldapjdk/ldapjdk    ldapjdk
-
-################################################################################
-%build
-################################################################################
-
-export JAVA_HOME=%{java_home}
-
-# build without Javadoc
-%mvn_build -j
-
-# specify Maven artifact locations
 %mvn_file org.dogtagpki.console-framework:console-framework \
     idm-console-framework/idm-console-framework \
     idm-console-framework \
@@ -122,31 +110,25 @@ export JAVA_HOME=%{java_home}
     idm-console-nmclf_en
 
 ################################################################################
+%build
+################################################################################
+
+export JAVA_HOME=%{java_home}
+
+# build without Javadoc
+%mvn_build -j
+
+################################################################################
 %install
 ################################################################################
 
 %mvn_install
-
-#install -p target/idm-console-framework.jar %{buildroot}%{_javadir}/idm-console-framework.jar
-
-# create links for backward compatibility
-#ln -s idm-console-framework.jar %{buildroot}%{_javadir}/idm-console-base.jar
-#ln -s idm-console-framework.jar %{buildroot}%{_javadir}/idm-console-mcc.jar
-#ln -s idm-console-framework.jar %{buildroot}%{_javadir}/idm-console-mcc_en.jar
-#ln -s idm-console-framework.jar %{buildroot}%{_javadir}/idm-console-nmclf.jar
-#ln -s idm-console-framework.jar %{buildroot}%{_javadir}/idm-console-nmclf_en.jar
 
 ################################################################################
 %files -n %{product_id} -f .mfiles
 ################################################################################
 
 %doc LICENSE
-#{_javadir}/idm-console-framework.jar
-#{_javadir}/idm-console-base.jar
-#{_javadir}/idm-console-mcc.jar
-#{_javadir}/idm-console-mcc_en.jar
-#{_javadir}/idm-console-nmclf.jar
-#{_javadir}/idm-console-nmclf_en.jar
 
 ################################################################################
 %changelog
