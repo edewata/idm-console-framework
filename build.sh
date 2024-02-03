@@ -12,6 +12,7 @@ SRC_DIR=$(dirname "$SCRIPT_PATH")
 NAME=idm-console-framework
 WORK_DIR=
 
+JAVA_VERSION="17"
 JAVA_DIR=/usr/share/java
 
 SOURCE_TAG=
@@ -29,17 +30,18 @@ usage() {
     echo "Usage: $SCRIPT_NAME [OPTIONS] <target>"
     echo
     echo "Options:"
-    echo "    --name=<name>          Package name (default: $NAME)."
-    echo "    --work-dir=<path>      Working directory (default: ~/build/$NAME)."
-    echo "    --java-dir=<path>      Java directory (default: $JAVA_DIR)"
-    echo "    --source-tag=<tag>     Generate RPM sources from a source tag."
-    echo "    --spec=<file>          Use the specified RPM spec (default: $SPEC_TEMPLATE)."
-    echo "    --with-timestamp       Append timestamp to release number."
-    echo "    --with-commit-id       Append commit ID to release number."
-    echo "    --dist=<name>          Distribution name (e.g. fc28)."
-    echo " -v,--verbose              Run in verbose mode."
-    echo "    --debug                Run in debug mode."
-    echo "    --help                 Show help message."
+    echo "    --name=<name>             Package name (default: $NAME)."
+    echo "    --work-dir=<path>         Working directory (default: ~/build/$NAME)."
+    echo "    --java-version=<version>  Java version (default: $JAVA_VERSION)"
+    echo "    --java-dir=<path>         Java directory (default: $JAVA_DIR)"
+    echo "    --source-tag=<tag>        Generate RPM sources from a source tag."
+    echo "    --spec=<file>             Use the specified RPM spec (default: $SPEC_TEMPLATE)."
+    echo "    --with-timestamp          Append timestamp to release number."
+    echo "    --with-commit-id          Append commit ID to release number."
+    echo "    --dist=<name>             Distribution name (e.g. fc28)."
+    echo " -v,--verbose                 Run in verbose mode."
+    echo "    --debug                   Run in debug mode."
+    echo "    --help                    Show help message."
     echo
     echo "Target:"
     echo "    dist     Build binaries (default)."
@@ -127,6 +129,9 @@ generate_rpm_spec() {
     # hard-code package name
     sed -i "s/^\(Name: *\).*\$/\1${NAME}/g" "$SPEC_FILE"
 
+    # hard-code Java version
+    sed -i "s/^\(%global *java_version *\).*\$/\1$JAVA_VERSION/g" "$SPEC_FILE"
+
     # hard-code timestamp
     if [ "$TIMESTAMP" != "" ] ; then
         sed -i "s/%undefine *timestamp/%global timestamp $TIMESTAMP/g" "$SPEC_FILE"
@@ -160,6 +165,9 @@ while getopts v-: arg ; do
         work-dir=?*)
             WORK_DIR=$(readlink -f "$LONG_OPTARG")
             ;;
+        java-version=?*)
+            JAVA_VERSION="$LONG_OPTARG"
+            ;;
         java-dir=?*)
             JAVA_DIR=$(readlink -f "$LONG_OPTARG")
             ;;
@@ -192,7 +200,7 @@ while getopts v-: arg ; do
         '')
             break # "--" terminates argument processing
             ;;
-        name* | work-dir* | java-dir* | source-tag* | spec* | dist*)
+        name* | work-dir* | java-version* | java-dir* | source-tag* | spec* | dist*)
             echo "ERROR: Missing argument for --$OPTARG option" >&2
             exit 1
             ;;
@@ -228,6 +236,7 @@ fi
 if [ "$DEBUG" = true ] ; then
     echo "NAME: $NAME"
     echo "WORK_DIR: $WORK_DIR"
+    echo "JAVA_VERSION: $JAVA_VERSION"
     echo "JAVA_DIR: $JAVA_DIR"
     echo "BUILD_TARGET: $BUILD_TARGET"
 fi

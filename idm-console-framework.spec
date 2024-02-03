@@ -53,16 +53,17 @@ ExclusiveArch:    %{java_arches} noarch
 # Java
 ################################################################################
 
-%define java_devel java-17-openjdk-devel
-%define java_headless java-17-openjdk-headless
-%define java_home %{_jvmdir}/jre-17-openjdk
+%global java_version 17
+%define java_devel java-%{java_version}-openjdk-devel
+%define java_headless java-%{java_version}-openjdk-headless
+%define java_home %{_jvmdir}/jre-%{java_version}-openjdk
 
 ################################################################################
 # Build Dependencies
 ################################################################################
 
 BuildRequires:    %{java_devel}
-BuildRequires:    maven-local
+BuildRequires:    maven-local-openjdk%{java_version}
 BuildRequires:    ant >= 1.6.2
 BuildRequires:    mvn(org.dogtagpki.jss:jss-base) >= 5.5.0
 BuildRequires:    mvn(org.dogtagpki.ldap-sdk:ldapjdk) >= 5.5.0
