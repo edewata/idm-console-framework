@@ -2,55 +2,69 @@ name: Build Tests
 
 on: [push, pull_request]
 
-env:
-  COPR_REPO: ${{ vars.COPR_REPO || '@pki/master' }}
-
 jobs:
+  wait-for-build:
+    name: Waiting for build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for build
+        uses: lewagon/wait-on-check-action@v1.3.1
+        with:
+          ref: ${{ github.ref }}
+          check-name: 'Building IDM Console Framework'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 30
+        if: github.event_name == 'push'
+
+      - name: Wait for build
+        uses: lewagon/wait-on-check-action@v1.3.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          check-name: 'Building IDM Console Framework'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 30
+        if: github.event_name == 'pull_request'
+
   build-test:
     name: Build Test
+    needs: wait-for-build
     runs-on: ubuntu-latest
-    container: ${{ vars.BASE_IMAGE || 'registry.fedoraproject.org/fedora:latest' }}
+    env:
+      SHARED: /tmp/workdir/idm-console-framework
     steps:
     - name: Clone repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
-    - name: Install build dependencies from Fedora
-      run: |
-        dnf install -y dnf-plugins-core moby-engine rpm-build
-        if [ -n "$COPR_REPO" ]; then dnf copr enable -y $COPR_REPO; fi
-        dnf builddep -y --skip-unavailable --spec idm-console-framework.spec
+    - name: Retrieve IDM Console Framework images
+      uses: actions/cache@v3
+      with:
+        key: idm-console-framework-images-${{ github.sha }}
+        path: idm-console-framework-images.tar
 
-    - name: Import JSS packages from jss-dist
-      run: |
-        docker pull quay.io/dogtagpki/jss-dist:latest
-        docker create --name=jss-dist quay.io/dogtagpki/jss-dist:latest
-        docker cp jss-dist:/root/RPMS/. /tmp/RPMS/
-        docker rm -f jss-dist
+    - name: Load IDM Console Framework images
+      run: docker load --input idm-console-framework-images.tar
 
-    - name: Import LDAP SDK packages from ldapjdk-dist
+    - name: Set up IDM Console Framework container
       run: |
-        docker pull quay.io/dogtagpki/ldapjdk-dist:latest
-        docker create --name=ldapjdk-dist quay.io/dogtagpki/ldapjdk-dist:latest
-        docker cp ldapjdk-dist:/root/RPMS/. /tmp/RPMS/
-        docker rm -f ldapjdk-dist
-
-    - name: Install build dependencies from GitHub Packages
-      run: |
-        dnf localinstall -y /tmp/RPMS/*
+        tests/bin/runner-init.sh idm-console-framework
+      env:
+        IMAGE: idm-console-framework-builder
+        HOSTNAME: idm-console-framework.example.com
 
     - name: Build with Ant
-      run: ./build.sh
+      run: |
+        docker exec idm-console-framework ./build.sh
 
     - name: Install JSS into local Maven repo
       run: |
         # get JSS <major>.<minor>.<update> version
-        JSS_VERSION=$(rpm -q --qf "%{version}" dogtag-jss)
+        JSS_VERSION=$(docker exec idm-console-framework rpm -q --qf "%{version}" dogtag-jss)
 
         # if built by COPR, jss-base.jar will be installed in /usr/lib/java,
         # otherwise it will be in /usr/share/java.
-        JSS_BASE_JAR=$(find /usr/lib/java /usr/share/java -name jss-base.jar)
+        JSS_BASE_JAR=$(docker exec idm-console-framework find /usr/lib/java /usr/share/java -name jss-base.jar)
 
-        mvn install:install-file \
+        docker exec idm-console-framework mvn install:install-file \
             -Dfile=$JSS_BASE_JAR \
             -DgroupId=org.dogtagpki.jss \
             -DartifactId=jss-base \
@@ -61,9 +75,9 @@ jobs:
     - name: Install LDAP JDK into local Maven repo
       run: |
         # get LDAP JDK <major>.<minor>.<update> version
-        LDAPJDK_VERSION=$(rpm -q --qf "%{version}" dogtag-ldapjdk)
+        LDAPJDK_VERSION=$(docker exec idm-console-framework rpm -q --qf "%{version}" dogtag-ldapjdk)
 
-        mvn install:install-file \
+        docker exec idm-console-framework mvn install:install-file \
             -Dfile=/usr/share/java/ldapjdk.jar \
             -DgroupId=org.dogtagpki.ldap-sdk \
             -DartifactId=ldapjdk \
@@ -72,10 +86,21 @@ jobs:
             -DgeneratePom=true
 
     - name: Build with Maven
-      run: mvn package
+      run: |
+        docker exec idm-console-framework mvn package
 
     - name: Compare idm-console-framework.jar
       run: |
-        jar tvf $HOME/build/idm-console-framework/release/jars/idm-console-framework.jar | awk '{print $8;}' | grep -v '/$' | sort | tee idm-console-framework.ant
-        jar tvf target/idm-console-framework.jar | awk '{print $8;}' | grep -v -E '^META-INF/maven/|/$' | sort | tee idm-console-framework.maven
+        docker exec idm-console-framework \
+            jar tvf /root/build/idm-console-framework/release/jars/idm-console-framework.jar \
+            | awk '{print $8;}' \
+            | grep -v '/$' \
+            | sort \
+            | tee idm-console-framework.ant
+        docker exec idm-console-framework \
+            jar tvf target/idm-console-framework.jar \
+            | awk '{print $8;}' \
+            | grep -v -E '^META-INF/maven/|/$' \
+            | sort \
+            | tee idm-console-framework.maven
         diff idm-console-framework.ant idm-console-framework.maven
