@@ -58,13 +58,7 @@ jobs:
           tags: idm-console-framework-builder
           target: idm-console-framework-builder
           cache-from: type=local,src=/tmp/.buildx-cache
-          outputs: type=docker,dest=idm-console-framework-builder.tar
-
-      - name: Store idm-console-framework-builder image
-        uses: actions/cache@v3
-        with:
-          key: idm-console-framework-builder-${{ github.sha }}
-          path: idm-console-framework-builder.tar
+          outputs: type=docker
 
       - name: Build idm-console-framework-dist image
         uses: docker/build-push-action@v3
@@ -76,13 +70,7 @@ jobs:
           tags: idm-console-framework-dist
           target: idm-console-framework-dist
           cache-from: type=local,src=/tmp/.buildx-cache
-          outputs: type=docker,dest=idm-console-framework-dist.tar
-
-      - name: Store idm-console-framework-dist image
-        uses: actions/cache@v3
-        with:
-          key: idm-console-framework-dist-${{ github.sha }}
-          path: idm-console-framework-dist.tar
+          outputs: type=docker
 
       - name: Build idm-console-framework-runner image
         uses: docker/build-push-action@v3
@@ -94,10 +82,15 @@ jobs:
           tags: idm-console-framework-runner
           target: idm-console-framework-runner
           cache-from: type=local,src=/tmp/.buildx-cache
-          outputs: type=docker,dest=idm-console-framework-runner.tar
+          outputs: type=docker
 
-      - name: Store idm-console-framework-runner image
+      - name: Save IDM Consonle Framework images
+        run: |
+          docker images
+          docker save -o idm-console-framework-images.tar idm-console-framework-builder idm-console-framework-dist idm-console-framework-runner
+
+      - name: Store IDM Consonle Framework images
         uses: actions/cache@v3
         with:
-          key: idm-console-framework-runner-${{ github.sha }}
-          path: idm-console-framework-runner.tar
+          key: idm-console-framework-images-${{ github.sha }}
+          path: idm-console-framework-images.tar

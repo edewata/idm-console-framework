@@ -78,15 +78,15 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
         if: vars.REGISTRY != 'ghcr.io'
 
-      - name: Retrieve images
+      - name: Retrieve IDM Console Framework images
         uses: actions/cache@v3
         with:
-          key: idm-console-framework-dist-${{ github.sha }}
-          path: idm-console-framework-dist.tar
+          key: idm-console-framework-images-${{ github.sha }}
+          path: idm-console-framework-images.tar
 
-      - name: Load images
+      - name: Load IDM Console Framework images
         run: |
-          docker load --input idm-console-framework-dist.tar
+          docker load --input idm-console-framework-images.tar
 
       - name: Publish idm-console-framework-dist image
         run: |
