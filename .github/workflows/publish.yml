@@ -79,7 +79,7 @@ jobs:
         if: vars.REGISTRY != 'ghcr.io'
 
       - name: Retrieve IDM Console Framework images
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           key: idm-console-framework-images-${{ github.sha }}
           path: idm-console-framework-images.tar

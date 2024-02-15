@@ -19,7 +19,7 @@ jobs:
 
       - name: Cache Docker layers
         id: cache-buildx
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           key: buildx-${{ hashFiles('idm-console-framework.spec') }}
           path: /tmp/.buildx-cache
@@ -90,7 +90,7 @@ jobs:
           docker save -o idm-console-framework-images.tar idm-console-framework-builder idm-console-framework-dist idm-console-framework-runner
 
       - name: Store IDM Consonle Framework images
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           key: idm-console-framework-images-${{ github.sha }}
           path: idm-console-framework-images.tar
