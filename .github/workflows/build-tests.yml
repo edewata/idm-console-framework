@@ -33,7 +33,7 @@ jobs:
       SHARED: /tmp/workdir/idm-console-framework
     steps:
     - name: Clone repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Retrieve IDM Console Framework images
       uses: actions/cache@v3
