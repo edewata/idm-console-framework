@@ -54,7 +54,6 @@ ExclusiveArch:    %{java_arches} noarch
 ################################################################################
 
 %define java_devel java-17-openjdk-devel
-%define java_headless java-17-openjdk-headless
 %define java_home %{_jvmdir}/jre-17-openjdk
 
 ################################################################################
@@ -76,7 +75,6 @@ A Java Management Console framework used for remote server management.
 
 Summary:          Identity Management Console Framework
 
-Requires:         %{java_headless}
 Requires:         mvn(org.dogtagpki.jss:jss-base) >= 5.5.0
 Requires:         mvn(org.dogtagpki.ldap-sdk:ldapjdk) >= 5.5.0
 
