@@ -3,7 +3,7 @@ name: Publish IDM Console Framework
 on:
   push:
     branches:
-      - master
+      - v2.1
 
 env:
   NAMESPACE: ${{ vars.REGISTRY_NAMESPACE || github.repository_owner }}
@@ -90,5 +90,5 @@ jobs:
 
       - name: Publish idm-console-framework-dist image
         run: |
-          docker tag idm-console-framework-dist ${{ vars.REGISTRY }}/$NAMESPACE/idm-console-framework-dist:latest
-          docker push ${{ vars.REGISTRY }}/$NAMESPACE/idm-console-framework-dist:latest
+          docker tag idm-console-framework-dist ${{ vars.REGISTRY }}/$NAMESPACE/idm-console-framework-dist:2.1
+          docker push ${{ vars.REGISTRY }}/$NAMESPACE/idm-console-framework-dist:2.1
