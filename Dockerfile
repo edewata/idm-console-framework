@@ -26,6 +26,7 @@ RUN if [ -n "$COPR_REPO" ]; then dnf copr enable -y $COPR_REPO; fi
 
 # Install IDM Console Framework runtime dependencies
 RUN dnf install -y java-17-openjdk-headless \
+    && rpm -e --nodeps $(rpm -qa | grep -E "^java-") \
     && dnf clean all \
     && rm -rf /var/cache/dnf
 
